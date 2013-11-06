@@ -37,10 +37,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 	private Label dualitytypeLabel = new Label("Choose Dualitytype: ");
 	private ListBox dualitytypeListBox = new ListBox();
 	private List<DualitytypeDTO> existingDualitytypeDTOs = new ArrayList<DualitytypeDTO>();
-	
-	// fun chrystal
-	private Button funButton = new Button("Drücke mich Chrystal!");  
-	
+
 	private READBServiceAsync reaDBSvc = GWT.create(READBService.class);
 	
 	public void onModuleLoad() {
