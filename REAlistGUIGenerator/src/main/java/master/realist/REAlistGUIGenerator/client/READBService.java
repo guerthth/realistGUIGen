@@ -11,4 +11,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface READBService extends RemoteService{
 	
 	public List<DualitytypeDTO> getDualitytypes();
+	
 }

@@ -7,27 +7,29 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateUtil {
+
+	private SessionFactory sessionFactory;
+	private ServiceRegistry serviceRegistry;
 	
-	private static SessionFactory sessionFactory;
-	private static ServiceRegistry serviceRegistry;
-	
-	static
-	{
-		try
-        {
-            Configuration configuration = new Configuration().configure();
-            serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        }
-        catch (HibernateException he)
-        {
-            System.err.println("Error creating Session: " + he);
-            throw new ExceptionInInitializerError(he);
-        }
-	}
-	
-	public static SessionFactory getSessionFactory()
+	/**
+	 * Creating a SessionFactory if not existing and returning it
+	 * @return
+	 */
+	public SessionFactory getSessionFactory()
     {
+		try
+		{			
+			if(this.sessionFactory == null){
+				
+				Configuration configuration = new Configuration().configure();
+	            serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
+	            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+			}
+		}catch(HibernateException he){
+			System.err.println("Error creating Session: " + he);
+            throw new ExceptionInInitializerError(he);
+		}
+		
         return sessionFactory;
     } 
 }

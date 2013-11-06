@@ -1,6 +1,7 @@
 package master.realist.REAlistGUIGenerator.server.util;
 
 import static org.junit.Assert.*;
+import master.realist.REAlistGUIGenerator.shared.util.SpringUtil;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,7 +12,8 @@ public class HibernateUtilTest {
 	@Test
 	public void test() {
 
-		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		HibernateUtil hibernateUtil = (HibernateUtil) SpringUtil.context.getBean("hibernateutil");
+		SessionFactory sessionFactory = hibernateUtil.getSessionFactory();
 		assertNotNull(sessionFactory);
 		Session session = sessionFactory.openSession();
 		assertNotNull(session);
