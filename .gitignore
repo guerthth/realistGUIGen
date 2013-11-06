@@ -1,8 +1,5 @@
 *.class
 
-# Package Files #
-*.jar
-*.war
 
 # gwt caches and compiled units #
 war/gwt_bree/
@@ -14,3 +11,30 @@ gwt-unitCache/
 # more caches and things from deploy #
 war/WEB-INF/deploy/
 war/WEB-INF/classes/
+
+# Package Files #
+*target*
+*.jar
+*.war
+
+# eclipse specific git ignore
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
