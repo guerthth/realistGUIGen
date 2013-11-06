@@ -103,7 +103,6 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    	  
 	    	  // assemble Main panel
 	    	  mainPanel.add(dualitytypePanel);
-	    	  chrystallove();
 	    	  
 	      }
 	    };
@@ -111,15 +110,6 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    // Make the call to the stock price service.
 	    reaDBSvc.getDualitytypes(callback);
 	}
-	
-	private void chrystallove(){
-		 mainPanel.add(funButton);
-		 funButton.addClickHandler(new ClickHandler(){
-			 public void onClick(ClickEvent event){
-				 Label chrystallove = new Label("Hallo du hübsches Ding! Ich liebe dich!");
-				 mainPanel.add(chrystallove);
-			 }
-		 });
-	}
+
   
 }
