@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <!-- Inherit our applications main module.                      -->
+  <inherits name='master.realist.REAlistGUIGenerator.REAlistGUIGenerator' />
+
+  <!-- Specify the path to any remote services.                   -->
+  <servlet path="/REAlistGUIGenerator/greet" class="master.realist.REAlistGUIGenerator.server.GreetingServiceImpl" />
+
+</module>
