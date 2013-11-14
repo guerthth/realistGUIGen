@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 5, 2013 2:01:09 PM by Hibernate Tools 4.0.0
+// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

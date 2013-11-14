@@ -70,6 +70,7 @@ public class GwtTestREAlistGUIGenerator extends GWTTestCase {
       }
     });
   }
+  
 
 
 }

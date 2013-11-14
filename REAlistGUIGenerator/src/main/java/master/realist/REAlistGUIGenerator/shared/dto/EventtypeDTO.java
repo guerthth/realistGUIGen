@@ -1,6 +1,9 @@
 package master.realist.REAlistGUIGenerator.shared.dto;
 
 import java.io.Serializable;
+import java.util.Set;
+
+import master.realist.REAlistGUIGenerator.shared.model.Eventtype;
 
 public class EventtypeDTO implements Serializable{
 	
@@ -12,24 +15,27 @@ public class EventtypeDTO implements Serializable{
 	
 	private String id;
 	// TODO implement eventtype hierarchies
-	//private Eventtype eventtype;
+	//private EventtypeDTO eventtype;
 	private String name;
 	private boolean isIncrement;
 	private boolean isResourceUsed;
 	private boolean isExceptionEvent;
 	private boolean isSeries;
+	private Set<AttributeDTO> attributes;
 	
 	public EventtypeDTO(){
 		
 	}
 	
-	public EventtypeDTO(String id, String name, boolean isIncrement, boolean isResourceUsed, boolean isExceptionEvent, boolean isSeries){
+	public EventtypeDTO(String id, String name, boolean isIncrement, boolean isResourceUsed, boolean isExceptionEvent, boolean isSeries, Set<AttributeDTO> attributes){
 		this.id = id;
 		this.name = name; 
 		this.isIncrement = isIncrement;
 		this.isResourceUsed = isResourceUsed;
 		this.isExceptionEvent = isExceptionEvent;
 		this.isSeries = isSeries;
+		this.attributes = attributes;
+		//this.eventtype = eventtype;
 	}
 
 	public String getId() {
@@ -79,7 +85,17 @@ public class EventtypeDTO implements Serializable{
 	public void setSeries(boolean isSeries) {
 		this.isSeries = isSeries;
 	}
-	
-	
+
+	public Set<AttributeDTO> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Set<AttributeDTO> attributes) {
+		this.attributes = attributes;
+	}
+
+	public void setIncrement(boolean isIncrement) {
+		this.isIncrement = isIncrement;
+	}	
 	
 }

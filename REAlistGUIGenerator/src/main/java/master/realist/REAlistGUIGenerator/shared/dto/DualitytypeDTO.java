@@ -3,8 +3,6 @@ package master.realist.REAlistGUIGenerator.shared.dto;
 import java.io.Serializable;
 import java.util.Set;
 
-import master.realist.REAlistGUIGenerator.shared.model.Eventtype;
-
 public class DualitytypeDTO implements Serializable{
 	
 	/**

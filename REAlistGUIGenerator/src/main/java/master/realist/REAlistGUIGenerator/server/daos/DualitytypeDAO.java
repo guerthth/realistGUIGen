@@ -9,15 +9,16 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import master.realist.REAlistGUIGenerator.server.util.HibernateUtil;
+import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 import master.realist.REAlistGUIGenerator.shared.model.Dualitytype;
 import master.realist.REAlistGUIGenerator.shared.model.Eventtype;
+import master.realist.REAlistGUIGenerator.shared.model.EventtypeHasAdditionalattribute;
 
 public class DualitytypeDAO {
 	
 	private HibernateUtil hibernateUtil;
-	
 	
 	/**
 	 * Getting all the existing Dualitytypes in the REA DB
@@ -42,7 +43,13 @@ public class DualitytypeDAO {
 				dualitytypeDTOlist = new ArrayList<DualitytypeDTO>();
 				for(Dualitytype dt : existingDualitytypes){
 					
-					Hibernate.initialize(dt.getEventtypes());		
+					Hibernate.initialize(dt.getEventtypes());
+					for(Eventtype et : dt.getEventtypes()){
+						Hibernate.initialize(et.getEventtypeHasAdditionalattributes());
+						for(EventtypeHasAdditionalattribute ethaa : et.getEventtypeHasAdditionalattributes()){
+							Hibernate.initialize(ethaa.getAttribute());
+						}
+					}
 				}
 			}
 			
@@ -78,7 +85,7 @@ public class DualitytypeDAO {
 		if(dualityEventtypes != null){
 			for(Eventtype et : dualityEventtypes){
 
-				dualityEventtypeDTOs.add(createDualityEventtypeDTO(et));
+				dualityEventtypeDTOs.add(createEventtypeDTO(et));
 			}
 		}
 		
@@ -88,14 +95,43 @@ public class DualitytypeDAO {
 	
 	
 	/**
-	 * Method that creates an EventtypeDTO object for a eventtype oject
+	 * Method that creates an EventtypeDTO object for an eventtype oject
 	 * @param et
 	 * @return created eventtype
 	 */
-	private EventtypeDTO createDualityEventtypeDTO(Eventtype et){
+	private EventtypeDTO createEventtypeDTO(Eventtype et){
 		
-		return new EventtypeDTO(et.getId(),et.getName(),et.getIsIncrement(),et.getIsResourceUsed(),et.getIsExceptionEvent(),et.getIsSeries());
+		Set<EventtypeHasAdditionalattribute> additionalEventtypeAttributes = et.getEventtypeHasAdditionalattributes();
+		//Set<EventtypeHasAdditionalattributeDTO> additionalEventtypeAttributesDTOs = 
+				//new HashSet<EventtypeHasAdditionalattributeDTO>(additionalEventtypeAttributes != null ? additionalEventtypeAttributes.size() : 0);
+		// only a list of the attribute DTOs is needed
+		Set<AttributeDTO> additionalEventtypeAttributeDTOs = 
+				new HashSet<AttributeDTO>(additionalEventtypeAttributes != null ? additionalEventtypeAttributes.size() : 0);
+		
+		
+		//ArrayList<String> additionalAttributeIds = new ArrayList<String>(additionalEventtypeAttributes != null ? additionalEventtypeAttributes.size() : 0);
+		
+		// using the additional attributes for the eventtype
+		if(additionalEventtypeAttributes != null){
+			for(EventtypeHasAdditionalattribute ethaa : additionalEventtypeAttributes){
+				
+				additionalEventtypeAttributeDTOs.add(createAttributeDTO(ethaa));
 
+			}
+		}
+		
+		return new EventtypeDTO(et.getId(),et.getName(),et.getIsIncrement(),et.getIsResourceUsed(),et.getIsExceptionEvent(),et.getIsSeries(),additionalEventtypeAttributeDTOs);
+
+	}
+	
+	/**
+	 * Creates an AttributeDTO object for an EventtypeHasAdditionalattribute object
+	 * @param et
+	 * @return created attribute DTO
+	 */
+	private AttributeDTO createAttributeDTO(EventtypeHasAdditionalattribute ethaa){
+		
+		return new AttributeDTO(ethaa.getId().getAttributeId(),ethaa.getAttribute().getName(),ethaa.getAttribute().getDatatype());
 	}
 	
 	

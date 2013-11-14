@@ -1,16 +1,28 @@
 package master.realist.REAlistGUIGenerator.client;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueIdDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
-import master.realist.REAlistGUIGenerator.shared.model.Eventtype;
+import master.realist.REAlistGUIGenerator.shared.model.EventHasAdditionalattributevalue;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -18,9 +30,12 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 
 /**
@@ -29,39 +44,47 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class REAlistGUIGenerator implements EntryPoint {
 
 	private VerticalPanel mainPanel = new VerticalPanel();  
-	private FlexTable stocksFlexTable = new FlexTable(); 
-	private HorizontalPanel addPanel = new HorizontalPanel();  
-	private TextBox newSymbolTextBox = new TextBox();  
-	private Button addStockButton = new Button("Add");  
-	private Label lastUpdatedLabel = new Label();
-	
+
 	// Dualitytype panel + ArrayList
-	private HorizontalPanel dualitytypePanel = new HorizontalPanel();
+	//private HorizontalPanel dualitytypePanel = new HorizontalPanel();
+	private FlexTable dualitytypeFlexTable = new FlexTable();
 	private Label dualitytypeLabel = new Label("Choose Dualitytype: ");
 	private ListBox dualitytypeListBox = new ListBox();
 	private List<DualitytypeDTO> existingDualitytypeDTOs = new ArrayList<DualitytypeDTO>();
 	private Button dualitytypeSelectionButton = new Button("Select");
 	
-	
+	// Eventtype Tab Panel
+	private TabPanel eventypeSetTabPanel;
 
+	// Asyn READB Service
 	private READBServiceAsync reaDBSvc = GWT.create(READBService.class);
 	
+	// Current Dualitytype_Id
+	private DualitytypeDTO currentDualityType;
+	
+	// startdate and enddate of the event
+	private Date starteventdate = null;
+	private Date endeventdate = null;
+	
+	// List of eventDTO objects that should be saved to the DB
+	private List<EventDTO> saveEventDTOList = new ArrayList<EventDTO>();
+	
+	// Map of the additional event attribute textboxes with corresponding attribute_id strings
+	private Map<String, Map<String,TextBox>> eventAttributeMap = new HashMap<String, Map<String,TextBox>>();
+	
+	// DateFormatter
+	//private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	
+	/**
+	 * On module load method
+	 */
 	public void onModuleLoad() {
-
-		// Create table for stock data.  
-		//stocksFlexTable.setText(0, 0, "Symbol");  
-		//stocksFlexTable.setText(0, 1, "Price");  
-		//stocksFlexTable.setText(0, 2, "Change");  
-		//stocksFlexTable.setText(0, 3, "Remove");
-		
-		// Assemble Add Stock panel.
-		//addPanel.add(newSymbolTextBox);
-		//addPanel.add(addStockButton);
 		
 		// Assemble Dualitytype panel
-		dualitytypePanel.add(dualitytypeLabel);
-		dualitytypePanel.add(dualitytypeListBox);
-		dualitytypePanel.add(dualitytypeSelectionButton);
+		dualitytypeFlexTable.setWidget(0, 0, dualitytypeLabel);
+		dualitytypeFlexTable.setWidget(0, 1, dualitytypeListBox);
+		dualitytypeFlexTable.setWidget(0, 2, dualitytypeSelectionButton);
+		dualitytypeFlexTable.setCellSpacing(5);
 
 		// listen for mouse events on the dualitytypeSelectionButton
 		dualitytypeSelectionButton.addClickHandler(new ClickHandler(){
@@ -70,28 +93,20 @@ public class REAlistGUIGenerator implements EntryPoint {
 			}
 		});
 		
-		// Assemble Main panel.
-		//mainPanel.add(stocksFlexTable);
-		//mainPanel.add(addPanel);
-		//mainPanel.add(lastUpdatedLabel);
-
 		// Associate the Main panel with the HTML host page.
-		RootPanel.get("readb").add(mainPanel);
-
-		// Move cursor focus to the input box.
-		//newSymbolTextBox.setFocus(true);
-		
+		RootPanel.get("readb").add(mainPanel);	
 		
 		//load the dualitytype selection
 		loadDualityTypes();
 	}
+	
 	
 	/**
 	 * Method loading the existing dualitytypes in the GUI
 	 */
 	private void loadDualityTypes(){
 		
-		 // Initialize the service proxy.
+		// Initialize the service proxy.
 	    if (reaDBSvc == null) {
 	    	reaDBSvc = GWT.create(READBService.class);
 	    }
@@ -109,7 +124,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    	  // populate dualitytypeListBox
 	    	  String dualitytypeDisplayName;
 	    	  for(DualitytypeDTO ddto : result){
-	    		  // not the autogenerated name, but the simplyfied form shouls be displayed
+	    		  // not the autogenerated name, but the simplyfied form should be displayed
 	    		  int trimIndex = ddto.getName().indexOf("_Duality");
 	    		  dualitytypeDisplayName = ddto.getName().substring(0,trimIndex);
 	    		  dualitytypeListBox.addItem(dualitytypeDisplayName);
@@ -119,8 +134,9 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    	  dualitytypeListBox.setVisibleItemCount(1);
 	    	  
 	    	  // assemble Main panel
-	    	  mainPanel.add(dualitytypePanel);
-  
+	    	  // mainPanel.add(dualitytypePanel);
+	    	  mainPanel.add(dualitytypeFlexTable);
+	    	  
 	      }
 	    };
 
@@ -128,17 +144,377 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    reaDBSvc.getDualitytypes(callback);
 	}
 	
+	
 	/**
 	 * Loading Resource, Event, Agentsections
 	 */
 	private void loadDualitytypeContent(int selectedIndex){
-		DualitytypeDTO selectedDualityType = existingDualitytypeDTOs.get(selectedIndex);
-		Window.alert("Content of Dualitytype " + selectedDualityType.getName() + " is now loading");
 		
-		for(EventtypeDTO et : selectedDualityType.getEventtypes()){
-			System.out.println(et.getName());
+		// since a new Dualitytype content is loaded the arraylist for
+		// eventdtos to save has to be refreshed
+		saveEventDTOList.clear();
+		// the same happens for additional attributes
+		eventAttributeMap.clear();
+		
+		
+		//retrieve selected DualitytypeDTO object
+		DualitytypeDTO selectedDualityType = existingDualitytypeDTOs.get(selectedIndex);
+		currentDualityType = selectedDualityType;
+		//Window.alert("Content of Dualitytype " + selectedDualityType.getName() + " is now loading");
+		
+		// removing the tabpanel from the main panel if it already exists to avoid adding it several times
+		if(eventypeSetTabPanel != null){
+			mainPanel.remove(eventypeSetTabPanel);
 		}
 		
+		
+		// Tab Panel for Eventtypes of a specific Duality
+		eventypeSetTabPanel = new TabPanel();
+		
+		// retrieve all eventtypes that occur in the specified duality and save them to
+		// arraylists for increments and decrements
+		ArrayList<EventtypeDTO> incrementEventtypes = new ArrayList<EventtypeDTO>();
+		ArrayList<EventtypeDTO> decrementEventtypes = new ArrayList<EventtypeDTO>();
+		
+		for(EventtypeDTO etdto : selectedDualityType.getEventtypes()){
+			
+			if(etdto.getIsIncrement()){
+				incrementEventtypes.add(etdto);
+			}else{
+				decrementEventtypes.add(etdto);
+			}
+		}
+		
+		// adding tabs for increment and decrement event sets
+		eventypeSetTabPanel.add(createAndFormatEventsetPanel(incrementEventtypes),"Increment");
+		eventypeSetTabPanel.add(createAndFormatEventsetPanel(decrementEventtypes),"Decrement");	
+		
+		// preselecting the first tab of the panel
+		eventypeSetTabPanel.selectTab(0);
+		
+		// add the tabpanel to the main panel
+		mainPanel.add(eventypeSetTabPanel);
+
+	}
+	
+	
+	/**
+	 * Creating and formating Panel for the increment and decrement eventsets
+	 * @return
+	 */
+	private Panel createAndFormatEventsetPanel(ArrayList<EventtypeDTO> eventtypes){
+		
+		Panel eventSetPanel = new VerticalPanel();
+		
+		// if more than one event is included, an additional tabpanel is added
+		// of only one event is in the list, no tabpanel is needed
+		if(eventtypes.size()>1){
+			
+			TabPanel eventtypeTabPanel = new TabPanel();
+			
+			for(EventtypeDTO etdto : eventtypes){
+				
+				String trimmedEventtypeName = etdto.getName().substring(etdto.getName().indexOf("_")+1);
+				eventtypeTabPanel.add(createAndFormatEventtypeContentPanel(etdto),trimmedEventtypeName);
+			}
+			
+			eventSetPanel.add(eventtypeTabPanel);
+			
+		} else{
+			
+			eventSetPanel = createAndFormatEventtypeContentPanel(eventtypes.get(0));
+		}
+		
+		return eventSetPanel;
+	}
+	
+	
+	/**
+	 * Creating vertical Panel for a specific tab of the eventypeTabPanel
+	 * @param etdto
+	 * @return created eventtypePanel
+	 */
+	private Panel createAndFormatEventtypeContentPanel(EventtypeDTO etdto){
+		
+		// Eventtype main panel
+		VerticalPanel eventtypeMainPanel = new VerticalPanel();
+		eventtypeMainPanel.setSpacing(10);
+		
+		// Horizontal panel for attribute flextable and date flextable
+		HorizontalPanel horizontalDataPanel = new HorizontalPanel();
+
+		// Flextable for the eventtype main panel
+		FlexTable eventtypeMainFlexTable = new FlexTable();
+		
+		// Eventtype attribute panel
+		VerticalPanel eventtypeAttributePanel = new VerticalPanel();
+
+			// Defining wheter the event is an increment or decrement event
+			String eventsort = "Decrement";
+			String trimmedEventTypeName = etdto.getName().substring(etdto.getName().indexOf("_")+1);
+			if(etdto.getIsIncrement()){
+				eventsort = "Increment";
+			}
+			
+			// Label for general Eventtypedefinitiontitle
+			Label eventDescriptionLabel = new Label(eventsort + " event: " + trimmedEventTypeName);
+
+			// Flextable for eventtypename and additional attributes
+			FlexTable eventtypeAttributeFlexTable = new FlexTable();
+			
+			// Eventname label
+			Label eventtypeNameLabel = new Label("Eventname:");
+			TextBox eventtypeActualNametextBox = new TextBox();
+			eventtypeActualNametextBox.setText(etdto.getName());
+			eventtypeActualNametextBox.setReadOnly(true);
+			eventtypeActualNametextBox.setVisibleLength(etdto.getName().length());
+			
+			// adding event name labels to the flextable
+			eventtypeAttributeFlexTable.setWidget(0, 0, eventtypeNameLabel);
+			eventtypeAttributeFlexTable.setWidget(0, 1, eventtypeActualNametextBox);
+			
+			// Generation of labels and textboxes for additional attributes of events
+			Map<String,TextBox> attributeLabelMap = new HashMap<String,TextBox>();
+			
+			for(AttributeDTO adto : etdto.getAttributes()){
+				Label attributenameLabel = new Label(adto.getName());
+				TextBox attributenameTextBox = new TextBox();
+				int row = eventtypeAttributeFlexTable.getRowCount();
+				eventtypeAttributeFlexTable.setWidget(row, 0, attributenameLabel);
+				eventtypeAttributeFlexTable.setWidget(row, 1, attributenameTextBox);
+				
+				// adding entries to eventAttributeMap that stores all additional eventtype attributes
+				attributeLabelMap.put(adto.getId(),attributenameTextBox);
+			}
+			
+			eventAttributeMap.put(etdto.getId(), attributeLabelMap);
+			
+			// adding the flextable to the eventtypeAttributePanel
+			eventtypeAttributePanel.add(eventtypeAttributeFlexTable);
+		
+		// Eventtype startdate panel
+		VerticalPanel eventtypeStartdatePanel = new VerticalPanel();
+		
+			Label eventtypeStartdateLabel = new Label("Startdate:");
+			
+		    DatePicker eventtypeStartdatePicker = new DatePicker();
+		    
+		    eventtypeStartdatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
+			    public void onValueChange(ValueChangeEvent<Date> event) {
+			        Date date = event.getValue();
+			        //String dateString = DateTimeFormat.getMediumDateFormat().format(date);
+			        starteventdate = date;
+			    }
+			});
+	
+			// Set the default value for the dualitytype datepicker
+			eventtypeStartdatePicker.setValue(new Date(), true);
+			
+			eventtypeStartdatePanel.add(eventtypeStartdateLabel);
+			eventtypeStartdatePanel.add(eventtypeStartdatePicker);
+		
+		// Eventtype enddate panel
+		VerticalPanel eventtypeEnddatePanel = new VerticalPanel();
+		
+			Label eventtypeEnddateLabel = new Label("Enddate:");
+			
+			DatePicker eventtypeEnddatePicker = new DatePicker();
+			
+			eventtypeEnddatePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
+			    public void onValueChange(ValueChangeEvent<Date> event) {
+			        Date date = event.getValue();
+			        //String dateString = DateTimeFormat.getMediumDateFormat().format(date);
+			        endeventdate = date;
+			    }
+			});
+	
+			// Set the default value for the dualitytype datepicker
+			eventtypeEnddatePicker.setValue(new Date(), true);
+			
+			eventtypeEnddatePanel.add(eventtypeEnddateLabel);
+			eventtypeEnddatePanel.add(eventtypeEnddatePicker);
+
+		// Event save button
+		Button eventtypeSaveButton = new Button("Save");
+						
+		eventtypeSaveButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				//Window.alert("Saving eventtype " + currentEventtype.getName() );
+				saveDuality(currentDualityType);
+			}
+		});	
+			
+		// adding the eventtypedefinition label to the mainpanel
+		eventtypeMainPanel.add(eventDescriptionLabel);
+
+		eventtypeMainFlexTable.setWidget(0, 0, eventtypeStartdatePanel);
+		eventtypeMainFlexTable.setWidget(0, 1, eventtypeEnddatePanel);
+		
+		horizontalDataPanel.add(eventtypeAttributePanel);
+		horizontalDataPanel.add(eventtypeMainFlexTable);
+		
+		eventtypeMainPanel.add(horizontalDataPanel);
+		eventtypeMainPanel.add(eventtypeSaveButton);
+		
+		// create an eventDTO object that will be saved to the DB
+		EventDTO eventdto = new EventDTO();
+		eventdto.setEventtype(etdto);
+		eventdto.setDateEnd(endeventdate);
+		eventdto.setDateStart(starteventdate);
+		
+		// add the eventDTO to the list of eventdtos that should be saved
+		saveEventDTOList.add(eventdto);
+		
+		return eventtypeMainPanel;
+			
+	}
+	
+	/**
+	 * Saving the specified duality to the database
+	 */
+	private void saveDuality(DualitytypeDTO currentDualityType){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+
+	    // Set up the callback object.
+	    AsyncCallback<DualityDTO> callback = new AsyncCallback<DualityDTO>() {
+	      public void onFailure(Throwable caught) {
+	        // TODO: Do something with errors.
+	    	  System.err.println("Error when making READB Service RPC");
+	    	  caught.printStackTrace();
+	      }
+
+	      public void onSuccess(DualityDTO result) {
+	    	  
+	    	  for(EventDTO eventdto : saveEventDTOList){
+	    		  	eventdto.setDuality(result);
+	  	    		saveEvent(eventdto);
+	  	      }
+	    	  
+	      }
+	    };
+
+	    // create the DualityDTO object that should be saved in the database
+	    DualityDTO savedDuality = new DualityDTO();
+	    savedDuality.setDate(new Date());
+	    savedDuality.setDualitytype(currentDualityType);
+	    
+	    // Make the call to the stock price service.
+	    reaDBSvc.saveDuality(savedDuality,callback);
+
+	}
+	
+	/**
+	 * Saving the included events to the database
+	 */
+	private void saveEvent(EventDTO savedEventdto){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+
+	    // Set up the callback object.
+	    AsyncCallback<EventDTO> callback = new AsyncCallback<EventDTO>() {
+	      public void onFailure(Throwable caught) {
+	        // TODO: Do something with errors.
+	    	  System.err.println("Error when making READB Service RPC");
+	    	  caught.printStackTrace();
+	      }
+
+	      public void onSuccess(EventDTO result) {
+	    	  
+	    	  Window.alert("Event " + result.getEventtype().getId() + " has been saved to the DB with id " + result.getId());
+	    	  
+	    	  // TODO: Hier mit dem EventDTO object (samt ID aus DB entry) weiterarbeiten 
+	    	  //und event_hasadditionalattributevalues entries erzeugen
+	    	  // Es wird eine Hashmap folgender Form benötigt Map<String, Map<String,TextBox>>
+	    	  /**
+	    	  Map<String,TextBox> retrievedMap = eventAttributeMap.get(result.getEventtype().getId());
+	    	  for(AttributeDTO adto : result.getEventtype().getAttributes()){
+	    		  
+	    		  String attributeLabelText = retrievedMap.get(adto.getId()).getText();
+	    		  EventHasAdditionalattributevalueDTO attrvalue = new EventHasAdditionalattributevalueDTO();
+	    		  attrvalue.setAttribute(adto);
+	    		  attrvalue.setEvent(result);
+	    		  attrvalue.setId(new EventHasAdditionalattributevalueIdDTO(result.getId(),adto.getId()));
+	    		  
+	    		  // depending on the datatype the labltext is set 
+	    		  if(adto.getDatatype().matches("INT") || adto.getDatatype().matches("DOUBLE")){
+	    			  attrvalue.setTextual(attributeLabelText);
+	    			  attrvalue.setBoolean_(false);
+	    			  attrvalue.setDatetime(new Date());
+	    			  attrvalue.setNumeric(1.);
+	    			  //attrvalue.setNumeric(Double.parseDouble(attributeLabelText));
+	    		  
+	    		  }else if(adto.getDatatype().matches("BOOLEAN")){
+	    			  attrvalue.setTextual(attributeLabelText);
+	    			  attrvalue.setBoolean_(false);
+	    			  attrvalue.setDatetime(new Date());
+	    			  attrvalue.setNumeric(1.);
+	    			  //attrvalue.setBoolean_(Boolean.parseBoolean(attributeLabelText));
+	    		  
+	    		  }else if(adto.getDatatype().matches("VARCHAR")){
+	    			  
+	    			  attrvalue.setTextual(attributeLabelText);
+	    			  attrvalue.setBoolean_(false);
+	    			  attrvalue.setDatetime(new Date());
+	    			  attrvalue.setNumeric(1.);
+	    			  
+	    		  }else{
+	    			  attrvalue.setTextual(attributeLabelText);
+	    			  attrvalue.setBoolean_(false);
+	    			  attrvalue.setDatetime(new Date());
+	    			  attrvalue.setNumeric(1.);
+	    			 
+	    			  try {
+						attrvalue.setDatetime(formatter.parse(attributeLabelText));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	    			  
+	    		  }
+	      
+	    		  
+	    		  
+	    		  //saveAdditionalEventAttributes(attrvalue);
+	    	  }**/
+	      }
+	    };
+	    
+	    // Make the call to the stock price service.
+	    reaDBSvc.saveEvent(savedEventdto, callback);
+	}
+	
+	
+	private void saveAdditionalEventAttributes(EventHasAdditionalattributevalueDTO attrvalue){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+
+	    // Set up the callback object.
+	    AsyncCallback<EventHasAdditionalattributevalueDTO> callback = new AsyncCallback<EventHasAdditionalattributevalueDTO>() {
+	      public void onFailure(Throwable caught) {
+	        // TODO: Do something with errors.
+	    	  System.err.println("Error when making READB Service RPC");
+	    	  caught.printStackTrace();
+	      }
+
+	      public void onSuccess(EventHasAdditionalattributevalueDTO result) {
+	    	  
+	    	  Window.alert("Additional attributes for " + result.getId().getEventId() + " saved");
+	    	  
+	      }
+	    };
+	    
+	    // Make the call to the stock price service.
+	    reaDBSvc.saveEventHasAdditionalattributevalue(attrvalue, callback);
 	}
 
   

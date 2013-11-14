@@ -27,6 +27,7 @@ public class DualitytypeDAOTest {
 	@Test
 	public void testGetDualitytypeList() {
 		
+		// TODO: Testen für konkrete REA-DSL Modelle
 		assertNotNull(dualitytypehandler.getDualitytypeList());
 	}
 

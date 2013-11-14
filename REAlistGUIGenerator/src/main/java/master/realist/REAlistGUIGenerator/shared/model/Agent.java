@@ -1,12 +1,14 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 5, 2013 2:01:09 PM by Hibernate Tools 4.0.0
+// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,7 +23,7 @@ import javax.persistence.Table;
 @Table(name = "agent", catalog = "rea")
 public class Agent implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private String name;
 	private Set<Event> events = new HashSet<Event>(0);
 	private Set<Proposal> proposals = new HashSet<Proposal>(0);
@@ -49,13 +51,8 @@ public class Agent implements java.io.Serializable {
 	public Agent() {
 	}
 
-	public Agent(int id) {
-		this.id = id;
-	}
-
-	public Agent(int id, String name, Set<Event> events,
-			Set<Proposal> proposals, Set<Contract> contracts,
-			Set<Claim> claimsForSettleAgentId,
+	public Agent(String name, Set<Event> events, Set<Proposal> proposals,
+			Set<Contract> contracts, Set<Claim> claimsForSettleAgentId,
 			Set<Claim> claimsForMaterializeAgentId,
 			Set<Commitment> commitmentsForProvideAgentId,
 			Set<Commitment> commitmentsForReceiveAgentId,
@@ -68,7 +65,6 @@ public class Agent implements java.io.Serializable {
 			Set<Locationofagent> locationofagents,
 			Set<Event> eventsForReceiveAgentId,
 			Set<Event> eventsForProvideAgentId) {
-		this.id = id;
 		this.name = name;
 		this.events = events;
 		this.proposals = proposals;
@@ -92,12 +88,13 @@ public class Agent implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
