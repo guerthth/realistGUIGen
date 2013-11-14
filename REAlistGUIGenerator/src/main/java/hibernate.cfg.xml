@@ -43,6 +43,8 @@
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Dualitystatus"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Dualitytype"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Event"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventHasAdditionalattributevalue"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventHasAdditionalattributevalueId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventHasLocation"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventHasLocationId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventMaterializesClaim"></mapping>
