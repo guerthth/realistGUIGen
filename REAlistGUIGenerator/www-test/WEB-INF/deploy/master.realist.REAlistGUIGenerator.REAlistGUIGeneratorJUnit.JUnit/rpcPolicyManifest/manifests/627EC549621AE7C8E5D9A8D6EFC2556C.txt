@@ -1,0 +1,2 @@
+serviceClass: master.realist.REAlistGUIGenerator.client.READBService
+path: 16C88EB526D355CB8518E3A0338364AF.gwt.rpc

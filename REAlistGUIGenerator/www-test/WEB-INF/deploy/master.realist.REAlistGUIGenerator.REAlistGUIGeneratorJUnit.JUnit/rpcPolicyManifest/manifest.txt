@@ -1,0 +1,2 @@
+# Module master.realist.REAlistGUIGenerator.REAlistGUIGeneratorJUnit.JUnit
+# RPC service class, partial path of RPC policy file
