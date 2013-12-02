@@ -50,24 +50,23 @@ public class DualitytypeDAO {
 							Hibernate.initialize(ethaa.getAttribute());
 						}
 					}
+					
+					// Adding created dualitytypeDTOs to the List that is returned
+					dualitytypeDTOlist.add(createDualitytypeDTO(dt));
 				}
 			}
 			
-			session.beginTransaction().commit();
+			session.getTransaction().commit();
 		}catch(Exception e){
+			e.printStackTrace();	
+			if(session != null){session.getTransaction().rollback();}
 			
-			if(session != null) {session.close();}	
-		}
-		
-		// Adding created dualitytypeDTOs to the List that is returned
-		if(existingDualitytypes != null){
-			
-			for(Dualitytype dt : existingDualitytypes){
-
-				dualitytypeDTOlist.add(createDualitytypeDTO(dt));
+		} finally {
+			if(session != null) {
+				session.close();
 			}
 		}
-		
+
 		return dualitytypeDTOlist;
 	}
 

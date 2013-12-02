@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
 import java.util.HashSet;
@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -25,7 +27,7 @@ import javax.persistence.TemporalType;
 @Table(name = "contract", catalog = "rea")
 public class Contract implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private Agent agentByInternalAgentId;
 	private Agent agentByExternalAgentId;
 	private Contractstatus contractstatus;
@@ -39,22 +41,18 @@ public class Contract implements java.io.Serializable {
 	public Contract() {
 	}
 
-	public Contract(int id, Agent agentByInternalAgentId,
-			Agent agentByExternalAgentId, Contractstatus contractstatus,
-			Contracttype contracttype) {
-		this.id = id;
+	public Contract(Agent agentByInternalAgentId, Agent agentByExternalAgentId,
+			Contractstatus contractstatus, Contracttype contracttype) {
 		this.agentByInternalAgentId = agentByInternalAgentId;
 		this.agentByExternalAgentId = agentByExternalAgentId;
 		this.contractstatus = contractstatus;
 		this.contracttype = contracttype;
 	}
 
-	public Contract(int id, Agent agentByInternalAgentId,
-			Agent agentByExternalAgentId, Contractstatus contractstatus,
-			Contracttype contracttype, Date date, Set<Agent> agents,
-			Set<Commitment> commitments, Set<Negotiation> negotiations,
-			Set<Duality> dualities) {
-		this.id = id;
+	public Contract(Agent agentByInternalAgentId, Agent agentByExternalAgentId,
+			Contractstatus contractstatus, Contracttype contracttype,
+			Date date, Set<Agent> agents, Set<Commitment> commitments,
+			Set<Negotiation> negotiations, Set<Duality> dualities) {
 		this.agentByInternalAgentId = agentByInternalAgentId;
 		this.agentByExternalAgentId = agentByExternalAgentId;
 		this.contractstatus = contractstatus;
@@ -67,12 +65,13 @@ public class Contract implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

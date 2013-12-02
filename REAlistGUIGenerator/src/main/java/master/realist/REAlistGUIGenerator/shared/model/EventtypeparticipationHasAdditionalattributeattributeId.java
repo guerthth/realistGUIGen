@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -12,29 +12,28 @@ import javax.persistence.Embeddable;
 public class EventtypeparticipationHasAdditionalattributeattributeId implements
 		java.io.Serializable {
 
-	private String eventTypeParticipationEventTypeId;
-	private String eventTypeParticipationAgentTypeId;
 	private String attributeId;
+	private String eventTypeParticipationAgentTypeId;
+	private String eventTypeParticipationEventTypeId;
 
 	public EventtypeparticipationHasAdditionalattributeattributeId() {
 	}
 
 	public EventtypeparticipationHasAdditionalattributeattributeId(
-			String eventTypeParticipationEventTypeId,
-			String eventTypeParticipationAgentTypeId, String attributeId) {
-		this.eventTypeParticipationEventTypeId = eventTypeParticipationEventTypeId;
-		this.eventTypeParticipationAgentTypeId = eventTypeParticipationAgentTypeId;
-		this.attributeId = attributeId;
-	}
-
-	@Column(name = "EventTypeParticipation_EventType_Id", nullable = false, length = 150)
-	public String getEventTypeParticipationEventTypeId() {
-		return this.eventTypeParticipationEventTypeId;
-	}
-
-	public void setEventTypeParticipationEventTypeId(
+			String attributeId, String eventTypeParticipationAgentTypeId,
 			String eventTypeParticipationEventTypeId) {
+		this.attributeId = attributeId;
+		this.eventTypeParticipationAgentTypeId = eventTypeParticipationAgentTypeId;
 		this.eventTypeParticipationEventTypeId = eventTypeParticipationEventTypeId;
+	}
+
+	@Column(name = "Attribute_Id", nullable = false, length = 150)
+	public String getAttributeId() {
+		return this.attributeId;
+	}
+
+	public void setAttributeId(String attributeId) {
+		this.attributeId = attributeId;
 	}
 
 	@Column(name = "EventTypeParticipation_AgentType_Id", nullable = false, length = 150)
@@ -47,13 +46,14 @@ public class EventtypeparticipationHasAdditionalattributeattributeId implements
 		this.eventTypeParticipationAgentTypeId = eventTypeParticipationAgentTypeId;
 	}
 
-	@Column(name = "Attribute_Id", nullable = false, length = 150)
-	public String getAttributeId() {
-		return this.attributeId;
+	@Column(name = "EventTypeParticipation_EventType_Id", nullable = false, length = 150)
+	public String getEventTypeParticipationEventTypeId() {
+		return this.eventTypeParticipationEventTypeId;
 	}
 
-	public void setAttributeId(String attributeId) {
-		this.attributeId = attributeId;
+	public void setEventTypeParticipationEventTypeId(
+			String eventTypeParticipationEventTypeId) {
+		this.eventTypeParticipationEventTypeId = eventTypeParticipationEventTypeId;
 	}
 
 	public boolean equals(Object other) {
@@ -65,12 +65,9 @@ public class EventtypeparticipationHasAdditionalattributeattributeId implements
 			return false;
 		EventtypeparticipationHasAdditionalattributeattributeId castOther = (EventtypeparticipationHasAdditionalattributeattributeId) other;
 
-		return ((this.getEventTypeParticipationEventTypeId() == castOther
-				.getEventTypeParticipationEventTypeId()) || (this
-				.getEventTypeParticipationEventTypeId() != null
-				&& castOther.getEventTypeParticipationEventTypeId() != null && this
-				.getEventTypeParticipationEventTypeId().equals(
-						castOther.getEventTypeParticipationEventTypeId())))
+		return ((this.getAttributeId() == castOther.getAttributeId()) || (this
+				.getAttributeId() != null && castOther.getAttributeId() != null && this
+				.getAttributeId().equals(castOther.getAttributeId())))
 				&& ((this.getEventTypeParticipationAgentTypeId() == castOther
 						.getEventTypeParticipationAgentTypeId()) || (this
 						.getEventTypeParticipationAgentTypeId() != null
@@ -78,10 +75,13 @@ public class EventtypeparticipationHasAdditionalattributeattributeId implements
 						.getEventTypeParticipationAgentTypeId()
 						.equals(castOther
 								.getEventTypeParticipationAgentTypeId())))
-				&& ((this.getAttributeId() == castOther.getAttributeId()) || (this
-						.getAttributeId() != null
-						&& castOther.getAttributeId() != null && this
-						.getAttributeId().equals(castOther.getAttributeId())));
+				&& ((this.getEventTypeParticipationEventTypeId() == castOther
+						.getEventTypeParticipationEventTypeId()) || (this
+						.getEventTypeParticipationEventTypeId() != null
+						&& castOther.getEventTypeParticipationEventTypeId() != null && this
+						.getEventTypeParticipationEventTypeId()
+						.equals(castOther
+								.getEventTypeParticipationEventTypeId())));
 	}
 
 	public int hashCode() {
@@ -89,16 +89,16 @@ public class EventtypeparticipationHasAdditionalattributeattributeId implements
 
 		result = 37
 				* result
-				+ (getEventTypeParticipationEventTypeId() == null ? 0 : this
-						.getEventTypeParticipationEventTypeId().hashCode());
+				+ (getAttributeId() == null ? 0 : this.getAttributeId()
+						.hashCode());
 		result = 37
 				* result
 				+ (getEventTypeParticipationAgentTypeId() == null ? 0 : this
 						.getEventTypeParticipationAgentTypeId().hashCode());
 		result = 37
 				* result
-				+ (getAttributeId() == null ? 0 : this.getAttributeId()
-						.hashCode());
+				+ (getEventTypeParticipationEventTypeId() == null ? 0 : this
+						.getEventTypeParticipationEventTypeId().hashCode());
 		return result;
 	}
 

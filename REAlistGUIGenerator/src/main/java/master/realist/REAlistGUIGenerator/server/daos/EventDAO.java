@@ -39,8 +39,10 @@ public class EventDAO {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+			if(session != null){session.getTransaction().rollback();}
+			
+		} finally {
 			if(session != null) {
-				session.getTransaction().rollback();
 				session.close();
 			}	
 		}

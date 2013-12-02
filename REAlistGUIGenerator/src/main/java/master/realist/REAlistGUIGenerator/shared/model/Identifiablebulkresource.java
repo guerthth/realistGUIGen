@@ -1,12 +1,14 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,7 +23,7 @@ import javax.persistence.Table;
 @Table(name = "identifiablebulkresource", catalog = "rea")
 public class Identifiablebulkresource implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private Resource resource;
 	private String serialNumber;
 	private Boolean isOnStock;
@@ -32,15 +34,13 @@ public class Identifiablebulkresource implements java.io.Serializable {
 	public Identifiablebulkresource() {
 	}
 
-	public Identifiablebulkresource(int id, Resource resource) {
-		this.id = id;
+	public Identifiablebulkresource(Resource resource) {
 		this.resource = resource;
 	}
 
-	public Identifiablebulkresource(int id, Resource resource,
-			String serialNumber, Boolean isOnStock, Set<Stockflow> stockflows,
+	public Identifiablebulkresource(Resource resource, String serialNumber,
+			Boolean isOnStock, Set<Stockflow> stockflows,
 			Set<Attribute> attributes, Set<Location> locations) {
-		this.id = id;
 		this.resource = resource;
 		this.serialNumber = serialNumber;
 		this.isOnStock = isOnStock;
@@ -50,12 +50,13 @@ public class Identifiablebulkresource implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

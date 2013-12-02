@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
 import java.util.HashSet;
@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -25,7 +27,7 @@ import javax.persistence.TemporalType;
 @Table(name = "commitment", catalog = "rea")
 public class Commitment implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private Eventtype eventtype;
 	private Currency currency;
 	private Agent agentByProvideAgentId;
@@ -39,6 +41,7 @@ public class Commitment implements java.io.Serializable {
 	private Date dateEndExpected;
 	private Set<Fulfills> fulfillses = new HashSet<Fulfills>(0);
 	private Set<Stockflow> stockflows = new HashSet<Stockflow>(0);
+	private Set<Participation> participations = new HashSet<Participation>(0);
 	private Set<CommitmentHasLocation> commitmentHasLocations = new HashSet<CommitmentHasLocation>(
 			0);
 	private Set<Proposal> proposals = new HashSet<Proposal>(0);
@@ -49,13 +52,11 @@ public class Commitment implements java.io.Serializable {
 	public Commitment() {
 	}
 
-	public Commitment(int id, Eventtype eventtype) {
-		this.id = id;
+	public Commitment(Eventtype eventtype) {
 		this.eventtype = eventtype;
 	}
 
 	public Commitment(
-			int id,
 			Eventtype eventtype,
 			Currency currency,
 			Agent agentByProvideAgentId,
@@ -69,11 +70,11 @@ public class Commitment implements java.io.Serializable {
 			Date dateEndExpected,
 			Set<Fulfills> fulfillses,
 			Set<Stockflow> stockflows,
+			Set<Participation> participations,
 			Set<CommitmentHasLocation> commitmentHasLocations,
 			Set<Proposal> proposals,
 			Set<CommitmentParticipationSpecification> commitmentParticipationSpecifications,
 			Set<Agent> agents) {
-		this.id = id;
 		this.eventtype = eventtype;
 		this.currency = currency;
 		this.agentByProvideAgentId = agentByProvideAgentId;
@@ -87,6 +88,7 @@ public class Commitment implements java.io.Serializable {
 		this.dateEndExpected = dateEndExpected;
 		this.fulfillses = fulfillses;
 		this.stockflows = stockflows;
+		this.participations = participations;
 		this.commitmentHasLocations = commitmentHasLocations;
 		this.proposals = proposals;
 		this.commitmentParticipationSpecifications = commitmentParticipationSpecifications;
@@ -94,12 +96,13 @@ public class Commitment implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -227,6 +230,16 @@ public class Commitment implements java.io.Serializable {
 
 	public void setStockflows(Set<Stockflow> stockflows) {
 		this.stockflows = stockflows;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "commitment_has_participation", catalog = "rea", joinColumns = { @JoinColumn(name = "Commitment_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "Participation_Participation_id", nullable = false, updatable = false) })
+	public Set<Participation> getParticipations() {
+		return this.participations;
+	}
+
+	public void setParticipations(Set<Participation> participations) {
+		this.participations = participations;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "commitment")

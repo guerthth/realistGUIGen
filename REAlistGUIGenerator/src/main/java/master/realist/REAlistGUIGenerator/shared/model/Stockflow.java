@@ -1,17 +1,20 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -21,7 +24,7 @@ import javax.persistence.Table;
 @Table(name = "stockflow", catalog = "rea")
 public class Stockflow implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private Currency currency;
 	private Resource resource;
 	private Tax tax;
@@ -37,25 +40,32 @@ public class Stockflow implements java.io.Serializable {
 	private Set<Identifiablebulkresource> identifiablebulkresources = new HashSet<Identifiablebulkresource>(
 			0);
 	private Set<Event> events = new HashSet<Event>(0);
+	private Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues = new HashSet<StockflowHasAdditionalattributevalue>(
+			0);
 
 	public Stockflow() {
 	}
 
-	public Stockflow(int id, Resource resource, double quantity) {
-		this.id = id;
+	public Stockflow(Resource resource, double quantity) {
 		this.resource = resource;
 		this.quantity = quantity;
 	}
 
-	public Stockflow(int id, Currency currency, Resource resource, Tax tax,
-			double quantity, Double pricePerUnit, Double totalValue,
-			Double totalValueNetto, Set<Claim> claims,
+	public Stockflow(
+			Currency currency,
+			Resource resource,
+			Tax tax,
+			double quantity,
+			Double pricePerUnit,
+			Double totalValue,
+			Double totalValueNetto,
+			Set<Claim> claims,
 			Set<Commitment> commitments,
 			Set<Discountoraddition> discountoradditions,
 			Set<Location> locations,
 			Set<Identifiablebulkresource> identifiablebulkresources,
-			Set<Event> events) {
-		this.id = id;
+			Set<Event> events,
+			Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues) {
 		this.currency = currency;
 		this.resource = resource;
 		this.tax = tax;
@@ -69,15 +79,17 @@ public class Stockflow implements java.io.Serializable {
 		this.locations = locations;
 		this.identifiablebulkresources = identifiablebulkresources;
 		this.events = events;
+		this.stockflowHasAdditionalattributevalues = stockflowHasAdditionalattributevalues;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -207,6 +219,16 @@ public class Stockflow implements java.io.Serializable {
 
 	public void setEvents(Set<Event> events) {
 		this.events = events;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "stockflow")
+	public Set<StockflowHasAdditionalattributevalue> getStockflowHasAdditionalattributevalues() {
+		return this.stockflowHasAdditionalattributevalues;
+	}
+
+	public void setStockflowHasAdditionalattributevalues(
+			Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues) {
+		this.stockflowHasAdditionalattributevalues = stockflowHasAdditionalattributevalues;
 	}
 
 }

@@ -1,12 +1,14 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -23,7 +25,7 @@ import javax.persistence.Table;
 @Table(name = "resource", catalog = "rea")
 public class Resource implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private Resourcetype resourcetype;
 	private String name;
 	private Boolean isBulk;
@@ -55,13 +57,11 @@ public class Resource implements java.io.Serializable {
 	public Resource() {
 	}
 
-	public Resource(int id, Resourcetype resourcetype) {
-		this.id = id;
+	public Resource(Resourcetype resourcetype) {
 		this.resourcetype = resourcetype;
 	}
 
 	public Resource(
-			int id,
 			Resourcetype resourcetype,
 			String name,
 			Boolean isBulk,
@@ -80,7 +80,6 @@ public class Resource implements java.io.Serializable {
 			Producttype producttype, Cashtype cashtype,
 			Set<Pricepolicy> pricepolicies, Set<Agent> agents,
 			Discountoraddition discountoraddition) {
-		this.id = id;
 		this.resourcetype = resourcetype;
 		this.name = name;
 		this.isBulk = isBulk;
@@ -106,12 +105,13 @@ public class Resource implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "Id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

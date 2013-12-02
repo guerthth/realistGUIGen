@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +29,17 @@ public class Attribute implements java.io.Serializable {
 	private String datatype;
 	private Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues = new HashSet<EventHasAdditionalattributevalue>(
 			0);
+	private Set<AgentHasAdditionalattributevalue> agentHasAdditionalattributevalues = new HashSet<AgentHasAdditionalattributevalue>(
+			0);
 	private Set<ResourcetypeHasAdditionalattribute> resourcetypeHasAdditionalattributes = new HashSet<ResourcetypeHasAdditionalattribute>(
 			0);
 	private Set<EventtypestockflowHasAdditionalattribute> eventtypestockflowHasAdditionalattributes = new HashSet<EventtypestockflowHasAdditionalattribute>(
+			0);
+	private Set<EventtypeparticipationHasAdditionalattribute> eventtypeparticipationHasAdditionalattributes = new HashSet<EventtypeparticipationHasAdditionalattribute>(
+			0);
+	private Set<ParticipationHasAdditionalattributevalue> participationHasAdditionalattributevalues = new HashSet<ParticipationHasAdditionalattributevalue>(
+			0);
+	private Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues = new HashSet<StockflowHasAdditionalattributevalue>(
 			0);
 	private Set<EventtypeparticipationHasAdditionalattributeattribute> eventtypeparticipationHasAdditionalattributeattributes = new HashSet<EventtypeparticipationHasAdditionalattributeattribute>(
 			0);
@@ -43,16 +51,16 @@ public class Attribute implements java.io.Serializable {
 			0);
 	private Set<EventtypeHasAdditionalattribute> eventtypeHasAdditionalattributes = new HashSet<EventtypeHasAdditionalattribute>(
 			0);
-
+	
 	/**
-	 * Added constructor to convert a attributedto object to an attribute object
+	 * Added constructor to convert a dualitydto object to a duality object
 	 * Needed to save in the DB
-	 * @param attrdto
+	 * @param dualityDTO
 	 */
-	public Attribute(AttributeDTO attrdto){
-		this.id = attrdto.getId();
-		this.name = attrdto.getName();
-		this.datatype = attrdto.getDatatype();
+	public Attribute(AttributeDTO attributeDTO){
+		this.id = attributeDTO.getId();
+		this.name = attributeDTO.getName();
+		this.datatype = attributeDTO.getDatatype();
 	}
 	
 	public Attribute() {
@@ -67,8 +75,12 @@ public class Attribute implements java.io.Serializable {
 			String name,
 			String datatype,
 			Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues,
+			Set<AgentHasAdditionalattributevalue> agentHasAdditionalattributevalues,
 			Set<ResourcetypeHasAdditionalattribute> resourcetypeHasAdditionalattributes,
 			Set<EventtypestockflowHasAdditionalattribute> eventtypestockflowHasAdditionalattributes,
+			Set<EventtypeparticipationHasAdditionalattribute> eventtypeparticipationHasAdditionalattributes,
+			Set<ParticipationHasAdditionalattributevalue> participationHasAdditionalattributevalues,
+			Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues,
 			Set<EventtypeparticipationHasAdditionalattributeattribute> eventtypeparticipationHasAdditionalattributeattributes,
 			Set<ResourceHasAdditionalattributevalue> resourceHasAdditionalattributevalues,
 			Set<Identifiablebulkresource> identifiablebulkresources,
@@ -78,8 +90,12 @@ public class Attribute implements java.io.Serializable {
 		this.name = name;
 		this.datatype = datatype;
 		this.eventHasAdditionalattributevalues = eventHasAdditionalattributevalues;
+		this.agentHasAdditionalattributevalues = agentHasAdditionalattributevalues;
 		this.resourcetypeHasAdditionalattributes = resourcetypeHasAdditionalattributes;
 		this.eventtypestockflowHasAdditionalattributes = eventtypestockflowHasAdditionalattributes;
+		this.eventtypeparticipationHasAdditionalattributes = eventtypeparticipationHasAdditionalattributes;
+		this.participationHasAdditionalattributevalues = participationHasAdditionalattributevalues;
+		this.stockflowHasAdditionalattributevalues = stockflowHasAdditionalattributevalues;
 		this.eventtypeparticipationHasAdditionalattributeattributes = eventtypeparticipationHasAdditionalattributeattributes;
 		this.resourceHasAdditionalattributevalues = resourceHasAdditionalattributevalues;
 		this.identifiablebulkresources = identifiablebulkresources;
@@ -126,6 +142,16 @@ public class Attribute implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	public Set<AgentHasAdditionalattributevalue> getAgentHasAdditionalattributevalues() {
+		return this.agentHasAdditionalattributevalues;
+	}
+
+	public void setAgentHasAdditionalattributevalues(
+			Set<AgentHasAdditionalattributevalue> agentHasAdditionalattributevalues) {
+		this.agentHasAdditionalattributevalues = agentHasAdditionalattributevalues;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
 	public Set<ResourcetypeHasAdditionalattribute> getResourcetypeHasAdditionalattributes() {
 		return this.resourcetypeHasAdditionalattributes;
 	}
@@ -143,6 +169,36 @@ public class Attribute implements java.io.Serializable {
 	public void setEventtypestockflowHasAdditionalattributes(
 			Set<EventtypestockflowHasAdditionalattribute> eventtypestockflowHasAdditionalattributes) {
 		this.eventtypestockflowHasAdditionalattributes = eventtypestockflowHasAdditionalattributes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	public Set<EventtypeparticipationHasAdditionalattribute> getEventtypeparticipationHasAdditionalattributes() {
+		return this.eventtypeparticipationHasAdditionalattributes;
+	}
+
+	public void setEventtypeparticipationHasAdditionalattributes(
+			Set<EventtypeparticipationHasAdditionalattribute> eventtypeparticipationHasAdditionalattributes) {
+		this.eventtypeparticipationHasAdditionalattributes = eventtypeparticipationHasAdditionalattributes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	public Set<ParticipationHasAdditionalattributevalue> getParticipationHasAdditionalattributevalues() {
+		return this.participationHasAdditionalattributevalues;
+	}
+
+	public void setParticipationHasAdditionalattributevalues(
+			Set<ParticipationHasAdditionalattributevalue> participationHasAdditionalattributevalues) {
+		this.participationHasAdditionalattributevalues = participationHasAdditionalattributevalues;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	public Set<StockflowHasAdditionalattributevalue> getStockflowHasAdditionalattributevalues() {
+		return this.stockflowHasAdditionalattributevalues;
+	}
+
+	public void setStockflowHasAdditionalattributevalues(
+			Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues) {
+		this.stockflowHasAdditionalattributevalues = stockflowHasAdditionalattributevalues;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")

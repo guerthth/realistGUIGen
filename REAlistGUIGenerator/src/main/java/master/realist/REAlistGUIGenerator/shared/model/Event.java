@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
 import java.util.HashSet;
@@ -58,7 +58,8 @@ public class Event implements java.io.Serializable {
 			0);
 	private Set<Reconciliation> reconciliationsForIncEventId = new HashSet<Reconciliation>(
 			0);
-	
+	private Set<Participation> participations = new HashSet<Participation>(0);
+
 	/**
 	 * Added constructor to convert a eventdto object to an event object
 	 * Needed to save in the DB
@@ -100,7 +101,8 @@ public class Event implements java.io.Serializable {
 			Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues,
 			Set<Reconciliation> reconciliationsForDecEventId,
 			Set<EventSettlesClaim> eventSettlesClaims,
-			Set<Reconciliation> reconciliationsForIncEventId) {
+			Set<Reconciliation> reconciliationsForIncEventId,
+			Set<Participation> participations) {
 		this.eventtype = eventtype;
 		this.currency = currency;
 		this.agentByProvideAgentId = agentByProvideAgentId;
@@ -120,6 +122,7 @@ public class Event implements java.io.Serializable {
 		this.reconciliationsForDecEventId = reconciliationsForDecEventId;
 		this.eventSettlesClaims = eventSettlesClaims;
 		this.reconciliationsForIncEventId = reconciliationsForIncEventId;
+		this.participations = participations;
 	}
 
 	@Id
@@ -315,6 +318,16 @@ public class Event implements java.io.Serializable {
 	public void setReconciliationsForIncEventId(
 			Set<Reconciliation> reconciliationsForIncEventId) {
 		this.reconciliationsForIncEventId = reconciliationsForIncEventId;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "event_has_participation", catalog = "rea", joinColumns = { @JoinColumn(name = "Event_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "Participation_Participation_id", nullable = false, updatable = false) })
+	public Set<Participation> getParticipations() {
+		return this.participations;
+	}
+
+	public void setParticipations(Set<Participation> participations) {
+		this.participations = participations;
 	}
 
 }

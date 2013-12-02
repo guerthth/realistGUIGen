@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
@@ -44,7 +44,7 @@ public class Eventtype implements java.io.Serializable {
 			0);
 	private Set<Dualitytype> dualitytypes = new HashSet<Dualitytype>(0);
 	private Set<Eventtype> eventtypes = new HashSet<Eventtype>(0);
-	
+
 	/**
 	 * Added constructor to convert a eventtypedto object to an eventtype object
 	 * Needed to save in the DB

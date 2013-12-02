@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
 
@@ -32,7 +32,7 @@ public class EventHasAdditionalattributevalue implements java.io.Serializable {
 	private String textual;
 	private Boolean boolean_;
 	private Date datetime;
-	
+
 	/**
 	 * Added constructor to convert a dualitydto object to a duality object
 	 * Needed to save in the DB

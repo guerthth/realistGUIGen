@@ -18,6 +18,8 @@
         
 		<!-- Naming the annotated entity classes -->
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Agent"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.AgentHasAdditionalattributevalue"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.AgentHasAdditionalattributevalueId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Agenttype"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.AgenttypeHasAdditionalattribute"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.AgenttypeHasAdditionalattributeId"></mapping>
@@ -54,6 +56,8 @@
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventtypeHasAdditionalattribute"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventtypeHasAdditionalattributeId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Eventtypeparticipation"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventtypeparticipationHasAdditionalattribute"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventtypeparticipationHasAdditionalattributeId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventtypeparticipationHasAdditionalattributeattribute"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventtypeparticipationHasAdditionalattributeattributeId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.EventtypeparticipationId"></mapping>
@@ -81,6 +85,9 @@
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Locationtype"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Negotiation"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Negotiationstatus"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.Participation"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.ParticipationHasAdditionalattributevalue"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.ParticipationHasAdditionalattributevalueId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Policy"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.PolicyOutcome"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Policytype"></mapping>
@@ -100,6 +107,8 @@
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.ResourcetypeHasAdditionalattributeId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Servicetype"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Stockflow"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.StockflowHasAdditionalattributevalue"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.StockflowHasAdditionalattributevalueId"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Tax"></mapping>
 	</session-factory>
     

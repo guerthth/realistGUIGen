@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -15,7 +15,7 @@ public class EventHasAdditionalattributevalueId implements java.io.Serializable 
 
 	private int eventId;
 	private String attributeId;
-	
+
 	/**
 	 * Added constructor to convert a EventHasAdditionalattributevalueIdDTO object to 
 	 * a EventHasAdditionalattributevalueId object

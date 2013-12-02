@@ -13,6 +13,18 @@
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>
     
+    <bean id="dualitystatusdao" class="master.realist.REAlistGUIGenerator.server.daos.DualityStatusDAO">
+    	<property name="hibernateUtil" ref="hibernateutil"></property>
+    </bean>
+    
+    <bean id="agentdao" class="master.realist.REAlistGUIGenerator.server.daos.AgentDAO">
+    	<property name="hibernateUtil" ref="hibernateutil"></property>
+    </bean>
+    
+    <bean id="agenttypedao" class="master.realist.REAlistGUIGenerator.server.daos.AgenttypeDAO">
+    	<property name="hibernateUtil" ref="hibernateutil"></property>
+    </bean>
+    
     <bean id="dualitydao" class="master.realist.REAlistGUIGenerator.server.daos.DualityDAO">
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>
@@ -24,6 +36,5 @@
     <bean id="eventHasAdditionalattributevalueDAO" class="master.realist.REAlistGUIGenerator.server.daos.EventHasAdditionalattributevalueDAO">
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>
-	
 	
 </beans>

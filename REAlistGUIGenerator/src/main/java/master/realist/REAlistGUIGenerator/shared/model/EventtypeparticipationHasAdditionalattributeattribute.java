@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -46,9 +46,9 @@ public class EventtypeparticipationHasAdditionalattributeattribute implements
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "eventTypeParticipationEventTypeId", column = @Column(name = "EventTypeParticipation_EventType_Id", nullable = false, length = 150)),
+			@AttributeOverride(name = "attributeId", column = @Column(name = "Attribute_Id", nullable = false, length = 150)),
 			@AttributeOverride(name = "eventTypeParticipationAgentTypeId", column = @Column(name = "EventTypeParticipation_AgentType_Id", nullable = false, length = 150)),
-			@AttributeOverride(name = "attributeId", column = @Column(name = "Attribute_Id", nullable = false, length = 150)) })
+			@AttributeOverride(name = "eventTypeParticipationEventTypeId", column = @Column(name = "EventTypeParticipation_EventType_Id", nullable = false, length = 150)) })
 	public EventtypeparticipationHasAdditionalattributeattributeId getId() {
 		return this.id;
 	}
@@ -59,8 +59,8 @@ public class EventtypeparticipationHasAdditionalattributeattribute implements
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({
-			@JoinColumn(name = "EventTypeParticipation_EventType_Id", referencedColumnName = "EventType_Id", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "EventTypeParticipation_AgentType_Id", referencedColumnName = "AgentType_Id", nullable = false, insertable = false, updatable = false) })
+			@JoinColumn(name = "EventTypeParticipation_AgentType_Id", referencedColumnName = "EventType_Id", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "EventTypeParticipation_EventType_Id", referencedColumnName = "AgentType_Id", nullable = false, insertable = false, updatable = false) })
 	public Eventtypeparticipation getEventtypeparticipation() {
 		return this.eventtypeparticipation;
 	}

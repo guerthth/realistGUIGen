@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Nov 12, 2013 8:47:49 PM by Hibernate Tools 4.0.0
+// Generated Nov 19, 2013 8:35:27 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +29,8 @@ public class Eventtypeparticipation implements java.io.Serializable {
 	private Boolean isIdentifiable;
 	private Set<EventtypeparticipationHasAdditionalattributeattribute> eventtypeparticipationHasAdditionalattributeattributes = new HashSet<EventtypeparticipationHasAdditionalattributeattribute>(
 			0);
+	private Set<EventtypeparticipationHasAdditionalattribute> eventtypeparticipationHasAdditionalattributes = new HashSet<EventtypeparticipationHasAdditionalattribute>(
+			0);
 
 	public Eventtypeparticipation() {
 	}
@@ -46,13 +48,15 @@ public class Eventtypeparticipation implements java.io.Serializable {
 			Agenttype agenttype,
 			Boolean isSeries,
 			Boolean isIdentifiable,
-			Set<EventtypeparticipationHasAdditionalattributeattribute> eventtypeparticipationHasAdditionalattributeattributes) {
+			Set<EventtypeparticipationHasAdditionalattributeattribute> eventtypeparticipationHasAdditionalattributeattributes,
+			Set<EventtypeparticipationHasAdditionalattribute> eventtypeparticipationHasAdditionalattributes) {
 		this.id = id;
 		this.eventtype = eventtype;
 		this.agenttype = agenttype;
 		this.isSeries = isSeries;
 		this.isIdentifiable = isIdentifiable;
 		this.eventtypeparticipationHasAdditionalattributeattributes = eventtypeparticipationHasAdditionalattributeattributes;
+		this.eventtypeparticipationHasAdditionalattributes = eventtypeparticipationHasAdditionalattributes;
 	}
 
 	@EmbeddedId
@@ -113,6 +117,16 @@ public class Eventtypeparticipation implements java.io.Serializable {
 	public void setEventtypeparticipationHasAdditionalattributeattributes(
 			Set<EventtypeparticipationHasAdditionalattributeattribute> eventtypeparticipationHasAdditionalattributeattributes) {
 		this.eventtypeparticipationHasAdditionalattributeattributes = eventtypeparticipationHasAdditionalattributeattributes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eventtypeparticipation")
+	public Set<EventtypeparticipationHasAdditionalattribute> getEventtypeparticipationHasAdditionalattributes() {
+		return this.eventtypeparticipationHasAdditionalattributes;
+	}
+
+	public void setEventtypeparticipationHasAdditionalattributes(
+			Set<EventtypeparticipationHasAdditionalattribute> eventtypeparticipationHasAdditionalattributes) {
+		this.eventtypeparticipationHasAdditionalattributes = eventtypeparticipationHasAdditionalattributes;
 	}
 
 }
