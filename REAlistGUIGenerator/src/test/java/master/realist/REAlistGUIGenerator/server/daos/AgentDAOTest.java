@@ -3,6 +3,7 @@ package master.realist.REAlistGUIGenerator.server.daos;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
@@ -18,6 +19,7 @@ public class AgentDAOTest {
 	
 	private static Set<AgenttypeDTO> agenttypes;
 	private static AgenttypeDTO agenttypeDTO;
+	private static AgenttypeDTO newagenttypeDTO;
 	private static AgentDTO agentDTO;
 	
 	/**
@@ -34,6 +36,12 @@ public class AgentDAOTest {
 		agenttypeDTO.setName("Customer");
 		agenttypeDTO.setParentAgenttypeId(null);
 		agenttypeDTO.setExternal(true);
+		
+		newagenttypeDTO = new AgenttypeDTO();
+		newagenttypeDTO.setId("Cashier");
+		newagenttypeDTO.setName("Cashier");
+		newagenttypeDTO.setParentAgenttypeId(null);
+		newagenttypeDTO.setExternal(true);
 		
 		agenttypes.add(agenttypeDTO);
 		
@@ -96,6 +104,41 @@ public class AgentDAOTest {
 		int newListSize = agenthandler.getAgentList().size();
 		
 		assertTrue(newListSize == listSize - 1);
+	}
+	
+	/**
+	 * Testing if the updateAgent method works as intended
+	 */
+	@Test
+	public void testUpdateAgent(){
+		
+		int agentCount = agenthandler.getAgentList().size();
+		
+		int addedId = agenthandler.saveAgent(agentDTO);
+		
+		agentDTO.setId(addedId);
+		agentDTO.setName("updated testagent");
+		
+		agenttypes.clear();
+		agenttypes.add(newagenttypeDTO);
+		agentDTO.setAgenttypes(agenttypes);
+		
+		agenthandler.updateAgent(agentDTO);
+		
+		List<AgentDTO> agentList = agenthandler.getAgentList();
+		int newagentCount = agentList.size();
+		
+		assertTrue(agentCount + 1 == newagentCount);
+		
+		assertTrue(agentList.get(agentList.size()-1).getId() == addedId);
+		assertTrue(agentList.get(agentList.size()-1).getName().equals("updated testagent"));
+		assertTrue(agentList.get(agentList.size()-1).getAgenttypes().iterator().next().getName().equals(newagenttypeDTO.getName()));
+		
+		agenthandler.deleteAgent(addedId);
+		agentList = agenthandler.getAgentList();
+		
+		assertTrue(agentList.size() == agentCount);
+		
 	}
 	
 }

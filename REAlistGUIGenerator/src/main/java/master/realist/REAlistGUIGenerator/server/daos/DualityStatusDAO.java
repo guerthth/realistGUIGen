@@ -129,6 +129,7 @@ public class DualityStatusDAO {
 	public DualityStatusDTO updateDualityStatus(DualityStatusDTO dualityStatusDTO){
 		
 		Session session = null;
+		DualityStatusDTO updatedDualityStatusDTO = null;
 		
 		try{
 			session = hibernateUtil.getSessionFactory().openSession();
@@ -137,6 +138,7 @@ public class DualityStatusDAO {
 			updateDualityStatus.setStatus(dualityStatusDTO.getStatus());
 			session.update(updateDualityStatus);
 			session.getTransaction().commit();
+			updatedDualityStatusDTO = dualityStatusDTO;
 			
 		} catch (Exception e){
 			e.printStackTrace();
@@ -145,7 +147,7 @@ public class DualityStatusDAO {
 			if(session != null){session.close();}
 		}
 		
-		return dualityStatusDTO;
+		return updatedDualityStatusDTO;
 	}
 	
 	/**

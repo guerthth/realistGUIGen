@@ -132,7 +132,8 @@ public class READBServiceImpl extends RemoteServiceServlet implements READBServi
 	 * @return updated agent object
 	 */
 	public AgentDTO updateAgent(AgentDTO agentDTO){
-		return null;
+		AgentDAO agenthandler = (AgentDAO) SpringUtil.context.getBean("agentdao");
+		return agenthandler.updateAgent(agentDTO);
 	}
 	
 	/**

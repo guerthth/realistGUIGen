@@ -1,6 +1,7 @@
 package master.realist.REAlistGUIGenerator.shared.dto;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import master.realist.REAlistGUIGenerator.shared.model.Agenttype;
 
@@ -20,6 +21,7 @@ public class AgenttypeDTO implements Serializable{
 	private AgenttypeDTO parentAgenttypeId;
 	private String name;
 	private boolean isExternal;
+	private Set<AttributeDTO> attributes;
 	
 	/**
 	 * Default Constructor
@@ -41,6 +43,7 @@ public class AgenttypeDTO implements Serializable{
 		if(agenttype.getAgenttype() != null){
 			this.parentAgenttypeId = new AgenttypeDTO(agenttype.getAgenttype());
 		}
+		
 	}
 
 	/**
@@ -105,6 +108,22 @@ public class AgenttypeDTO implements Serializable{
 	 */
 	public void setExternal(boolean isExternal) {
 		this.isExternal = isExternal;
+	}
+
+	/**
+	 * Getter for AgenttypeDTO attributesDTO set
+	 * @return
+	 */
+	public Set<AttributeDTO> getAttributes() {
+		return attributes;
+	}
+
+	/**
+	 * Setter for AgenttypeDTO attributesDTO set
+	 * @param attributes
+	 */
+	public void setAttributes(Set<AttributeDTO> attributes) {
+		this.attributes = attributes;
 	}
 	
 }

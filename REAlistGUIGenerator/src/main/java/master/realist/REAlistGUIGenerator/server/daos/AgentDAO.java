@@ -130,6 +130,35 @@ public class AgentDAO {
 	}
 	
 	/**
+	 * Updating an existing AgentDTO object
+	 * @param updatedAgentDTO updated object that should be stored in the REA DB
+	 * @return updated agentDTO
+	 */
+	public AgentDTO updateAgent(AgentDTO agentDTO){
+		
+		Session session = null;
+		AgentDTO updatedAgentDTO = null;
+		
+		try{
+			session = hibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			Agent updateAgent = (Agent) session.get(Agent.class, agentDTO.getId());
+			updateAgent.setName(agentDTO.getName());
+			updateAgent.setAgenttypes(createAgenttypeDTOSet(agentDTO.getAgenttypes()));
+			session.update(updateAgent);
+			session.getTransaction().commit();
+			updatedAgentDTO = agentDTO;
+		} catch(Exception e){
+			e.printStackTrace();
+			if(session != null){ session.getTransaction().rollback();}
+		} finally {
+			if(session != null){ session.close();}
+		}
+		
+		return updatedAgentDTO;
+	}
+	
+	/**
 	 * Method transforming a agent object retrieved from the REA DB 
 	 * to a agentDTO object
 	 * @param agent
@@ -146,6 +175,20 @@ public class AgentDAO {
 		
 		return new AgentDTO(agent.getId(),agent.getName(),agenttypeDTOs);
 	}	
+	
+	/**
+	 * Method transforming a agenttypeDTO set to a agenttype set
+	 * @param agenttypeDTOSet agenttypeDTO Set
+	 * @return created Agenttype Set
+	 */
+	private Set<Agenttype> createAgenttypeDTOSet(Set<AgenttypeDTO> agenttypeDTOSet){
+		
+		// TODO: the REA DB is capable of representing agents with more than one agenttype
+		// for this prototype it is assumed that each agent has only one agenttype
+		Set<Agenttype> createdAgenttypeSet = new HashSet<Agenttype>(1);
+		createdAgenttypeSet.add(new Agenttype(agenttypeDTOSet.iterator().next()));
+		return createdAgenttypeSet;
+	}
 
 	
 	/**

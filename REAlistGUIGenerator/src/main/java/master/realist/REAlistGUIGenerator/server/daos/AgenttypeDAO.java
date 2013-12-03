@@ -1,13 +1,18 @@
 package master.realist.REAlistGUIGenerator.server.daos;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import master.realist.REAlistGUIGenerator.server.util.HibernateUtil;
 import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.model.Agenttype;
+import master.realist.REAlistGUIGenerator.shared.model.AgenttypeHasAdditionalattribute;
 
 public class AgenttypeDAO {
 
@@ -37,6 +42,7 @@ public class AgenttypeDAO {
 				for(Agenttype agenttype : existingAgenttypes){
 					
 					// adding the created agenttypeDTOs to the List that is returned
+					Hibernate.initialize(agenttype.getAgenttypeHasAdditionalattributes());
 					agenttypeDTOlist.add(createAgenttypeDTO(agenttype));
 				}
 			}
@@ -126,7 +132,33 @@ public class AgenttypeDAO {
 	 * @return agenttype DTO object
 	 */
 	public AgenttypeDTO createAgenttypeDTO(Agenttype agenttype){
+		
+		Set<AgenttypeHasAdditionalattribute> additionalAgenttypeAttributes = agenttype.getAgenttypeHasAdditionalattributes();
+		// only a list of the attribute DTOs is needed
+		Set<AttributeDTO> additionalAgenttypeAttributeDTOs = 
+				new HashSet<AttributeDTO>(additionalAgenttypeAttributes != null ? additionalAgenttypeAttributes.size() : 0);
+		
+		// using the additional attributes for the agenttype
+		if(additionalAgenttypeAttributes != null){
+			for(AgenttypeHasAdditionalattribute athaa : additionalAgenttypeAttributes){
+						
+				additionalAgenttypeAttributeDTOs.add(createAttributeDTO(athaa));
+
+			}
+		}
+		
 		return new AgenttypeDTO(agenttype);
+	}
+	
+	/**
+	 * Creates an AttributeDTO object for an AgenttypeHasAdditionalattribute object
+	 * @param et
+	 * @return created attribute DTO
+	 */
+	private AttributeDTO createAttributeDTO(AgenttypeHasAdditionalattribute athaa){
+		
+		//return new AttributeDTO(athaa.getId().getAttributeId(),athaa.getAttribute().getName(),athaa.getAttribute().getDatatype());
+		return new AttributeDTO(athaa);
 	}
 	
 	
