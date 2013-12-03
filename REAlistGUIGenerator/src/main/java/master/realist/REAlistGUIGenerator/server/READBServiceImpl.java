@@ -127,6 +127,15 @@ public class READBServiceImpl extends RemoteServiceServlet implements READBServi
 	}
 	
 	/**
+	 * Updating an existing agent object in the REA DB
+	 * @param agentDTO updated version of the object that should be saved to the REA DB
+	 * @return updated agent object
+	 */
+	public AgentDTO updateAgent(AgentDTO agentDTO){
+		return null;
+	}
+	
+	/**
 	 * Service method saving a dualityDTO as duality object to the REA DB
 	 * @param dualityDTO
 	 * @return dualityDTO with stored ID of dbentry

@@ -116,7 +116,9 @@ public class REAlistGUIGenerator implements EntryPoint {
 	// flag that specifies if a user wants to save or update
 	private boolean agentSaveActionState = true;
 	// DualityStatusDTO object that should be updated
-	private AgentDTO agentUpdateObject;
+	private AgentDTO agentUpdateObject = new AgentDTO();
+	// Updated AgentDTO object
+	private AgentDTO updatedAgentObject;
 	
 	// Eventtype Tab Panel
 	private TabPanel eventypeSetTabPanel;
@@ -683,7 +685,6 @@ public class REAlistGUIGenerator implements EntryPoint {
 					
 					// final variable needed for the button specifications
 					final DualityStatusDTO currentDualityStatusDTO = dsdto;
-					final int lastIndex = existingDualityStatusDTOs.indexOf(currentDualityStatusDTO);
 					
 					// Buttons to edit and delete dualitystatus
 					Button updateDualityStatusButton = new Button("Update");
@@ -736,7 +737,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 				dualityStatusIdTextTextBox.setText(String.valueOf(lastId+1));
 				
 			}else{	
-				dualityStatusIdTextTextBox.setText("1");	
+				dualityStatusIdTextTextBox.setText("-");	
 			}
 			
 			dualityStatusStatusCodeTextBox.setText("");
@@ -897,7 +898,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 	
 	
 	/**
-	 * Deleting a Dualitystatus from the REA DB
+	 * Updating a Dualitystatus from the REA DB
 	 * 
 	 */
 	private void updateDualityStatus(DualityStatusDTO updatedDualityStatusDTO, int listUpdateIndex){
@@ -1089,7 +1090,6 @@ public class REAlistGUIGenerator implements EntryPoint {
 					deleteAgentButton.addClickHandler(new ClickHandler(){
 						public void onClick(ClickEvent event){
 							
-							//deleteAgent(agentSelectionFlexTable.getText(lastIndex+1, 0),lastIndex);
 							deleteAgent(currentAgentDTO);
 						}
 					});
@@ -1134,7 +1134,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 				agentIdTextTextBox.setText(String.valueOf(lastId+1));
 				
 			}else{	
-				agentIdTextTextBox.setText("1");	
+				agentIdTextTextBox.setText("-");	
 			}
 			
 			agentNameTextBox.setText("");
@@ -1142,7 +1142,15 @@ public class REAlistGUIGenerator implements EntryPoint {
 			
 		} else{
 			agentSaveActionState = false;
-			agentUpdateObject = agentDTO;
+			
+			// copy the current state of the agentDTO object
+			agentUpdateObject.setId(agentDTO.getId());
+			agentUpdateObject.setName(agentDTO.getName());
+			agentUpdateObject.setAgenttypes(agentDTO.getAgenttypes());
+						
+			// copy the agentDTO object itself
+			updatedAgentObject = agentDTO;
+			
 			agentIdTextTextBox.setText(String.valueOf(agentDTO.getId()));
 			agentNameTextBox.setText(agentDTO.getName());
 			
@@ -1177,15 +1185,41 @@ public class REAlistGUIGenerator implements EntryPoint {
 
 		// check if the actionstate is 'save'
 		if(!agentSaveActionState){
-			int indexOfUpdateObject = existingAgentDTOs.indexOf(agentUpdateObject);
+			int indexOfUpdateObject = existingAgentDTOs.indexOf(updatedAgentObject);
 			String oldName = agentUpdateObject.getName();
 			String updatedName = agentNameTextBox.getText();
-			if(oldName.matches(updatedName)){
+			
+			// TODO: the REA DB is capable of representing agents with more than one agenttype
+			// for this prototype it is assumed that each agent has only one agenttype
+			Iterator<AgenttypeDTO> iterator = agentUpdateObject.getAgenttypes().iterator();
+			AgenttypeDTO agenttypeDTO = iterator.next();
+			String oldagenttype = agenttypeDTO.getName();
+			String newagenttype = agentTypeListBox.getItemText(agentTypeListBox.getSelectedIndex());
+			
+			// flags helping to distinguish between different updates
+			boolean agentNameChange = false;
+			boolean agentTypeChange = false;
+			
+			if(oldName.matches(updatedName) && oldagenttype.matches(newagenttype)){
 				Window.alert("Nothing has been updated");
 			}else{
-				agentUpdateObject.setName(updatedName);
-				// TODO: implement update agent functionality
-				//updateAgent(agentUpdateObject,indexOfUpdateObject);
+				if(!oldName.matches(updatedName)){
+					agentNameChange = true;
+					updatedAgentObject.setName(updatedName);
+				}
+		
+				if(!oldagenttype.matches(newagenttype)){
+					agentTypeChange = true;
+					Set<AgenttypeDTO> newagenttypes = new HashSet<AgenttypeDTO>(1);
+					for(AgenttypeDTO atDTO : existingAgenttypeDTOs){
+				    	if(atDTO.getId().equals(newagenttype)){
+				    		newagenttypes.add(atDTO);
+				    	}
+				    }  
+					updatedAgentObject.setAgenttypes(newagenttypes);
+				}
+				
+				updateAgent(updatedAgentObject,indexOfUpdateObject,agentNameChange,agentTypeChange);
 			}		
 			
 			return;
@@ -1212,8 +1246,6 @@ public class REAlistGUIGenerator implements EntryPoint {
 				existingAgentDTOs.add(result);
 				
 				final AgentDTO savedAgentDTO = result;
-				final int lastAddedIndex = existingAgentDTOs.indexOf(savedAgentDTO);
-				
 				
 				// Buttons to edit and delte dualitystatus
 				Button updateAgentButton = new Button("Update");
@@ -1302,7 +1334,17 @@ public class REAlistGUIGenerator implements EntryPoint {
 				// remove entries from flextable
 				agentSelectionFlexTable.removeRow(removedListIndex+1);
 				// update the dualitystatusandeditpanel
-				updateAgentAddEditPanel(null);
+				
+				
+				// update the dualitystatusandeditpanel if it is already visible
+				if(agentAddEditPanel.isVisible()){
+					updateAgentAddEditPanel(null);
+				}
+				
+				// if not dualitystatus exist dualitystatusaddeditpanel is set to invisible
+				if(existingAgentDTOs.size() == 0){
+					agentAddEditPanel.setVisible(false);
+				}
 			}
 			
 	    };
@@ -1310,6 +1352,61 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    // Make the call
 	    reaDBSvc.deleteAgent(deleteAgentDTO.getId(), callback);
 		
+	}
+	
+	/**
+	 * Updating a Dualitystatus from the REA DB
+	 * 
+	 */
+	private void updateAgent(AgentDTO updatedAgentDTO, int listUpdateIndex, boolean agentNameChange, boolean agentTypeChange){
+		
+		final int updatedListIndex = listUpdateIndex;
+		final boolean changedName = agentNameChange;
+		final boolean changedType = agentTypeChange;
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }	
+	    
+	    // Set up the callback object.
+	    AsyncCallback<AgentDTO> callback = new AsyncCallback<AgentDTO>() {
+	    	
+	    	public void onFailure(Throwable caught) {
+	    		logREADBRPCFailure("updateAgent()");
+		    	caught.printStackTrace();
+			}
+	    	
+	    	public void onSuccess(AgentDTO result) {
+	    		
+	    		// print update message
+	    		String updateAgentStatusMsg = "";
+	    		if(changedName){
+	    			updateAgentStatusMsg += "Name of Agent (Id " + updatedAgentObject.getId() + ") updated from '"
+							+ agentUpdateObject.getName() + "' to '" + updatedAgentObject.getName() + "'. \n";
+	    		}
+	    		
+	    		if(changedType){
+	    			updateAgentStatusMsg += "Agenttype of Agent (Id " + updatedAgentObject.getId() + ") updated from '"
+	    					+ agentUpdateObject.getAgenttypes().iterator().next() + "' to '" + updatedAgentObject.getAgenttypes().iterator().next() + "'";
+	    		}
+	    		
+	    		Window.alert(updateAgentStatusMsg);
+	    		logger.info(updateAgentStatusMsg);
+	    		
+	    		// update the dualitySatusDTO arraylist
+	    		//existingDualityStatusDTOs.set(updatedListIndex, result);
+	    		existingAgentDTOs.get(updatedListIndex).setName(result.getName());
+	    		// update entries from flextable
+	    		agentSelectionFlexTable.setText(updatedListIndex + 1, 1, result.getName());
+	    		
+				updateAgentAddEditPanel(existingAgentDTOs.get(updatedListIndex));
+	    	}
+	    };
+	    
+	    // Make the call
+	    reaDBSvc.updateAgent(updatedAgentDTO, callback);
+	    
 	}
 	
 	

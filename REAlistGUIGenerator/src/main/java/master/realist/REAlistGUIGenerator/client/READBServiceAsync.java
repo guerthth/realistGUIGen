@@ -62,6 +62,13 @@ public interface READBServiceAsync {
 	 * @param callback
 	 */
 	void deleteAgent(Integer agentId, AsyncCallback<Integer> callback);
+	
+	/**
+	 * updating an existing agent object in the REA DB
+	 * @param agentDTO updated object version that should be saved
+	 * @param callback
+	 */
+	void updateAgent(AgentDTO agentDTO, AsyncCallback<AgentDTO> callback);
 
 	void saveDuality(DualityDTO dualityDTO,AsyncCallback<DualityDTO> callback);
 

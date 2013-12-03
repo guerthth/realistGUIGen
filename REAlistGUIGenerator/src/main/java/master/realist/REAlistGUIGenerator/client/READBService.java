@@ -34,7 +34,7 @@ public interface READBService extends RemoteService{
 	
 	/**
 	 * Updating an existing dualityobject in the REA DB
-	 * @param dualityStatusDTO updated vesion of the object that should be saved to the REA DB
+	 * @param dualityStatusDTO updated version of the object that should be saved to the REA DB
 	 * @return updated dualitystatusDTO object
 	 */
 	public DualityStatusDTO updateDualityStatus(DualityStatusDTO dualityStatusDTO);
@@ -64,6 +64,13 @@ public interface READBService extends RemoteService{
 	 * @return Id of the deleted object
 	 */
 	public Integer deleteAgent(Integer agentId);
+	
+	/**
+	 * Updating an existing agent object in the REA DB
+	 * @param agentDTO updated version of the object that should be saved to the REA DB
+	 * @return updated agent object
+	 */
+	public AgentDTO updateAgent(AgentDTO agentDTO);
 	
 	public DualityDTO saveDuality(DualityDTO dualityDTO);
 	
