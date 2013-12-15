@@ -1,7 +1,13 @@
 package master.realist.REAlistGUIGenerator.shared.dto;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+
+import master.realist.REAlistGUIGenerator.shared.model.Agent;
+import master.realist.REAlistGUIGenerator.shared.model.Agenttype;
+
 
 /**
  * Data Transfer Object for Agent
@@ -17,13 +23,30 @@ public class AgentDTO implements Serializable{
 	
 	private int id;
 	private String name;
-	private Set<AgenttypeDTO>agenttypes;
+	private Set<AgenttypeDTO> agenttypes;
+	private Set<AgentHasAdditionalattributevalueDTO> additionalAttributeValues;
 	
 	/**
 	 * Default Constructor
 	 */
 	public AgentDTO(){
 		
+	}
+	
+	public AgentDTO (Agent agent){
+		this.id = agent.getId();
+		this.name = agent.getName();
+		
+		// add agenttypeDTOs to agentDTO
+		if(agent.getAgenttypes() != null){
+			this.agenttypes = new LinkedHashSet<AgenttypeDTO>(agent.getAgenttypes().size());
+			for(Agenttype agenttype : agent.getAgenttypes()){
+				agenttypes.add(new AgenttypeDTO(agenttype));
+			}
+		}
+		
+		this.additionalAttributeValues = new LinkedHashSet<AgentHasAdditionalattributevalueDTO>();
+	
 	}
 
 	/**
@@ -48,7 +71,7 @@ public class AgentDTO implements Serializable{
 	}
 
 	/**
-	 * Setter for DualityStatusDTO Id
+	 * Setter for AgentDTO Id
 	 * @param id
 	 */
 	public void setId(int id) {
@@ -56,7 +79,7 @@ public class AgentDTO implements Serializable{
 	}
 
 	/**
-	 * Getter for DualityStatusDTO name
+	 * Getter for AgentDTO name
 	 * @return name
 	 */
 	public String getName() {
@@ -64,7 +87,7 @@ public class AgentDTO implements Serializable{
 	}
 
 	/**
-	 * Setter for DualityStatusDTO name
+	 * Setter for AgentDTO name
 	 * @param name
 	 */
 	public void setName(String name) {
@@ -72,7 +95,7 @@ public class AgentDTO implements Serializable{
 	}
 
 	/**
-	 * Getter for DualityStatusDTO agenttypes
+	 * Getter for AgentDTO agenttypes
 	 * @return agenttypes
 	 */
 	public Set<AgenttypeDTO> getAgenttypes() {
@@ -80,12 +103,28 @@ public class AgentDTO implements Serializable{
 	}
 
 	/**
-	 * Setter for DualityStatusDTO agenttypes
+	 * Setter for AgentDTO agenttypes
 	 * @param agenttypes
 	 */
 	public void setAgenttypes(Set<AgenttypeDTO> agenttypes) {
 		this.agenttypes = agenttypes;
 	}
-	
-	
+
+	/**
+	 * Getter for AgentDTO additionalattributevalues
+	 * @return additionalAttributeValues
+	 */
+	public Set<AgentHasAdditionalattributevalueDTO> getAdditionalAttributeValues() {
+		return additionalAttributeValues;
+	}
+
+	/**
+	 * Setter for AgentDTO additionalattributevalues
+	 * @param additionalAttributeValues
+	 */
+	public void setAdditionalAttributeValues(
+			Set<AgentHasAdditionalattributevalueDTO> additionalAttributeValues) {
+		this.additionalAttributeValues = additionalAttributeValues;
+	}
+
 }

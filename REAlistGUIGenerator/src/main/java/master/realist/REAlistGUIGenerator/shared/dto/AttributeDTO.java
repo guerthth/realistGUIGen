@@ -3,6 +3,7 @@ package master.realist.REAlistGUIGenerator.shared.dto;
 import java.io.Serializable;
 
 import master.realist.REAlistGUIGenerator.shared.model.AgenttypeHasAdditionalattribute;
+import master.realist.REAlistGUIGenerator.shared.model.Attribute;
 
 public class AttributeDTO implements Serializable{
 
@@ -16,11 +17,21 @@ public class AttributeDTO implements Serializable{
 	private String datatype;
 	
 	/**
+	 * Constructor converting an Attribute object to an AttributeDTO object
+	 * @param attribute
+	 */
+	public AttributeDTO(Attribute attribute){
+		this.id = attribute.getId();
+		this.name = attribute.getName();
+		this.datatype = attribute.getDatatype();
+	}
+	
+	/**
 	 * Constructor converting a AgenttypeHasAdditionalattribute object to a AttributeDTO object
 	 * @param athaa
 	 */
 	public AttributeDTO(AgenttypeHasAdditionalattribute athaa){
-		this.id = athaa.getId().getAttributeId();
+		this.id = athaa.getAttribute().getId();
 		this.name = athaa.getAttribute().getName();
 		this.datatype = athaa.getAttribute().getDatatype();
 	}

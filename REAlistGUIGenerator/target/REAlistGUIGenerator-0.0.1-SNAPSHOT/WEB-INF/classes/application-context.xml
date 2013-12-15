@@ -25,6 +25,10 @@
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>
     
+    <bean id="attributedao" class="master.realist.REAlistGUIGenerator.server.daos.AttributeDAO">
+    	<property name="hibernateUtil" ref="hibernateutil"></property>
+    </bean>
+    
     <bean id="dualitydao" class="master.realist.REAlistGUIGenerator.server.daos.DualityDAO">
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>

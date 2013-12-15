@@ -1,7 +1,7 @@
 package master.realist.REAlistGUIGenerator.server.daos;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,9 +10,12 @@ import org.hibernate.Session;
 
 import master.realist.REAlistGUIGenerator.server.util.HibernateUtil;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.AgentHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
 import master.realist.REAlistGUIGenerator.shared.model.Agent;
+import master.realist.REAlistGUIGenerator.shared.model.AgentHasAdditionalattributevalue;
 import master.realist.REAlistGUIGenerator.shared.model.Agenttype;
+import master.realist.REAlistGUIGenerator.shared.model.Attribute;
 
 /**
  * DAO for Agent table of the REA DB
@@ -46,6 +49,7 @@ public class AgentDAO {
 				for(Agent agent : existingAgents){
 					
 					Hibernate.initialize(agent.getAgenttypes());
+					Hibernate.initialize(agent.getAgentHasAdditionalattributevalues());
 					
 					// adding the created agentDTOs to the List that is returned
 					agentDTOlist.add(createAgentDTO(agent));
@@ -79,11 +83,34 @@ public class AgentDAO {
 		Agent agent = new Agent(agentDTO);
 		int agentId = 0;
 		
+		Set<AgentHasAdditionalattributevalueDTO> additionalAttributeValues = agentDTO.getAdditionalAttributeValues();
+		
+		Attribute additionalAttribute;
+		
 		try{
 			
 			session = hibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
-			session.save(agent);
+			
+			// if agent has additional attributes
+			if(additionalAttributeValues != null){
+																						
+				//Hibernate.initialize(agent.getAgentHasAdditionalattributevalues());
+																						
+				for(AgentHasAdditionalattributevalueDTO dto : additionalAttributeValues){
+																							
+					// Retrieve the already stored attribute object
+					additionalAttribute = (Attribute) session.get(Attribute.class, dto.getAttribute().getId());					
+																				
+					// add the additional attribute values to the agent objects list
+					agent.getAgentHasAdditionalattributevalues().add(createAdditionalAttributeValue(agent,additionalAttribute,dto));
+											
+				}
+			}
+			
+			// save the agent
+			session.save(agent);	
+				
 			agentId = agent.getId();
 			session.getTransaction().commit();
 			
@@ -139,15 +166,41 @@ public class AgentDAO {
 		Session session = null;
 		AgentDTO updatedAgentDTO = null;
 		
+		Set<AgentHasAdditionalattributevalueDTO> additionalAttributeValues = agentDTO.getAdditionalAttributeValues();
+
+		Attribute additionalAttribute;
+		
 		try{
 			session = hibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 			Agent updateAgent = (Agent) session.get(Agent.class, agentDTO.getId());
 			updateAgent.setName(agentDTO.getName());
-			updateAgent.setAgenttypes(createAgenttypeDTOSet(agentDTO.getAgenttypes()));
+			updateAgent.setAgenttypes(createAgenttypeDTOSet(agentDTO.getAgenttypes()));	
+			
+			// if agent has additional attributes
+			if(additionalAttributeValues != null){
+				
+				Set<AgentHasAdditionalattributevalue> updatedAdditionalAttributeValues = 
+						new LinkedHashSet<AgentHasAdditionalattributevalue>(additionalAttributeValues.size());
+																			
+				for(AgentHasAdditionalattributevalueDTO dto : additionalAttributeValues){
+																				
+					// Retrieve the already stored attribute object
+					additionalAttribute = (Attribute) session.get(Attribute.class, dto.getAttribute().getId());					
+					
+					// add the updated additional attribute values to the agent objects list
+					updatedAdditionalAttributeValues.add(createAdditionalAttributeValue(updateAgent,additionalAttribute,dto));
+								
+				}
+				
+				// set the updated additional attribute values set for the updateAgent object
+				updateAgent.setAgentHasAdditionalattributevalues(updatedAdditionalAttributeValues);
+			}
+			
 			session.update(updateAgent);
 			session.getTransaction().commit();
 			updatedAgentDTO = agentDTO;
+			
 		} catch(Exception e){
 			e.printStackTrace();
 			if(session != null){ session.getTransaction().rollback();}
@@ -166,15 +219,53 @@ public class AgentDAO {
 	 */
 	private AgentDTO createAgentDTO(Agent agent){
 		
-		Set<Agenttype> agenttypes = agent.getAgenttypes();
-		Set<AgenttypeDTO> agenttypeDTOs = new HashSet<AgenttypeDTO>(agenttypes != null ? agenttypes.size() : 0);
+		Set<AgentHasAdditionalattributevalue> additionalAttributes = 
+				new LinkedHashSet<AgentHasAdditionalattributevalue>(agent.getAgentHasAdditionalattributevalues().size());
+		additionalAttributes = agent.getAgentHasAdditionalattributevalues();	
+		Set<AgentHasAdditionalattributevalueDTO> additionalAttributeDTOs = 
+				new LinkedHashSet<AgentHasAdditionalattributevalueDTO>(additionalAttributes != null ? additionalAttributes.size() : 0);
 		
-		for(Agenttype agenttype : agenttypes){
-			agenttypeDTOs.add(new AgenttypeDTO(agenttype));
+		// create AgentDTO object
+		AgentDTO createdAgentDTO = new AgentDTO(agent);
+		
+		// add additional attribute DTOs to agentDTO
+		for(AgentHasAdditionalattributevalue additionalAttribute : additionalAttributes){
+			
+			AgentHasAdditionalattributevalueDTO additionalAttributeDTO = new AgentHasAdditionalattributevalueDTO(additionalAttribute);
+			additionalAttributeDTO.setAgent(createdAgentDTO);
+
+			additionalAttributeDTOs.add(additionalAttributeDTO);
 		}
 		
-		return new AgentDTO(agent.getId(),agent.getName(),agenttypeDTOs);
+		createdAgentDTO.setAdditionalAttributeValues(additionalAttributeDTOs);
+		
+		return createdAgentDTO;
+		
 	}	
+	
+	/**
+	 * Method creating an AgentHasAdditionalattributevalue for a specific AgentHasAdditionalattributevalueDTO, 
+	 * agent, and attribute
+	 * @param agent Agent object
+	 * @param additionalAttribute Attribute object
+	 * @param dto AgentHasAdditionalattributevalueDTO containing textual, numeric, date, or boolean values
+	 * @return additionalAgentAttributeValue 
+	 */
+	private AgentHasAdditionalattributevalue createAdditionalAttributeValue(Agent agent, Attribute additionalAttribute, AgentHasAdditionalattributevalueDTO dto){
+
+		// create an AgentHasAdditionalattributevalue object and set its values	
+		AgentHasAdditionalattributevalue additionalAgentAttributeValue = null;
+		
+		additionalAgentAttributeValue = new AgentHasAdditionalattributevalue();
+		additionalAgentAttributeValue.setAgent(agent);
+		additionalAgentAttributeValue.setAttribute(additionalAttribute);
+		additionalAgentAttributeValue.setBooleanValue(dto.getBooleanValue());
+		additionalAgentAttributeValue.setDatetimeValue(dto.getDatetimeValue());
+		additionalAgentAttributeValue.setNumericValue(dto.getNumericValue());
+		additionalAgentAttributeValue.setTextualValue(dto.getTextualValue());
+		
+		return additionalAgentAttributeValue;
+	}
 	
 	/**
 	 * Method transforming a agenttypeDTO set to a agenttype set
@@ -185,7 +276,7 @@ public class AgentDAO {
 		
 		// TODO: the REA DB is capable of representing agents with more than one agenttype
 		// for this prototype it is assumed that each agent has only one agenttype
-		Set<Agenttype> createdAgenttypeSet = new HashSet<Agenttype>(1);
+		Set<Agenttype> createdAgenttypeSet = new LinkedHashSet<Agenttype>(1);
 		createdAgenttypeSet.add(new Agenttype(agenttypeDTOSet.iterator().next()));
 		return createdAgenttypeSet;
 	}

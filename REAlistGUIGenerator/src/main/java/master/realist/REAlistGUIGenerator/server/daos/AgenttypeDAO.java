@@ -1,7 +1,7 @@
 package master.realist.REAlistGUIGenerator.server.daos;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,9 +41,16 @@ public class AgenttypeDAO {
 				
 				for(Agenttype agenttype : existingAgenttypes){
 					
-					// adding the created agenttypeDTOs to the List that is returned
+					// since lazy fetching is used additional attributes, ids, and attributes need to be initialized
 					Hibernate.initialize(agenttype.getAgenttypeHasAdditionalattributes());
+					
+					for(AgenttypeHasAdditionalattribute athaa : agenttype.getAgenttypeHasAdditionalattributes()){
+						Hibernate.initialize(athaa.getAttribute());
+					}
+	
+					// adding the created agenttypeDTOs to the List that is returned
 					agenttypeDTOlist.add(createAgenttypeDTO(agenttype));
+
 				}
 			}
 			
@@ -136,18 +143,20 @@ public class AgenttypeDAO {
 		Set<AgenttypeHasAdditionalattribute> additionalAgenttypeAttributes = agenttype.getAgenttypeHasAdditionalattributes();
 		// only a list of the attribute DTOs is needed
 		Set<AttributeDTO> additionalAgenttypeAttributeDTOs = 
-				new HashSet<AttributeDTO>(additionalAgenttypeAttributes != null ? additionalAgenttypeAttributes.size() : 0);
+				new LinkedHashSet<AttributeDTO>(additionalAgenttypeAttributes != null ? additionalAgenttypeAttributes.size() : 0);
 		
 		// using the additional attributes for the agenttype
 		if(additionalAgenttypeAttributes != null){
 			for(AgenttypeHasAdditionalattribute athaa : additionalAgenttypeAttributes){
-						
 				additionalAgenttypeAttributeDTOs.add(createAttributeDTO(athaa));
 
 			}
 		}
 		
-		return new AgenttypeDTO(agenttype);
+		AgenttypeDTO agenttypeDTO = new AgenttypeDTO(agenttype);
+		agenttypeDTO.setAttributes(additionalAgenttypeAttributeDTOs);
+		
+		return agenttypeDTO;
 	}
 	
 	/**
