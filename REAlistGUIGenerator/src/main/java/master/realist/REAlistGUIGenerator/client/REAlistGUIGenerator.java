@@ -53,16 +53,13 @@ public class REAlistGUIGenerator implements EntryPoint {
 
 	// stack panel containing sections for entity administration and business case creation
 	private StackPanel stackPanel = new StackPanel();
-	private TabPanel administrationTabPanel = new TabPanel();
-
-	// Eventtype Tab Panel
-	private TabPanel eventypeSetTabPanel;
-
-	// Asyn READB Service
-	private READBServiceAsync reaDBSvc = GWT.create(READBService.class);
 	
-	// Current Dualitytype_Id
-	private DualitytypeDTO currentDualityType;
+	// administration panels
+	private DualityStatusPanel dualityStatusPanel = new DualityStatusPanel();
+	private AgentPanel agentPanel = new AgentPanel();
+	
+	// tab panel containing all administration panels as tabs
+	private TabPanel administrationTabPanel = new TabPanel();
 	
 
 	/**
@@ -70,19 +67,27 @@ public class REAlistGUIGenerator implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
+		// mainpanel stype
+		mainPanel.addStyleName("fullsizePanel");
+		
 		// initializing logger to INFO level
 		logger.setLevel(Level.INFO);
 
+		// create Administration Panels and apply styles to set their widhts to 100%
+		
+		
 		// Assemble administration tabpanel
-		administrationTabPanel.add(new DualityStatusPanel(),"Dualitystatus");
-		administrationTabPanel.add(new AgentPanel(),"Agents");
+		administrationTabPanel.add(dualityStatusPanel,"Dualitystatus");
+		administrationTabPanel.add(agentPanel,"Agents");
 		administrationTabPanel.selectTab(0);
-		administrationTabPanel.setTitle("Administrate dualitystatus, resources, or agents");
+		administrationTabPanel.addStyleName("fullsizePanel");
 		
 		// Assemble the stack panel
 		stackPanel.add(administrationTabPanel, "Entity Administration");
 		stackPanel.add(new DualityTypePanel(),"Business Case Creation");
 		stackPanel.showStack(0);
+		stackPanel.addStyleName("fullsizePanel");
+		
 		
 		// Associate the Main panel with the HTML host page.
 		RootPanel.get("readb").add(mainPanel);	

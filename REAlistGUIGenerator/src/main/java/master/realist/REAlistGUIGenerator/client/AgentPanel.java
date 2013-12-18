@@ -11,11 +11,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import master.realist.REAlistGUIGenerator.shared.BooleanValidator;
+import master.realist.REAlistGUIGenerator.shared.DateValidator;
+import master.realist.REAlistGUIGenerator.shared.NumericValidator;
+import master.realist.REAlistGUIGenerator.shared.TextValidator;
+import master.realist.REAlistGUIGenerator.shared.Validator;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
-import master.realist.REAlistGUIGenerator.shared.model.AgentHasAdditionalattributevalue;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -39,16 +43,16 @@ public class AgentPanel extends VerticalPanel{
 	private final static Logger logger = Logger.getLogger("AgentPanelLogger");
 	
 	// Panel for Agent Administration + Agent ArrayList
-	private Label agentSelectionIntroductionLabel = new Label("Add new agent or update existing one");
+	private Label agentSelectionIntroductionLabel = new Label("Agent Administration");
 	private HorizontalPanel agentTableAndAddEditPanel = new HorizontalPanel();
 	private FlexTable agentSelectionFlexTable = new FlexTable();
 	private VerticalPanel agentAddEditPanel = new VerticalPanel();
-	private Label agentAddEditHeaderLabel = new Label("Add or edit agent");
+	private Label agentAddEditHeader = new Label("Create or update Agent: ");
 	private FlexTable agentAddEditFlexTable = new FlexTable();
 	private Label agentIdLabel = new Label("AgentId:");
 	private TextBox agentIdTextTextBox = new TextBox();
 	private Label agentNameLabel = new Label("Agentname:");
-	private TextBox agentNameTextBox = new TextBox();
+	private CustomTextBox agentNameTextBox = new CustomTextBox();
 	private Label agentTypeLabel = new Label("Agenttype:");
 	private ListBox agentTypeListBox = new ListBox();
 	private Button agentOkButton = new Button("Ok");
@@ -74,17 +78,14 @@ public class AgentPanel extends VerticalPanel{
 	private int selectedIndexInListBox;
 	
 	// Map keeping track of attributeDTOs and corresponding TextBoxes
-	private Map<AttributeDTO,TextBox> attributeLabelMap;
+	private Map<AttributeDTO,CustomTextBox> attributeLabelMap;
 	
-	// Map relating an agentDTO with an agentAttributeLabelMap
-	private Map<AgentDTO, Map<AttributeDTO, TextBox>> agentAttributeLabelMap;
 	
 	/**
 	 * Constructor
 	 */
 	public AgentPanel(){
 		populateAgentPanel();
-		agentAttributeLabelMap = new HashMap<AgentDTO, Map<AttributeDTO, TextBox>>();
 	}
 	
 	
@@ -97,7 +98,10 @@ public class AgentPanel extends VerticalPanel{
 		callGetAgenttypes();
 		
 		// get all the existing agents (they are added to the existingAgentDTOs arrayList)
-		callGetAgents();	
+		callGetAgents();
+		
+		// define style for agentSelectionIntroductionLabel
+		agentSelectionIntroductionLabel.addStyleName("introductionLabel");
 		
 		// Adding the headline label to the agentSelectionPanel
 		this.add(agentSelectionIntroductionLabel);
@@ -109,12 +113,29 @@ public class AgentPanel extends VerticalPanel{
 		agentSelectionFlexTable.setText(0, 2, "Agenttype");
 		agentSelectionFlexTable.setText(0, 3, "Edit");
 		agentSelectionFlexTable.setText(0, 4, "Remove");
-		agentSelectionFlexTable.setTitle("Agentselection");
-						
+		
+		// setting padding of 4 to the cells of the statusSelectionFlexTable
+		agentSelectionFlexTable.setCellPadding(4);
+		
+		// Add styles to elements in the statusSelectionFlexTable
+		agentSelectionFlexTable.getRowFormatter().addStyleName(0, "adminFlexTableHeader");
+		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 1, "adminFlexTableColumn");
+		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 2, "adminFlexTableColumn");
+		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 3, "adminFlexTableEditRemoveColumn");
+		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 4, "adminFlexTableEditRemoveColumn");
+		agentSelectionFlexTable.addStyleName("adminFlexTable");	
+		
 		agentTableAndAddEditPanel.add(agentSelectionFlexTable);
+		
+		// setting validators for dualityStatusStatusCodeTextBox
+		Validator agentNameValidator = new TextValidator(45);
+		agentNameTextBox.addValidator(agentNameValidator);
+		
+		// applying styles to the agentAddEditHeader and adding it to the agentAddEditPanel
+		agentAddEditHeader.addStyleName("addEditHeaderLabel");
+		agentAddEditPanel.add(agentAddEditHeader);
 						
-		// Populating the agentAddEditPanel
-		agentAddEditPanel.add(agentAddEditHeaderLabel);
+		// Populating the agentAddEditFlexTable
 		agentAddEditFlexTable.setWidget(0, 0, agentIdLabel);
 		agentAddEditFlexTable.setWidget(0, 1, agentIdTextTextBox);
 		agentAddEditFlexTable.setWidget(1, 0, agentNameLabel);
@@ -125,9 +146,25 @@ public class AgentPanel extends VerticalPanel{
 		agentAddEditPanel.add(agentAddEditFlexTable);
 		agentAddEditPanel.setVisible(false);
 		agentIdTextTextBox.setReadOnly(true);
+		
+		// applying style for Ok Button
+		agentOkButton.addStyleDependentName("ok");
+		agentAddEditPanel.add(agentOkButton);
+
+		// applying style to the agentAddEditPanel
+		agentAddEditPanel.addStyleName("adminFlexTable");
+		agentAddEditPanel.addStyleName("addEditPanel");
+		
 		agentTableAndAddEditPanel.add(agentAddEditPanel);
 						
-		this.add(agentTableAndAddEditPanel);	
+		this.add(agentTableAndAddEditPanel);
+		
+		// adding stype to dualityStatusChooseAddPanel
+		agentAddPanel.addStyleName("addPanel");
+		agentAddPanel.addStyleName("fullsizePanel");
+		
+		// adding style to the dualityStatusAddButton
+		agentAddButton.addStyleDependentName("add");
 						
 		// Populating the agentAddPanel (horizontal) and adding it to the agentSelectionPanel
 		agentAddPanel.add(agentAddButton);
@@ -256,6 +293,7 @@ public class AgentPanel extends VerticalPanel{
 					
 					// Buttons to edit and delete agents
 					Button updateAgentButton = new Button("Update");
+					updateAgentButton.addStyleDependentName("removeupdate");
 
 					updateAgentButton.addClickHandler(new ClickHandler(){
 						public void onClick(ClickEvent event){
@@ -264,6 +302,8 @@ public class AgentPanel extends VerticalPanel{
 					});	
 					
 					Button deleteAgentButton = new Button("X");
+					deleteAgentButton.addStyleDependentName("removeupdate");
+					
 					deleteAgentButton.addClickHandler(new ClickHandler(){
 						public void onClick(ClickEvent event){
 							
@@ -279,9 +319,14 @@ public class AgentPanel extends VerticalPanel{
 					int row = agentSelectionFlexTable.getRowCount();
 					agentSelectionFlexTable.setText(row, 0, String.valueOf(adto.getId()));
 					agentSelectionFlexTable.setText(row, 1, adto.getName());
+					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
 					agentSelectionFlexTable.setText(row, 2, agenttypeDTO.getId());
+					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "agentSelectionFlexTable");
 					agentSelectionFlexTable.setWidget(row, 3, updateAgentButton);
+					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
 					agentSelectionFlexTable.setWidget(row, 4, deleteAgentButton);
+					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 4, "adminFlexTableEditRemoveColumn");
+				
 				}
 				
 			}
@@ -300,7 +345,7 @@ public class AgentPanel extends VerticalPanel{
 	private void updateAgentAddEditPanel(AgentDTO agentDTO){
 		
 		// Check if the agentDTO object is null
-		// If so the textboxes are granted for adding new dualitystatus
+		// If so the textboxes are granted for adding new agents without content
 		if(agentDTO == null){
 			
 			// setting the values of the agents
@@ -356,9 +401,6 @@ public class AgentPanel extends VerticalPanel{
 			selectedIndexInListBox = selectedIndex;
 			selectedAgenttypeDTOInListBox = existingAgenttypeDTOs.get(selectedIndexInListBox);
 			
-			// setting the values of the saved attributes
-			Map<AttributeDTO, TextBox> agentDTOAttributeMap = agentAttributeLabelMap.get(agentDTO);	
-			
 			// adding the additional attribute labels and textfields for the initially selected agenttype (with saved values)
 			addAdditionalAttributesForSelectedAgenttype(true);
 			
@@ -375,7 +417,7 @@ public class AgentPanel extends VerticalPanel{
 	private void addAdditionalAttributesForSelectedAgenttype(boolean isUpdate){
 		
 		// create attributeLabelMap
-		attributeLabelMap = new HashMap<AttributeDTO,TextBox>();
+		attributeLabelMap = new HashMap<AttributeDTO,CustomTextBox>();
 					
 		// get the additional Attribute DTo set for the selected agentype
 		Set<AttributeDTO> agenttypeAttributes = selectedAgenttypeDTOInListBox.getAttributes();
@@ -394,25 +436,40 @@ public class AgentPanel extends VerticalPanel{
 				}
 				
 				for(AttributeDTO adto : agenttypeAttributes){
-					Label attributenameLabel = new Label(adto.getName());
-					TextBox attributenameTextBox = new TextBox();
+					Label attributeLabel = new Label(adto.getName() + ":");
+					CustomTextBox attributeTextBox = new CustomTextBox();
+					Validator attributeValidator;
 					
-					if(isUpdate){
-						Set<AgentHasAdditionalattributevalueDTO> additionalattributevalues = agentUpdateObject.getAdditionalAttributeValues();
-						
-						
-					}
+					// setting Validations depending on the datatype
+			    	if (adto.getDatatype().equals("INT") || adto.getDatatype().equals("DOUBLE")){
+			    		
+			    		attributeValidator = new NumericValidator();
+			    	
+			    	} else if (adto.getDatatype().equals("VARCHAR")){
+			    		
+			    		attributeValidator = new TextValidator(45);
+			    	
+			    	} else if (adto.getDatatype().equals("BOOLEAN")){
+			    	
+			    		attributeValidator = new BooleanValidator();
+			    	
+			    	} else {		
+			    	
+			    		attributeValidator = new DateValidator();
+			    	
+			    	}
+			    	
+			    	// adding validator to attributeTextBox
+			    	attributeTextBox.addValidator(attributeValidator);
+					
 					row = agentAddEditFlexTable.getRowCount();
-					agentAddEditFlexTable.setWidget(row, 0, attributenameLabel);
-					agentAddEditFlexTable.setWidget(row, 1, attributenameTextBox);
+					agentAddEditFlexTable.setWidget(row, 0, attributeLabel);
+					agentAddEditFlexTable.setWidget(row, 1, attributeTextBox);
 							
 					// adding entries to eventAttributeMap that stores all additional eventtype attributes
-					attributeLabelMap.put(adto,attributenameTextBox);
+					attributeLabelMap.put(adto,attributeTextBox);
 				}
-				
-				// add the add button at the and of the flextable
-				row = agentAddEditFlexTable.getRowCount();
-				agentAddEditFlexTable.setWidget(row, 0, agentOkButton);	
+
 			}
 		} else{
 			
@@ -429,46 +486,51 @@ public class AgentPanel extends VerticalPanel{
 						agentAddEditFlexTable.removeRow(3);
 					}
 				}
-				
+
 				// run through all existing addtitional attribute values
 				for(AgentHasAdditionalattributevalueDTO adto : additionalattributevalues){
 					
-					Label attributenameLabel = new Label(adto.getAttribute().getName());
-					TextBox attributenameTextBox = new TextBox();
+					Label attributeLabel = new Label(adto.getAttribute().getName() + ":");
+					CustomTextBox attributeTextBox = new CustomTextBox();
 					String textBoxContent = "";
-								
+					Validator attributeValidator;
+					
+					// set textBoxContent and Validators (depending on datatypes)
 					if (adto.getAttribute().getDatatype().equals("INT") || adto.getAttribute().getDatatype().equals("DOUBLE")){
 
 						textBoxContent = String.valueOf(adto.getNumericValue());
+						attributeValidator = new NumericValidator();
 						
 			    	} else if (adto.getAttribute().getDatatype().equals("VARCHAR")){
 			    		
 			    		textBoxContent = String.valueOf(adto.getTextualValue());
+			    		attributeValidator = new TextValidator(45);
 			    		
 			    	} else if (adto.getAttribute().getDatatype().equals("BOOLEAN")){
 			    		
 			    		textBoxContent = String.valueOf(adto.getBooleanValue());
+			    		attributeValidator = new BooleanValidator();
 
 			    	} else {
+			    	
+			    		textBoxContent = DateTimeFormat.getFormat("yyyy-MM-dd").format(adto.getDatetimeValue());
+			    		attributeValidator = new DateValidator();
 			    		
-			    		textBoxContent = adto.getDatetimeValue().toString();
-					
 			    	}
 					
 					// set the text for the textbox
-					attributenameTextBox.setText(textBoxContent);
+					attributeTextBox.setText(textBoxContent);
+					
+					// adding the validator for the textbox
+					attributeTextBox.addValidator(attributeValidator);
 
 					row = agentAddEditFlexTable.getRowCount();
-					agentAddEditFlexTable.setWidget(row, 0, attributenameLabel);
-					agentAddEditFlexTable.setWidget(row, 1, attributenameTextBox);
+					agentAddEditFlexTable.setWidget(row, 0, attributeLabel);
+					agentAddEditFlexTable.setWidget(row, 1, attributeTextBox);
 										
 					// adding entries to eventAttributeMap that stores all additional eventtype attributes
-					attributeLabelMap.put(adto.getAttribute(),attributenameTextBox);
+					attributeLabelMap.put(adto.getAttribute(),attributeTextBox);
 				}
-							
-				// add the add button at the and of the flextable
-				row = agentAddEditFlexTable.getRowCount();
-				agentAddEditFlexTable.setWidget(row, 0, agentOkButton);	
 				
 			}
 		}	
@@ -482,6 +544,11 @@ public class AgentPanel extends VerticalPanel{
 	 */
 	private void addNewAgent(){
 
+		// Only add if the validation does not fail
+		if(!agentTextBoxValidationResult()){
+			return;
+		}
+		
 		// check if the actionstate is 'save'
 		if(!agentSaveActionState){
 			int indexOfUpdateObject = existingAgentDTOs.indexOf(updatedAgentObject);
@@ -498,6 +565,7 @@ public class AgentPanel extends VerticalPanel{
 			// flags helping to distinguish between different updates
 			boolean agentNameChange = false;
 			boolean agentTypeChange = false;
+			boolean agentAttributeValueChange = false;
 			
 			if(oldName.matches(updatedName) && oldagenttype.matches(newagenttype) && additionalAttributeEquality()){
 				Window.alert("Nothing has been updated");
@@ -519,7 +587,39 @@ public class AgentPanel extends VerticalPanel{
 					updatedAgentObject.setAgenttypes(newagenttypes);
 				}
 				
-				updateAgent(updatedAgentObject,indexOfUpdateObject,agentNameChange,agentTypeChange);
+				if(!additionalAttributeEquality()){
+					agentAttributeValueChange = true;
+					Set<AgentHasAdditionalattributevalueDTO> updatedAttributeValues = 
+							new LinkedHashSet<AgentHasAdditionalattributevalueDTO>(agentUpdateObject.getAdditionalAttributeValues().size());
+					
+					// examine all attributeDTOs in the attributeLabelMap
+					for(AgentHasAdditionalattributevalueDTO attributeValue : agentUpdateObject.getAdditionalAttributeValues()){
+						
+						// setting the new attributes
+						String textBoxContent = attributeLabelMap.get(attributeValue.getAttribute()).getText();
+					
+						// setting the value depending on the datatype
+				    	if (attributeValue.getAttribute().getDatatype().equals("INT") || attributeValue.getAttribute().getDatatype().equals("DOUBLE")){
+				    		attributeValue.setNumericValue(Double.parseDouble(textBoxContent));
+				    	} else if (attributeValue.getAttribute().getDatatype().equals("VARCHAR")){
+				    		attributeValue.setTextualValue(textBoxContent);
+				    	} else if (attributeValue.getAttribute().getDatatype().equals("BOOLEAN")){
+				    		attributeValue.setBooleanValue(Boolean.valueOf(textBoxContent));
+				    	} else {		
+				    		Date date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(textBoxContent);
+				    		attributeValue.setDatetimeValue(date);
+				    	}
+				    	
+				    	// adding the updated attribute values to the updatedAttributeValues set
+				    	updatedAttributeValues.add(attributeValue);
+						
+					}
+					
+					// setting the new additional attribute value set for the updatedAgentObject
+					updatedAgentObject.setAdditionalAttributeValues(updatedAttributeValues);
+				}
+				
+				updateAgent(updatedAgentObject,indexOfUpdateObject,agentNameChange,agentTypeChange,agentAttributeValueChange);
 			}		
 			
 			return;
@@ -549,6 +649,8 @@ public class AgentPanel extends VerticalPanel{
 				
 				// Buttons to edit and delte dualitystatus
 				Button updateAgentButton = new Button("Update");
+				updateAgentButton.addStyleDependentName("removeupdate");
+				
 				updateAgentButton.addClickHandler(new ClickHandler(){
 					public void onClick(ClickEvent event){
 						updateAgentAddEditPanel(savedAgentDTO);
@@ -556,6 +658,8 @@ public class AgentPanel extends VerticalPanel{
 				});	
 				
 				Button deleteAgentButton = new Button("X");
+				deleteAgentButton.addStyleDependentName("removeupdate");
+				
 				deleteAgentButton.addClickHandler(new ClickHandler(){
 					public void onClick(ClickEvent event){
 						deleteAgent(savedAgentDTO);
@@ -593,10 +697,6 @@ public class AgentPanel extends VerticalPanel{
 			// Make the call
 		    reaDBSvc.saveAgent(agentDTO, callback);
 		    
-		    // relate the agentDTO object with the 
-		    agentAttributeLabelMap.put(agentDTO, attributeLabelMap);
-		    System.out.println("ATTRIBUTEMAP: "  + agentAttributeLabelMap.get(agentDTO));
-		    
 		} catch (ParseException e) {
 			
 			e.printStackTrace();
@@ -612,11 +712,12 @@ public class AgentPanel extends VerticalPanel{
 	 * Updating a Dualitystatus from the REA DB
 	 * 
 	 */
-	private void updateAgent(AgentDTO updatedAgentDTO, int listUpdateIndex, boolean agentNameChange, boolean agentTypeChange){
+	private void updateAgent(AgentDTO updatedAgentDTO, int listUpdateIndex, boolean agentNameChange, boolean agentTypeChange, boolean agentAttributeValueChange){
 		
 		final int updatedListIndex = listUpdateIndex;
 		final boolean changedName = agentNameChange;
 		final boolean changedType = agentTypeChange;
+		final boolean changedAttributeValue = agentAttributeValueChange;
 		
 		// Initialize the service proxy.
 	    if (reaDBSvc == null) {
@@ -643,7 +744,11 @@ public class AgentPanel extends VerticalPanel{
 	    		if(changedType){
 	    			updateAgentStatusMsg += "Agenttype of Agent (Id " + updatedAgentObject.getId() + ") updated from '"
 	    					+ agentUpdateObject.getAgenttypes().iterator().next().getName() + "' to '"
-	    					+ updatedAgentObject.getAgenttypes().iterator().next().getName() + "'";
+	    					+ updatedAgentObject.getAgenttypes().iterator().next().getName() + "'. \n";
+	    		}
+	    		
+	    		if(changedAttributeValue){
+	    			updateAgentStatusMsg += "Values of additional attributes of Agent (Id " + updatedAgentObject.getId() + ") updated.";
 	    		}
 	    		
 	    		Window.alert(updateAgentStatusMsg);
@@ -704,6 +809,7 @@ public class AgentPanel extends VerticalPanel{
 				}
 				
 				// if not dualitystatus exist dualitystatusaddeditpanel is set to invisible
+				// the same happens to the agentSelectionFlexTable
 				if(existingAgentDTOs.size() == 0){
 					agentAddEditPanel.setVisible(false);
 				}
@@ -777,8 +883,79 @@ public class AgentPanel extends VerticalPanel{
 	private boolean additionalAttributeEquality(){
 		
 		boolean attributeEquality = true;
+		
+		// examine all attributeDTOs in the attributeLabelMap
+		for(AgentHasAdditionalattributevalueDTO attributeValue : agentUpdateObject.getAdditionalAttributeValues()){
+			
+			
+			if(attributeValue.getBooleanValue() != null){
 				
+				// if value is boolean
+				String booleanValue = String.valueOf(attributeValue.getBooleanValue());
+				if(!booleanValue.equals(attributeLabelMap.get(attributeValue.getAttribute()).getText())){
+					attributeEquality = false;
+					break;
+				}
+				
+			} else if (attributeValue.getDatetimeValue() != null){
+				
+				// if value is datetime
+				String dateValue = DateTimeFormat.getFormat("yyyy-MM-dd").format(attributeValue.getDatetimeValue());
+				if(!dateValue.equals(attributeLabelMap.get(attributeValue.getAttribute()).getText())){
+					attributeEquality = false;
+					break;
+				}
+				
+			} else if(attributeValue.getNumericValue() != null){
+				
+				// if value is numeric
+				String numericValue = String.valueOf(attributeValue.getNumericValue());
+				if(!numericValue.equals(attributeLabelMap.get(attributeValue.getAttribute()).getText())){
+					attributeEquality = false;
+					break;
+				}
+				
+			} else {
+				
+				// if value is String
+				String textualValue = attributeValue.getTextualValue();
+				if(!textualValue.equals(attributeLabelMap.get(attributeValue.getAttribute()).getText())){
+					attributeEquality = false;
+					break;
+				}
+				
+			}		
+			
+		}
+		
 		return attributeEquality;
+	}
+	
+	
+	/**
+	 * Method validating all textboxes relevant for an Agent
+	 * @return True if all validations are passed. False if one fails
+	 */
+	private boolean agentTextBoxValidationResult(){
+		
+		boolean validationResult = true;
+		
+		// validate the agentname textbox first
+		// if this validation fails, validationResult is set to false immediately
+		if(!agentNameTextBox.validate()){
+			validationResult = false;
+		}
+			
+		// run through all entries of the attributeLabelMap and validate the textboxes
+		for(AttributeDTO adto : attributeLabelMap.keySet()){
+				
+			// if a textbox validation returns false, set validationResult to false
+			if(!attributeLabelMap.get(adto).validate()){
+				validationResult = false;
+			}
+		}
+		
+		return validationResult;
 	}
 	
 	

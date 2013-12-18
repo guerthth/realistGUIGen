@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import master.realist.REAlistGUIGenerator.shared.TextValidator;
+import master.realist.REAlistGUIGenerator.shared.Validator;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 
 import com.google.gwt.core.client.GWT;
@@ -23,16 +25,16 @@ public class DualityStatusPanel extends VerticalPanel{
 	// Logger
 	private final static Logger logger = Logger.getLogger("DualityStatusPanelLogger");
 	
-	private Label statusSelectionIntroductionLabel = new Label("Add new status or update existing one");
+	private Label statusSelectionIntroductionLabel = new Label("DualityStatus Administration");
 	private HorizontalPanel tableAndAddEditPanel = new HorizontalPanel();
 	private FlexTable statusSelectionFlexTable = new FlexTable();
 	private VerticalPanel dualityStatusAddEditPanel = new VerticalPanel();
-	private Label dualityStatusAddEditHeaderLabel = new Label("Add or edit dualitystatus");
+	private Label dualityStatusAddEditHeader = new Label("Create or update DualityStatus: ");
 	private FlexTable dualityStatusAddEditFlexTable = new FlexTable();
 	private Label dualityStatusIdLabel = new Label("StatusId:");
 	private TextBox dualityStatusIdTextTextBox = new TextBox();
 	private Label dualityStatusStatusCodeLabel = new Label("StatusCode:");
-	private TextBox dualityStatusStatusCodeTextBox = new TextBox();
+	private CustomTextBox dualityStatusStatusCodeTextBox = new CustomTextBox();
 	private Button dualityStatusOkButton = new Button("Ok");
 	private HorizontalPanel dualityStatusChooseAddPanel = new HorizontalPanel();
 	private Button dualityStatusAddButton = new Button("Add");	
@@ -65,6 +67,9 @@ public class DualityStatusPanel extends VerticalPanel{
 		
 		// get all the existing dualitystatus (they are added to the existingDualityStatusDTOs arrayList)
 		callGetDualityStatus();
+		
+		// define style for agentSelectionIntroductionLabel
+		statusSelectionIntroductionLabel.addStyleName("introductionLabel");
 				
 		// Adding the headline label to the statusSelectionPanel
 		this.add(statusSelectionIntroductionLabel);
@@ -75,24 +80,58 @@ public class DualityStatusPanel extends VerticalPanel{
 		statusSelectionFlexTable.setText(0, 1, "Statuscode");
 		statusSelectionFlexTable.setText(0, 2, "Edit");
 		statusSelectionFlexTable.setText(0, 3, "Remove");
-		statusSelectionFlexTable.setTitle("Satusselection");
+		
+		// setting padding of 4 to the cells of the statusSelectionFlexTable
+		statusSelectionFlexTable.setCellPadding(4);
+		
+		// Add styles to elements in the statusSelectionFlexTable
+		statusSelectionFlexTable.getRowFormatter().addStyleName(0, "adminFlexTableHeader");
+		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 1, "adminFlexTableColumn");
+		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 2, "adminFlexTableEditRemoveColumn");
+		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 3, "adminFlexTableEditRemoveColumn");
+		statusSelectionFlexTable.addStyleName("adminFlexTable");
 						
 		tableAndAddEditPanel.add(statusSelectionFlexTable);
 						
+		// setting validators for dualityStatusStatusCodeTextBox
+		Validator statuscodeValidator = new TextValidator(45);
+		dualityStatusStatusCodeTextBox.addValidator(statuscodeValidator);
+		
+		// applying styles to the dualityStatusAddEditHeader and adding it to the dualityStatusAddEditPanel
+		dualityStatusAddEditHeader.addStyleName("addEditHeaderLabel");
+		dualityStatusAddEditPanel.add(dualityStatusAddEditHeader);
+		
 		// Populating the dualityStatusAddEditPanel
-		dualityStatusAddEditPanel.add(dualityStatusAddEditHeaderLabel);
 		dualityStatusAddEditFlexTable.setWidget(0, 0, dualityStatusIdLabel);
 		dualityStatusAddEditFlexTable.setWidget(0, 1, dualityStatusIdTextTextBox);
 		dualityStatusAddEditFlexTable.setWidget(1, 0, dualityStatusStatusCodeLabel);
 		dualityStatusAddEditFlexTable.setWidget(1, 1, dualityStatusStatusCodeTextBox);
-		dualityStatusAddEditFlexTable.setWidget(2, 0, dualityStatusOkButton);
+		
 		dualityStatusAddEditPanel.add(dualityStatusAddEditFlexTable);
 		dualityStatusAddEditPanel.setVisible(false);
 		dualityStatusIdTextTextBox.setReadOnly(true);
+		
+		// applying style for Ok Button 
+		dualityStatusOkButton.addStyleDependentName("ok");
+		dualityStatusAddEditPanel.add(dualityStatusOkButton);
+		
+		// applying style for dualityStatusAddEditPanel
+		dualityStatusAddEditPanel.addStyleName("adminFlexTable");
+		
+		// applying style to the dualityStatusAddEditPanel
+		dualityStatusAddEditPanel.addStyleName("addEditPanel");
+		
 		tableAndAddEditPanel.add(dualityStatusAddEditPanel);
 				
 		this.add(tableAndAddEditPanel);
-				
+		
+		// adding stype to dualityStatusChooseAddPanel
+		dualityStatusChooseAddPanel.addStyleName("addPanel");
+		dualityStatusChooseAddPanel.addStyleName("fullsizePanel");
+		
+		// adding style to the dualityStatusAddButton
+		dualityStatusAddButton.addStyleDependentName("add");
+		
 		// Populating the dualityStatusChooseAddPanel (horizontal) and adding it to the panelstatusSelectionPanel
 		dualityStatusChooseAddPanel.add(dualityStatusAddButton);
 						
@@ -108,7 +147,7 @@ public class DualityStatusPanel extends VerticalPanel{
 			public void onClick(ClickEvent event){
 				addNewDualityStatus();
 			}
-				});
+		});
 						
 		this.add(dualityStatusChooseAddPanel);
 	}
@@ -146,7 +185,8 @@ public class DualityStatusPanel extends VerticalPanel{
 					
 					// Buttons to edit and delete dualitystatus
 					Button updateDualityStatusButton = new Button("Update");
-
+					updateDualityStatusButton.addStyleDependentName("removeupdate");
+					
 					updateDualityStatusButton.addClickHandler(new ClickHandler(){
 						public void onClick(ClickEvent event){
 							updateDualityStatusAddEditPanel(currentDualityStatusDTO);
@@ -154,6 +194,8 @@ public class DualityStatusPanel extends VerticalPanel{
 					});	
 					
 					Button deleteDualityStatusButton = new Button("X");
+					deleteDualityStatusButton.addStyleDependentName("removeupdate");
+					
 					deleteDualityStatusButton.addClickHandler(new ClickHandler(){
 						public void onClick(ClickEvent event){
 							
@@ -161,11 +203,15 @@ public class DualityStatusPanel extends VerticalPanel{
 						}
 					});
 					
+					// adding rows for each dualitystatus that exists in the REA DB and apply styles
 					int row = statusSelectionFlexTable.getRowCount();
 					statusSelectionFlexTable.setText(row, 0, String.valueOf(dsdto.getId()));
 					statusSelectionFlexTable.setText(row, 1, dsdto.getStatus());
+					statusSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
 					statusSelectionFlexTable.setWidget(row, 2, updateDualityStatusButton);
+					statusSelectionFlexTable.getCellFormatter().addStyleName(row, 2, "adminFlexTableEditRemoveColumn");
 					statusSelectionFlexTable.setWidget(row, 3, deleteDualityStatusButton);
+					statusSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
 				}
 				
 			}
@@ -226,6 +272,11 @@ public class DualityStatusPanel extends VerticalPanel{
 	 */
 	private void addNewDualityStatus(){
 		
+		// Only add if the validation does not fail
+		if(!dualityStatusStatusCodeTextBox.validate()){
+			return;
+		}
+		
 		// check if the actionstate is 'save'
 		if(!saveActionState){
 			int indexOfUpdateObbject = existingDualityStatusDTOs.indexOf(updatedObject);
@@ -256,6 +307,12 @@ public class DualityStatusPanel extends VerticalPanel{
 
 			public void onSuccess(DualityStatusDTO result) {
 				
+				// if the Id is 0 return
+				if(result.getId() == 0){
+					Window.alert("New Dualitystatus '" + result.getStatus() + "' could not be saved to REA DB.");
+					return;
+				}
+				
 				String addDualityStatusMsg = "New Dualitystatus '" + result.getStatus() + "' added to REA DB with Id " + result.getId();
 				Window.alert(addDualityStatusMsg);
 				logger.info(addDualityStatusMsg);
@@ -268,6 +325,8 @@ public class DualityStatusPanel extends VerticalPanel{
 				
 				// Buttons to edit and delte dualitystatus
 				Button updateDualityStatusButton = new Button("Update");
+				updateDualityStatusButton.addStyleDependentName("removeupdate");
+				
 				updateDualityStatusButton.addClickHandler(new ClickHandler(){
 					public void onClick(ClickEvent event){
 						updateDualityStatusAddEditPanel(savedDualityStatusDTO);
@@ -275,6 +334,8 @@ public class DualityStatusPanel extends VerticalPanel{
 				});	
 				
 				Button deleteDualityStatusButton = new Button("X");
+				deleteDualityStatusButton.addStyleDependentName("removeupdate");
+				
 				deleteDualityStatusButton.addClickHandler(new ClickHandler(){
 					public void onClick(ClickEvent event){
 						deleteDualityStatus(savedDualityStatusDTO);
@@ -286,9 +347,12 @@ public class DualityStatusPanel extends VerticalPanel{
 				int row = statusSelectionFlexTable.getRowCount();
 				statusSelectionFlexTable.setText(row, 0, String.valueOf(result.getId()));
 				statusSelectionFlexTable.setText(row, 1, result.getStatus());
+				statusSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
 				statusSelectionFlexTable.setWidget(row, 2, updateDualityStatusButton);
+				statusSelectionFlexTable.getCellFormatter().addStyleName(row, 2, "adminFlexTableEditRemoveColumn");
 				statusSelectionFlexTable.setWidget(row, 3, deleteDualityStatusButton);
-				
+				statusSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
+
 				// updating the dualityStatusAddEditPanel
 				updateDualityStatusAddEditPanel(null);
 			}

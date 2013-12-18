@@ -20,15 +20,96 @@ h1 {
   width: 400px;
 }
 
-.dialogVPanel {
-  margin: 5px;
+/* Formatting specific to the REAlistGUIgenerator application */
+
+body {
+  padding: 10px;
 }
 
-.serverResponseLabelError {
-  color: red;
+/*********************************/
+/*    Introduction Labels	     */
+/*********************************/
+.introductionLabel {
+  margin: 10px 0px 10px 0px;
+  font-size:200%;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
+
+/*********************************/
+/*     		Flextables		     */
+/*********************************/
+
+/* dualityStatusFlexTable header row */
+.adminFlexTableHeader {
+  background-color: #2062B8;
+  color: white;
+  font-style: italic;
 }
+
+/* Admin FlexTables */
+.adminFlexTable {
+  border: 1px solid silver;
+  padding: 2px;
+  margin-bottom:6px;
+}
+
+/* Admin addpanels */
+.addPanel {
+  margin: 10px 0px 15px 0px;
+}
+
+/* Admin addEditpanels */
+.addEditPanel {
+  margin: 0px 0px 0px 10px;
+}
+
+/* Admin addEdit Header Labels */
+.addEditHeaderLabel {
+  margin-bottom: 6px;
+  font-size:120%;
+  margin-top: 6px;
+}
+
+/* Admin Add Buttons */
+.gwt-Button-add {
+  width: 5%;
+}
+
+/* Admin Ok Buttons */
+.gwt-Button-ok {
+  width: 25%;
+  margin: 10px 0px 10px 0px;
+}
+
+/* dualityStatusFlexTable StatusCode fields */
+.adminFlexTableColumn {
+  text-align: left;
+  width:8em;
+}
+
+/* Admin Edit column */
+.adminFlexTableEditRemoveColumn {
+  text-align: center;
+}
+
+/* Adminsections, Remove and Update button */
+.gwt-Button-removeupdate {
+  width: 100%;
+}
+
+/* Panel full Screen Size */
+.fullsizePanel {
+  width: 100%;
+}
+
+/* Panel half secreen size */
+.halfsizePanel {
+  width: 45%;
+}
+
+/* Error Style when textbox validation fails. Only for Validation purposes*/
+.error-text-box { 
+	border: 2px solid red; 
+}
+
+
