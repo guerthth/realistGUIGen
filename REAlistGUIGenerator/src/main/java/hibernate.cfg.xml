@@ -9,7 +9,7 @@
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/rea</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-    	
+        
         <!-- Naming the annotated entity classes -->
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Agent"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.AgentHasAdditionalattributevalue"></mapping>
@@ -65,7 +65,7 @@
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.FactorResourcetype"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Fulfills"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.FulfillsId"></mapping>
-        <mapping class="master.realist.REAlistGUIGenerator.shared.model.Identifiablebulkresource"></mapping>
+        <mapping class="master.realist.REAlistGUIGenerator.shared.model.Identifiableresource"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Labor"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.Location"></mapping>
         <mapping class="master.realist.REAlistGUIGenerator.shared.model.LocationAddress"></mapping>

@@ -25,6 +25,7 @@ public class DualityStatusPanel extends VerticalPanel{
 	// Logger
 	private final static Logger logger = Logger.getLogger("DualityStatusPanelLogger");
 	
+	// Panel for DualityStatus Administration + Resource ArrayList
 	private Label statusSelectionIntroductionLabel = new Label("DualityStatus Administration");
 	private HorizontalPanel tableAndAddEditPanel = new HorizontalPanel();
 	private FlexTable statusSelectionFlexTable = new FlexTable();
@@ -90,11 +91,13 @@ public class DualityStatusPanel extends VerticalPanel{
 		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 2, "adminFlexTableEditRemoveColumn");
 		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 3, "adminFlexTableEditRemoveColumn");
 		statusSelectionFlexTable.addStyleName("adminFlexTable");
-						
-		tableAndAddEditPanel.add(statusSelectionFlexTable);
-						
+			
+		// Adding the statusSelectionFlexTable to the statusSelectionEmptyMessageFlexTablePanel
+		tableAndAddEditPanel.add(statusSelectionFlexTable);				
+		
 		// setting validators for dualityStatusStatusCodeTextBox
 		Validator statuscodeValidator = new TextValidator(45);
+		
 		dualityStatusStatusCodeTextBox.addValidator(statuscodeValidator);
 		
 		// applying styles to the dualityStatusAddEditHeader and adding it to the dualityStatusAddEditPanel
@@ -107,8 +110,11 @@ public class DualityStatusPanel extends VerticalPanel{
 		dualityStatusAddEditFlexTable.setWidget(1, 0, dualityStatusStatusCodeLabel);
 		dualityStatusAddEditFlexTable.setWidget(1, 1, dualityStatusStatusCodeTextBox);
 		
+		// adding the dualityStatusAddEditFlexTable to the dualityStatusAddEditPanel
 		dualityStatusAddEditPanel.add(dualityStatusAddEditFlexTable);
 		dualityStatusAddEditPanel.setVisible(false);
+		
+		// set dualityStatusIdTextTextBox to read only
 		dualityStatusIdTextTextBox.setReadOnly(true);
 		
 		// applying style for Ok Button 
@@ -117,12 +123,12 @@ public class DualityStatusPanel extends VerticalPanel{
 		
 		// applying style for dualityStatusAddEditPanel
 		dualityStatusAddEditPanel.addStyleName("adminFlexTable");
-		
-		// applying style to the dualityStatusAddEditPanel
 		dualityStatusAddEditPanel.addStyleName("addEditPanel");
 		
+		// adding the dualityStatusAddEditPanel to the tableAndAddEditPanel
 		tableAndAddEditPanel.add(dualityStatusAddEditPanel);
-				
+		
+		// Adding the statusSelectionEmptyMessageFlexTablePanel to the dualitystatusPanel
 		this.add(tableAndAddEditPanel);
 		
 		// adding stype to dualityStatusChooseAddPanel

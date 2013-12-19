@@ -19,6 +19,10 @@ import javax.persistence.Table;
 @Table(name = "agenttype_has_additionalattribute", catalog = "rea")
 public class AgenttypeHasAdditionalattribute implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6556631098606017408L;
 	private AgenttypeHasAdditionalattributeId id;
 	private Agenttype agenttype;
 	private Attribute attribute;

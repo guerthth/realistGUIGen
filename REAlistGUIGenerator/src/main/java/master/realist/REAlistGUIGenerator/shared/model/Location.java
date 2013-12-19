@@ -40,7 +40,7 @@ public class Location implements java.io.Serializable {
 	private LocationCoordinates locationCoordinates;
 	private Set<Locationofagent> locationofagents = new HashSet<Locationofagent>(
 			0);
-	private Set<Identifiablebulkresource> identifiablebulkresources = new HashSet<Identifiablebulkresource>(
+	private Set<Identifiableresource> identifiablebulkresources = new HashSet<Identifiableresource>(
 			0);
 	private Set<Location> locations = new HashSet<Location>(0);
 	private Set<Locationtype> locationtypes = new HashSet<Locationtype>(0);
@@ -61,7 +61,7 @@ public class Location implements java.io.Serializable {
 			LocationAddress locationAddress, Set<Stockflow> stockflows,
 			LocationCoordinates locationCoordinates,
 			Set<Locationofagent> locationofagents,
-			Set<Identifiablebulkresource> identifiablebulkresources,
+			Set<Identifiableresource> identifiablebulkresources,
 			Set<Location> locations, Set<Locationtype> locationtypes) {
 		this.id = id;
 		this.location = location;
@@ -195,12 +195,12 @@ public class Location implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "locationofidentifiablebulkresource", catalog = "rea", joinColumns = { @JoinColumn(name = "Location_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "IdentifiableResource_Id", nullable = false, updatable = false) })
-	public Set<Identifiablebulkresource> getIdentifiablebulkresources() {
+	public Set<Identifiableresource> getIdentifiablebulkresources() {
 		return this.identifiablebulkresources;
 	}
 
 	public void setIdentifiablebulkresources(
-			Set<Identifiablebulkresource> identifiablebulkresources) {
+			Set<Identifiableresource> identifiablebulkresources) {
 		this.identifiablebulkresources = identifiablebulkresources;
 	}
 

@@ -105,7 +105,7 @@ public class AgentPanel extends VerticalPanel{
 		
 		// Adding the headline label to the agentSelectionPanel
 		this.add(agentSelectionIntroductionLabel);
-						
+		
 		// Populating the horizontalpanel and adding it to the agentSelectionPanel
 		// Populating the flex table for the selection of agents
 		agentSelectionFlexTable.setText(0, 0, "Id");
@@ -125,7 +125,8 @@ public class AgentPanel extends VerticalPanel{
 		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 4, "adminFlexTableEditRemoveColumn");
 		agentSelectionFlexTable.addStyleName("adminFlexTable");	
 		
-		agentTableAndAddEditPanel.add(agentSelectionFlexTable);
+		// Adding the agentSelectionFlexTable to the agentTableAndAddEditPanel
+		agentTableAndAddEditPanel.add(agentSelectionFlexTable);		
 		
 		// setting validators for dualityStatusStatusCodeTextBox
 		Validator agentNameValidator = new TextValidator(45);
@@ -155,15 +156,17 @@ public class AgentPanel extends VerticalPanel{
 		agentAddEditPanel.addStyleName("adminFlexTable");
 		agentAddEditPanel.addStyleName("addEditPanel");
 		
+		// adding the agentAddEditPanel to the agentTableAndAddEditPanel
 		agentTableAndAddEditPanel.add(agentAddEditPanel);
-						
+		
+		// adding the agentTableAndAddEditPanel to the agentpanel
 		this.add(agentTableAndAddEditPanel);
 		
-		// adding stype to dualityStatusChooseAddPanel
+		// adding style to agentChooseAddPanel
 		agentAddPanel.addStyleName("addPanel");
 		agentAddPanel.addStyleName("fullsizePanel");
 		
-		// adding style to the dualityStatusAddButton
+		// adding style to the agentAddButton
 		agentAddButton.addStyleDependentName("add");
 						
 		// Populating the agentAddPanel (horizontal) and adding it to the agentSelectionPanel
@@ -202,6 +205,7 @@ public class AgentPanel extends VerticalPanel{
 					addAdditionalAttributesForSelectedAgenttype(false);
 				}else{
 					Window.alert("ListBox Update Change!");
+					addAdditionalAttributesForSelectedAgenttype(false);
 				}
 				
 			}
@@ -321,7 +325,6 @@ public class AgentPanel extends VerticalPanel{
 					agentSelectionFlexTable.setText(row, 1, adto.getName());
 					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
 					agentSelectionFlexTable.setText(row, 2, agenttypeDTO.getId());
-					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "agentSelectionFlexTable");
 					agentSelectionFlexTable.setWidget(row, 3, updateAgentButton);
 					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
 					agentSelectionFlexTable.setWidget(row, 4, deleteAgentButton);
@@ -466,7 +469,7 @@ public class AgentPanel extends VerticalPanel{
 					agentAddEditFlexTable.setWidget(row, 0, attributeLabel);
 					agentAddEditFlexTable.setWidget(row, 1, attributeTextBox);
 							
-					// adding entries to eventAttributeMap that stores all additional eventtype attributes
+					// adding entries to eventAttributeMap that stores all additional agenttype attributes
 					attributeLabelMap.put(adto,attributeTextBox);
 				}
 
@@ -528,7 +531,7 @@ public class AgentPanel extends VerticalPanel{
 					agentAddEditFlexTable.setWidget(row, 0, attributeLabel);
 					agentAddEditFlexTable.setWidget(row, 1, attributeTextBox);
 										
-					// adding entries to eventAttributeMap that stores all additional eventtype attributes
+					// adding entries to eventAttributeMap that stores all additional agenttype attributes
 					attributeLabelMap.put(adto.getAttribute(),attributeTextBox);
 				}
 				
@@ -566,28 +569,20 @@ public class AgentPanel extends VerticalPanel{
 			boolean agentNameChange = false;
 			boolean agentTypeChange = false;
 			boolean agentAttributeValueChange = false;
-			
-			if(oldName.matches(updatedName) && oldagenttype.matches(newagenttype) && additionalAttributeEquality()){
-				Window.alert("Nothing has been updated");
-			}else{
-				if(!oldName.matches(updatedName)){
-					agentNameChange = true;
-					updatedAgentObject.setName(updatedName);
-				}
+	
 		
-				if(!oldagenttype.matches(newagenttype)){
-					agentTypeChange = true;
-					Set<AgenttypeDTO> newagenttypes = new LinkedHashSet<AgenttypeDTO>(1);
-					for(AgenttypeDTO atDTO : existingAgenttypeDTOs){
-				    	if(atDTO.getId().equals(newagenttype)){
-				    		newagenttypes.add(atDTO);
-				    		break;
-				    	}
-				    }  
-					updatedAgentObject.setAgenttypes(newagenttypes);
-				}
+			// check if agent name has changed. If so, set agentNameChange to true
+			if(!oldName.matches(updatedName)){
+				agentNameChange = true;
+				updatedAgentObject.setName(updatedName);
+			}
+			
+			// only when agenttype stays the same, the additional attributes are compared
+			if(oldagenttype.matches(newagenttype)){
 				
 				if(!additionalAttributeEquality()){
+					
+					// set agentAttributeValueChange to true 
 					agentAttributeValueChange = true;
 					Set<AgentHasAdditionalattributevalueDTO> updatedAttributeValues = 
 							new LinkedHashSet<AgentHasAdditionalattributevalueDTO>(agentUpdateObject.getAdditionalAttributeValues().size());
@@ -613,14 +608,43 @@ public class AgentPanel extends VerticalPanel{
 				    	// adding the updated attribute values to the updatedAttributeValues set
 				    	updatedAttributeValues.add(attributeValue);
 						
-					}
+					} 
 					
 					// setting the new additional attribute value set for the updatedAgentObject
 					updatedAgentObject.setAdditionalAttributeValues(updatedAttributeValues);
-				}
+					
+				} 
+				
+			} else {
+				
+				// set agentTypeChange to true and set new agentype
+				agentTypeChange = true;
+				
+				// set agentAttributeValueChange to true
+				agentAttributeValueChange = true;
+				
+				Set<AgenttypeDTO> newagenttypes = new LinkedHashSet<AgenttypeDTO>(1);
+				for(AgenttypeDTO atDTO : existingAgenttypeDTOs){
+			    	if(atDTO.getId().equals(newagenttype)){
+			    		newagenttypes.add(atDTO);
+			    		break;
+			    	}
+			    }  
+				updatedAgentObject.setAgenttypes(newagenttypes);
+				
+				// also update the additional attribute values, since they are new
+				updatedAgentObject.setAdditionalAttributeValues(createAttributeValueSetForSelectedAgenttype(updatedAgentObject));
+				
+			}
+			
+			// If name, type, or attributes have changes --> update agent. If not, show Message
+			if(agentNameChange || agentTypeChange || agentAttributeValueChange){
 				
 				updateAgent(updatedAgentObject,indexOfUpdateObject,agentNameChange,agentTypeChange,agentAttributeValueChange);
-			}		
+				
+			} else {
+				Window.alert("Nothing has been updated");
+			}
 			
 			return;
 		}
@@ -647,7 +671,7 @@ public class AgentPanel extends VerticalPanel{
 				
 				final AgentDTO savedAgentDTO = result;
 				
-				// Buttons to edit and delte dualitystatus
+				// Buttons to edit and delete agents
 				Button updateAgentButton = new Button("Update");
 				updateAgentButton.addStyleDependentName("removeupdate");
 				
@@ -709,7 +733,7 @@ public class AgentPanel extends VerticalPanel{
 	
 	
 	/**
-	 * Updating a Dualitystatus from the REA DB
+	 * Updating an Agent from the REA DB
 	 * 
 	 */
 	private void updateAgent(AgentDTO updatedAgentDTO, int listUpdateIndex, boolean agentNameChange, boolean agentTypeChange, boolean agentAttributeValueChange){
@@ -754,7 +778,7 @@ public class AgentPanel extends VerticalPanel{
 	    		Window.alert(updateAgentStatusMsg);
 	    		logger.info(updateAgentStatusMsg);
 	    		
-	    		// update the dualitySatusDTO arraylist
+	    		// update the dagentDTO arraylist
 
 	    		existingAgentDTOs.get(updatedListIndex).setName(result.getName());
 	    		existingAgentDTOs.get(updatedListIndex).setAgenttypes(result.getAgenttypes());
@@ -808,7 +832,7 @@ public class AgentPanel extends VerticalPanel{
 					updateAgentAddEditPanel(null);
 				}
 				
-				// if not dualitystatus exist dualitystatusaddeditpanel is set to invisible
+				// if no agents existagentaddeditpanel is set to invisible
 				// the same happens to the agentSelectionFlexTable
 				if(existingAgentDTOs.size() == 0){
 					agentAddEditPanel.setVisible(false);
@@ -839,10 +863,25 @@ public class AgentPanel extends VerticalPanel{
 	    agentDTO.setName(agentNameTextBox.getText());
 	    agentDTO.setAgenttypes(agenttypes);
 	    
-	    // creating additional attribute values for agentDTO
+	    // setting additionalattributevalues for agentDTO
+	    agentDTO.setAdditionalAttributeValues(createAttributeValueSetForSelectedAgenttype(agentDTO));
+	    
+		return agentDTO;
+	}
+	
+	
+	/**
+	 * Method creating an AgentHasAdditionalattributevalueDTO set for the agenttypedto selected in the listbox
+	 * @param agentDTO agentDTO the set belongs to
+	 * @return attributes
+	 */
+	private Set<AgentHasAdditionalattributevalueDTO> createAttributeValueSetForSelectedAgenttype(AgentDTO agentDTO){
+		
+		// creating additional attribute values for agentDTO
 	    Set<AgentHasAdditionalattributevalueDTO> attributes = new LinkedHashSet<AgentHasAdditionalattributevalueDTO>();
 	    
-	    for(AttributeDTO attribute : agenttypes.iterator().next().getAttributes()){
+	    //for(AttributeDTO attribute : agenttypes.iterator().next().getAttributes()){
+	    for(AttributeDTO attribute : selectedAgenttypeDTOInListBox.getAttributes()){
 	    	
 	    	// get the textbox content for the current attribute from the agentAttributeLabelMap
 	    	String textBoxContent = attributeLabelMap.get(attribute).getText();
@@ -869,10 +908,8 @@ public class AgentPanel extends VerticalPanel{
 	    	
 	    }
 	    
-	    // setting additionalattributevalues for agentDTO
-	    agentDTO.setAdditionalAttributeValues(attributes);
-	    
-		return agentDTO;
+	    // return the attributes set
+	    return attributes;
 	}
 	
 	

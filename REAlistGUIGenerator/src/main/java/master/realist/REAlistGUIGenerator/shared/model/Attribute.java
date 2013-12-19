@@ -1,8 +1,9 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Dec 10, 2013 2:10:07 PM by Hibernate Tools 4.0.0
+// Generated Dec 18, 2013 2:38:04 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -27,15 +28,15 @@ public class Attribute implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3769845626230601972L;
+	private static final long serialVersionUID = -3472555218994259563L;
 	private String id;
 	private String name;
 	private String datatype;
 	private Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues = new HashSet<EventHasAdditionalattributevalue>(
 			0);
-	private Set<AgentHasAdditionalattributevalue> agentHasAdditionalattributevalues = new HashSet<AgentHasAdditionalattributevalue>(
+	private Set<AgentHasAdditionalattributevalue> agentHasAdditionalattributevalues = new LinkedHashSet<AgentHasAdditionalattributevalue>(
 			0);
-	private Set<ResourcetypeHasAdditionalattribute> resourcetypeHasAdditionalattributes = new HashSet<ResourcetypeHasAdditionalattribute>(
+	private Set<ResourcetypeHasAdditionalattribute> resourcetypeHasAdditionalattributes = new LinkedHashSet<ResourcetypeHasAdditionalattribute>(
 			0);
 	private Set<EventtypestockflowHasAdditionalattribute> eventtypestockflowHasAdditionalattributes = new HashSet<EventtypestockflowHasAdditionalattribute>(
 			0);
@@ -47,7 +48,7 @@ public class Attribute implements java.io.Serializable {
 			0);
 	private Set<ResourceHasAdditionalattributevalue> resourceHasAdditionalattributevalues = new HashSet<ResourceHasAdditionalattributevalue>(
 			0);
-	private Set<Identifiablebulkresource> identifiablebulkresources = new HashSet<Identifiablebulkresource>(
+	private Set<Identifiableresource> identifiableresources = new HashSet<Identifiableresource>(
 			0);
 	private Set<AgenttypeHasAdditionalattribute> agenttypeHasAdditionalattributes = new HashSet<AgenttypeHasAdditionalattribute>(
 			0);
@@ -65,8 +66,10 @@ public class Attribute implements java.io.Serializable {
 		this.datatype = attributeDTO.getDatatype();
 	}
 	
+	
 	public Attribute() {
 	}
+	
 
 	public Attribute(String id) {
 		this.id = id;
@@ -84,7 +87,7 @@ public class Attribute implements java.io.Serializable {
 			Set<ParticipationHasAdditionalattributevalue> participationHasAdditionalattributevalues,
 			Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues,
 			Set<ResourceHasAdditionalattributevalue> resourceHasAdditionalattributevalues,
-			Set<Identifiablebulkresource> identifiablebulkresources,
+			Set<Identifiableresource> identifiableresources,
 			Set<AgenttypeHasAdditionalattribute> agenttypeHasAdditionalattributes,
 			Set<EventtypeHasAdditionalattribute> eventtypeHasAdditionalattributes) {
 		this.id = id;
@@ -98,7 +101,7 @@ public class Attribute implements java.io.Serializable {
 		this.participationHasAdditionalattributevalues = participationHasAdditionalattributevalues;
 		this.stockflowHasAdditionalattributevalues = stockflowHasAdditionalattributevalues;
 		this.resourceHasAdditionalattributevalues = resourceHasAdditionalattributevalues;
-		this.identifiablebulkresources = identifiablebulkresources;
+		this.identifiableresources = identifiableresources;
 		this.agenttypeHasAdditionalattributes = agenttypeHasAdditionalattributes;
 		this.eventtypeHasAdditionalattributes = eventtypeHasAdditionalattributes;
 	}
@@ -201,7 +204,7 @@ public class Attribute implements java.io.Serializable {
 		this.stockflowHasAdditionalattributevalues = stockflowHasAdditionalattributevalues;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.attribute")
 	public Set<ResourceHasAdditionalattributevalue> getResourceHasAdditionalattributevalues() {
 		return this.resourceHasAdditionalattributevalues;
 	}
@@ -212,14 +215,14 @@ public class Attribute implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "identifiablebulkresource_has_additionalattributevalue", catalog = "rea", joinColumns = { @JoinColumn(name = "Attribute_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "IdentifiableBulkResource_Id", nullable = false, updatable = false) })
-	public Set<Identifiablebulkresource> getIdentifiablebulkresources() {
-		return this.identifiablebulkresources;
+	@JoinTable(name = "identifiableresource_has_additionalattributevalue", catalog = "rea", joinColumns = { @JoinColumn(name = "Attribute_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "IdentifiableResource_Id", nullable = false, updatable = false) })
+	public Set<Identifiableresource> getIdentifiableresources() {
+		return this.identifiableresources;
 	}
 
-	public void setIdentifiablebulkresources(
-			Set<Identifiablebulkresource> identifiablebulkresources) {
-		this.identifiablebulkresources = identifiablebulkresources;
+	public void setIdentifiableresources(
+			Set<Identifiableresource> identifiableresources) {
+		this.identifiableresources = identifiableresources;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")

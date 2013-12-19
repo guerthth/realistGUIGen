@@ -81,6 +81,41 @@ public interface READBServiceAsync
      * GWT-RPC service  asynchronous (client-side) interface
      * @see master.realist.REAlistGUIGenerator.client.READBService
      */
+    void getResourcetypes( AsyncCallback<java.util.List<master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO>> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
+    void getResources( AsyncCallback<java.util.List<master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO>> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
+    void saveResource( master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO resourceDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
+    void deleteResource( java.lang.Integer resourceId, AsyncCallback<java.lang.Integer> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
+    void updateResource( master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO resourceDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
     void saveDuality( master.realist.REAlistGUIGenerator.shared.dto.DualityDTO dualityDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.DualityDTO> callback );
 
 

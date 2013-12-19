@@ -1,43 +1,16 @@
 package master.realist.REAlistGUIGenerator.client;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
-
-import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
-
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DatePicker;
 
 
 /**
@@ -57,6 +30,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 	// administration panels
 	private DualityStatusPanel dualityStatusPanel = new DualityStatusPanel();
 	private AgentPanel agentPanel = new AgentPanel();
+	private ResourcePanel resourcePanel = new ResourcePanel();
 	
 	// tab panel containing all administration panels as tabs
 	private TabPanel administrationTabPanel = new TabPanel();
@@ -79,6 +53,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 		// Assemble administration tabpanel
 		administrationTabPanel.add(dualityStatusPanel,"Dualitystatus");
 		administrationTabPanel.add(agentPanel,"Agents");
+		administrationTabPanel.add(resourcePanel,"Resources");
 		administrationTabPanel.selectTab(0);
 		administrationTabPanel.addStyleName("fullsizePanel");
 		

@@ -12,6 +12,8 @@ import master.realist.REAlistGUIGenerator.server.daos.DualityStatusDAO;
 import master.realist.REAlistGUIGenerator.server.daos.DualitytypeDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventHasAdditionalattributevalueDAO;
+import master.realist.REAlistGUIGenerator.server.daos.ResourceDAO;
+import master.realist.REAlistGUIGenerator.server.daos.ResourcetypeDAO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
@@ -19,6 +21,8 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 import master.realist.REAlistGUIGenerator.shared.util.SpringUtil;
 
 public class READBServiceImpl extends RemoteServiceServlet implements READBService{
@@ -135,6 +139,63 @@ public class READBServiceImpl extends RemoteServiceServlet implements READBServi
 		AgentDAO agenthandler = (AgentDAO) SpringUtil.context.getBean("agentdao");
 		return agenthandler.updateAgent(agentDTO);
 	}
+	
+	
+	/**
+	 * Retrieving all existing resourcetypes in the REA DB
+	 * @return list of the existing resourcetypes in the REA DB
+	 */
+	public List<ResourcetypeDTO> getResourcetypes(){
+		ResourcetypeDAO resourcetypehandler = (ResourcetypeDAO) SpringUtil.context.getBean("resourcetypedao");
+		return resourcetypehandler.getResourcetypeList();
+	}
+	
+	
+	/**
+	 * Retrieving all exsiting resources in the REA DB
+	 * @return list of the existing resources in the REA DB
+	 */
+	public List<ResourceDTO> getResources(){
+		ResourceDAO resourcehandler = (ResourceDAO) SpringUtil.context.getBean("resourcedao");
+		return resourcehandler.getResourceList();
+	}
+	
+	
+	/**
+	 * saving a resourceDTO object as resource object in the REA DB
+	 * @param resourceDTO object that should be saved
+	 * @return saved resourcedto object
+	 */
+	public ResourceDTO saveResource(ResourceDTO resourceDTO) {
+		ResourceDAO resourcehandler = (ResourceDAO) SpringUtil.context.getBean("resourcedao");
+		int saveId = resourcehandler.saveResource(resourceDTO);
+		resourceDTO.setId(saveId);
+		return resourceDTO;
+	}
+	
+	
+	/**
+	 * deleting an resourceDTO object from the REA DB
+	 * @param resourceId Id of the agent object that should be deleted from the REA DB
+	 * @return Id of the deleted object
+	 */
+	public Integer deleteResource(Integer deleteId) {
+		ResourceDAO resourcehandler = (ResourceDAO) SpringUtil.context.getBean("resourcedao");
+		resourcehandler.deleteResource(deleteId);
+		
+		return deleteId;
+	}
+	
+	/**
+	 * Updating an existing resource object in the REA DB
+	 * @param resourceDTO updated version of the object that should be saved to the REA DB
+	 * @return updated resource object
+	 */
+	public ResourceDTO updateResource(ResourceDTO resourceDTO){
+		ResourceDAO resourcehandler = (ResourceDAO) SpringUtil.context.getBean("resourcedao");
+		return resourcehandler.updateResource(resourceDTO);
+	}
+	
 	
 	/**
 	 * Service method saving a dualityDTO as duality object to the REA DB

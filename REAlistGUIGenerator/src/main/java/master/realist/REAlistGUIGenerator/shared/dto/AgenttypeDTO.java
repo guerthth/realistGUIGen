@@ -112,7 +112,7 @@ public class AgenttypeDTO implements Serializable{
 
 	/**
 	 * Getter for AgenttypeDTO attributesDTO set
-	 * @return
+	 * @return attributes of AgenttypeDTO
 	 */
 	public Set<AttributeDTO> getAttributes() {
 		return attributes;
@@ -120,7 +120,7 @@ public class AgenttypeDTO implements Serializable{
 
 	/**
 	 * Setter for AgenttypeDTO attributesDTO set
-	 * @param attributes
+	 * @param attributes of AgenttypeDTO
 	 */
 	public void setAttributes(Set<AttributeDTO> attributes) {
 		this.attributes = attributes;

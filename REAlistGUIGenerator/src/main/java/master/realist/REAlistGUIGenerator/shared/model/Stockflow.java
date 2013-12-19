@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Dec 10, 2013 2:10:07 PM by Hibernate Tools 4.0.0
+// Generated Dec 18, 2013 2:38:04 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +37,7 @@ public class Stockflow implements java.io.Serializable {
 	private Set<Discountoraddition> discountoradditions = new HashSet<Discountoraddition>(
 			0);
 	private Set<Location> locations = new HashSet<Location>(0);
-	private Set<Identifiablebulkresource> identifiablebulkresources = new HashSet<Identifiablebulkresource>(
+	private Set<Identifiableresource> identifiableresources = new HashSet<Identifiableresource>(
 			0);
 	private Set<Event> events = new HashSet<Event>(0);
 	private Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues = new HashSet<StockflowHasAdditionalattributevalue>(
@@ -63,7 +63,7 @@ public class Stockflow implements java.io.Serializable {
 			Set<Commitment> commitments,
 			Set<Discountoraddition> discountoradditions,
 			Set<Location> locations,
-			Set<Identifiablebulkresource> identifiablebulkresources,
+			Set<Identifiableresource> identifiableresources,
 			Set<Event> events,
 			Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues) {
 		this.currency = currency;
@@ -77,7 +77,7 @@ public class Stockflow implements java.io.Serializable {
 		this.commitments = commitments;
 		this.discountoradditions = discountoradditions;
 		this.locations = locations;
-		this.identifiablebulkresources = identifiablebulkresources;
+		this.identifiableresources = identifiableresources;
 		this.events = events;
 		this.stockflowHasAdditionalattributevalues = stockflowHasAdditionalattributevalues;
 	}
@@ -201,14 +201,14 @@ public class Stockflow implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "stockflow_has_identifiablebulkresource", catalog = "rea", joinColumns = { @JoinColumn(name = "Stockflow_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "IdentifiableBulkResource_Id", nullable = false, updatable = false) })
-	public Set<Identifiablebulkresource> getIdentifiablebulkresources() {
-		return this.identifiablebulkresources;
+	@JoinTable(name = "stockflow_has_identifiableresource", catalog = "rea", joinColumns = { @JoinColumn(name = "Stockflow_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "IdentifiableResource_Id", nullable = false, updatable = false) })
+	public Set<Identifiableresource> getIdentifiableresources() {
+		return this.identifiableresources;
 	}
 
-	public void setIdentifiablebulkresources(
-			Set<Identifiablebulkresource> identifiablebulkresources) {
-		this.identifiablebulkresources = identifiablebulkresources;
+	public void setIdentifiableresources(
+			Set<Identifiableresource> identifiableresources) {
+		this.identifiableresources = identifiableresources;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)

@@ -33,6 +33,10 @@ public class AgentDTO implements Serializable{
 		
 	}
 	
+	/**
+	 * Constructor creating an AgentDTO from an existing Agent
+	 * @param agent
+	 */
 	public AgentDTO (Agent agent){
 		this.id = agent.getId();
 		this.name = agent.getName();

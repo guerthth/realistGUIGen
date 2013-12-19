@@ -18,6 +18,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Testclass for AgentDAO
+ * @author Thomas
+ *
+ */
 public class AgentDAOTest {
 	
 	private static AgentDAO agenthandler;
@@ -42,7 +47,7 @@ public class AgentDAOTest {
 	private static AgentHasAdditionalattributevalueDTO attrvalue2;
 	
 	/**
-	 * Setting up dualitytypehandler used by every test method
+	 * Setting up agenttype and agent handler used by every test method
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass(){
@@ -73,13 +78,13 @@ public class AgentDAOTest {
 		agentDTO.setAgenttypes(agenttypes);	
 		
 		// additional attributes
-		// first attribute (already existing for car producer example)
+		// first attribute)
 		attribute1 = new AttributeDTO();
 		attribute1.setId("Test_Attribute1");
 		attribute1.setName("Test_Attribute1_Name");
 		attribute1.setDatatype("VARCHAR");
 					
-		// second attribute (already existing for car producer example)
+		// second attribute
 		attribute2 = new AttributeDTO();
 		attribute2.setId("Test_Attribute2");
 		attribute2.setName("Test_Attribute2_Name");
@@ -235,7 +240,7 @@ public class AgentDAOTest {
 		// assert that newest agent has additional attributes
 		Set<AgentHasAdditionalattributevalueDTO> additionalAttributes = agenthandler.getAgentList().get(agenthandler.getAgentList().size()-1).getAdditionalAttributeValues();
 		assertTrue(additionalAttributes.size() != 0);
-		// and that the first attributes id is 'Car_Brand'
+		// and that the first attributes id is 'Test_Attribute1'
 		AgentHasAdditionalattributevalueDTO firstAttribute = additionalAttributes.iterator().next();
 		assertTrue(firstAttribute.getAttribute().getId().equals("Test_Attribute1"));
 		

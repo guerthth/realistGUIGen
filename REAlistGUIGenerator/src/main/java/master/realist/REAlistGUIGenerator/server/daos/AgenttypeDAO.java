@@ -14,6 +14,11 @@ import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.model.Agenttype;
 import master.realist.REAlistGUIGenerator.shared.model.AgenttypeHasAdditionalattribute;
 
+/**
+ * DAO for Agenttype table of the REA DB
+ * @author Thomas
+ *
+ */
 public class AgenttypeDAO {
 
 	private HibernateUtil hibernateUtil;
@@ -161,12 +166,11 @@ public class AgenttypeDAO {
 	
 	/**
 	 * Creates an AttributeDTO object for an AgenttypeHasAdditionalattribute object
-	 * @param et
+	 * @param athaa
 	 * @return created attribute DTO
 	 */
 	private AttributeDTO createAttributeDTO(AgenttypeHasAdditionalattribute athaa){
 		
-		//return new AttributeDTO(athaa.getId().getAttributeId(),athaa.getAttribute().getName(),athaa.getAttribute().getDatatype());
 		return new AttributeDTO(athaa);
 	}
 	

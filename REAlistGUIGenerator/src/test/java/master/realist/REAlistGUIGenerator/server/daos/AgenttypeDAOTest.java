@@ -7,6 +7,11 @@ import master.realist.REAlistGUIGenerator.shared.util.SpringUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Testclass for Agenttype DAO
+ * @author Thomas
+ *
+ */
 public class AgenttypeDAOTest {
 
 	private static AgenttypeDAO agenttypehandler;

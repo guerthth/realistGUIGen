@@ -9,6 +9,8 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -71,6 +73,39 @@ public interface READBService extends RemoteService{
 	 * @return updated agent object
 	 */
 	public AgentDTO updateAgent(AgentDTO agentDTO);
+	
+	/**
+	 * Retrieving all existing resourcetypes in the REA DB
+	 * @return list of the existing resourcetypes in the REA DB
+	 */
+	public List<ResourcetypeDTO> getResourcetypes();
+	
+	/**
+	 * Retrieving all existing resources in the REA DB
+	 * @return list of existing ResourceDTOs
+	 */
+	public List<ResourceDTO> getResources();
+	
+	/**
+	 * saving a resourceDTO object as resource object in the REA DB
+	 * @param resourceDTO object that should be saved
+	 * @return saved resourcedto object
+	 */
+	public ResourceDTO saveResource(ResourceDTO resourceDTO);
+	
+	/**
+	 * deleting an resourceDTO object from the REA DB
+	 * @param resourceId Id of the resource object that should be deleted from the REA DB
+	 * @return Id of the deleted object
+	 */
+	public Integer deleteResource(Integer resourceId);
+	
+	/**
+	 * Updating an existing resource object in the REA DB
+	 * @param resourceDTO updated version of the object that should be saved to the REA DB
+	 * @return updated resource object
+	 */
+	public ResourceDTO updateResource(ResourceDTO resourceDTO);
 	
 	public DualityDTO saveDuality(DualityDTO dualityDTO);
 	

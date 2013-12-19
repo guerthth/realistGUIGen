@@ -1,6 +1,6 @@
 package master.realist.REAlistGUIGenerator.shared.model;
 
-// Generated Dec 10, 2013 2:10:07 PM by Hibernate Tools 4.0.0
+// Generated Dec 18, 2013 3:42:47 PM by Hibernate Tools 4.0.0
 
 import java.util.Date;
 
@@ -28,14 +28,14 @@ public class EventHasAdditionalattributevalue implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4071711977450601966L;
+	private static final long serialVersionUID = 538550730026629457L;
 	private EventHasAdditionalattributevalueId id;
 	private Event event;
 	private Attribute attribute;
-	private Double numeric;
-	private String textual;
-	private Boolean boolean_;
-	private Date datetime;
+	private Double numericValue;
+	private String textualValue;
+	private Boolean booleanValue;
+	private Date datetimeValue;
 
 	/**
 	 * Added constructor to convert a dualitydto object to a duality object
@@ -46,11 +46,12 @@ public class EventHasAdditionalattributevalue implements java.io.Serializable {
 		this.id = new EventHasAdditionalattributevalueId(addvaluedto.getId());
 		this.event = new Event(addvaluedto.getEvent());
 		this.attribute = new Attribute(addvaluedto.getAttribute());
-		this.numeric = addvaluedto.getNumeric();
-		this.textual = addvaluedto.getTextual();
-		this.boolean_ = addvaluedto.getBoolean_();
-		this.datetime = addvaluedto.getDatetime();
+		this.numericValue = addvaluedto.getNumeric();
+		this.textualValue = addvaluedto.getTextual();
+		this.booleanValue = addvaluedto.getBoolean_();
+		this.datetimeValue = addvaluedto.getDatetime();
 	}
+	
 	
 	public EventHasAdditionalattributevalue() {
 	}
@@ -65,15 +66,15 @@ public class EventHasAdditionalattributevalue implements java.io.Serializable {
 
 	public EventHasAdditionalattributevalue(
 			EventHasAdditionalattributevalueId id, Event event,
-			Attribute attribute, Double numeric, String textual,
-			Boolean boolean_, Date datetime) {
+			Attribute attribute, Double numericValue, String textualValue,
+			Boolean booleanValue, Date datetimeValue) {
 		this.id = id;
 		this.event = event;
 		this.attribute = attribute;
-		this.numeric = numeric;
-		this.textual = textual;
-		this.boolean_ = boolean_;
-		this.datetime = datetime;
+		this.numericValue = numericValue;
+		this.textualValue = textualValue;
+		this.booleanValue = booleanValue;
+		this.datetimeValue = datetimeValue;
 	}
 
 	@EmbeddedId
@@ -108,41 +109,41 @@ public class EventHasAdditionalattributevalue implements java.io.Serializable {
 		this.attribute = attribute;
 	}
 
-	@Column(name = "Numeric", precision = 22, scale = 0)
-	public Double getNumeric() {
-		return this.numeric;
+	@Column(name = "Numeric_Value", precision = 22, scale = 0)
+	public Double getNumericValue() {
+		return this.numericValue;
 	}
 
-	public void setNumeric(Double numeric) {
-		this.numeric = numeric;
+	public void setNumericValue(Double numericValue) {
+		this.numericValue = numericValue;
 	}
 
-	@Column(name = "Textual", length = 45)
-	public String getTextual() {
-		return this.textual;
+	@Column(name = "Textual_Value", length = 45)
+	public String getTextualValue() {
+		return this.textualValue;
 	}
 
-	public void setTextual(String textual) {
-		this.textual = textual;
+	public void setTextualValue(String textualValue) {
+		this.textualValue = textualValue;
 	}
 
-	@Column(name = "Boolean")
-	public Boolean getBoolean_() {
-		return this.boolean_;
+	@Column(name = "Boolean_Value")
+	public Boolean getBooleanValue() {
+		return this.booleanValue;
 	}
 
-	public void setBoolean_(Boolean boolean_) {
-		this.boolean_ = boolean_;
+	public void setBooleanValue(Boolean booleanValue) {
+		this.booleanValue = booleanValue;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "Datetime", length = 19)
-	public Date getDatetime() {
-		return this.datetime;
+	@Column(name = "Datetime_Value", length = 19)
+	public Date getDatetimeValue() {
+		return this.datetimeValue;
 	}
 
-	public void setDatetime(Date datetime) {
-		this.datetime = datetime;
+	public void setDatetimeValue(Date datetimeValue) {
+		this.datetimeValue = datetimeValue;
 	}
 
 }
