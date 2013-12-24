@@ -9,10 +9,10 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -23,12 +23,14 @@ public class DualityTypePanel extends VerticalPanel {
 	// Logger
 	private final static Logger logger = Logger.getLogger("DualityTypePanelLogger");
 	
-	// Dualitytype panel + ArrayList
+	// DualitytypeSelection panel + ArrayList
+	private Label agentSelectionIntroductionLabel = new Label("Business Case Administration");
+	private HorizontalPanel dualitytypeSelectionPanel = new HorizontalPanel();
 	private FlexTable dualitytypeFlexTable = new FlexTable();
 	private Label dualitytypeLabel = new Label("Choose Dualitytype: ");
 	private ListBox dualitytypeListBox = new ListBox();
 	private List<DualitytypeDTO> existingDualitytypeDTOs = new ArrayList<DualitytypeDTO>();
-	private Button dualitytypeSelectionButton = new Button("Select");
+	private Button dualitytypeSelectionButton = new Button("Create new");
 	
 	// Asyn READB Service
 	private READBServiceAsync reaDBSvc = GWT.create(READBService.class);	
@@ -52,6 +54,15 @@ public class DualityTypePanel extends VerticalPanel {
 	 */
 	private void populateDualityTypePanel(){
 		
+		// define style for agentSelectionIntroductionLabel
+		agentSelectionIntroductionLabel.addStyleName("introductionLabel");
+		
+		// adding the agentSelectionIntroductionLabel to the DualitytypePanel
+		this.add(agentSelectionIntroductionLabel);
+		
+		// apply styles for dualitytylePanel
+		this.addStyleName("fullsizePanel");
+		
 		// Assemble Dualitytype panel
 		dualitytypeFlexTable.setWidget(0, 0, dualitytypeLabel);
 		dualitytypeFlexTable.setWidget(0, 1, dualitytypeListBox);
@@ -68,8 +79,15 @@ public class DualityTypePanel extends VerticalPanel {
 		// get existing dualityType and populate dualitytypeListBox
 		getExistingDualityTypes();
 		
-  		 // assemble dualitytypePanel
-		this.add(dualitytypeFlexTable);  
+		// apply style for dualitytypeSelectionPanel
+		dualitytypeSelectionPanel.addStyleName("dualitytypeSelection");
+		dualitytypeSelectionPanel.addStyleName("fullsizePanel");
+		
+		// add the dualitytypeFlexTable to the dualitytypeSelectionPanel
+		dualitytypeSelectionPanel.add(dualitytypeFlexTable);
+		
+  		 // add dualitytypeSelectionPanel to the DualitytypePanel
+		this.add(dualitytypeSelectionPanel);  
 		
 	}
 	
@@ -103,6 +121,7 @@ public class DualityTypePanel extends VerticalPanel {
 	    		  dualitytypeDisplayName = ddto.getName().substring(0,trimIndex);
 	    		  dualitytypeListBox.addItem(dualitytypeDisplayName);
 	    		  existingDualitytypeDTOs.add(ddto);
+  
 	    	  }
 	    	  
 	    	  dualitytypeListBox.setVisibleItemCount(1);
@@ -110,7 +129,7 @@ public class DualityTypePanel extends VerticalPanel {
 	      }
 	    };
 
-	    // Make the call to the stock price service.
+	    // Make the call 
 	    reaDBSvc.getDualitytypes(callback);
 	}
 	

@@ -5,6 +5,11 @@ import java.util.Set;
 
 import master.realist.REAlistGUIGenerator.shared.model.Eventtype;
 
+/**
+ * Eventtype Data Transfer Object
+ * @author Thomas
+ *
+ */
 public class EventtypeDTO implements Serializable{
 	
 	/**
@@ -22,9 +27,34 @@ public class EventtypeDTO implements Serializable{
 	private boolean isExceptionEvent;
 	private boolean isSeries;
 	private Set<AttributeDTO> attributes;
+	private Set<EventtypeParticipationDTO> participations;
 	
+	/**
+	 * Default Constructor
+	 */
 	public EventtypeDTO(){
 		
+	}
+	
+	public Set<EventtypeParticipationDTO> getParticipations() {
+		return participations;
+	}
+
+	public void setParticipations(Set<EventtypeParticipationDTO> participations) {
+		this.participations = participations;
+	}
+
+	/**
+	 * Constructor transforming an Eventtype object to an EventtypeDTO
+	 * @param eventtype
+	 */
+	public EventtypeDTO(Eventtype eventtype){
+		this.id = eventtype.getId();
+		this.name = eventtype.getName();
+		this.isIncrement = eventtype.getIsIncrement();
+		this.isResourceUsed = eventtype.getIsResourceUsed();
+		this.isExceptionEvent = eventtype.getIsExceptionEvent();
+		this.isSeries = eventtype.getIsSeries();
 	}
 	
 	public EventtypeDTO(String id, String name, boolean isIncrement, boolean isResourceUsed, boolean isExceptionEvent, boolean isSeries, Set<AttributeDTO> attributes){
@@ -94,8 +124,5 @@ public class EventtypeDTO implements Serializable{
 		this.attributes = attributes;
 	}
 
-	public void setIncrement(boolean isIncrement) {
-		this.isIncrement = isIncrement;
-	}	
 	
 }

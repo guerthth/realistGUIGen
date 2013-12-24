@@ -9,6 +9,8 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 
@@ -104,6 +106,12 @@ public interface READBServiceAsync {
 	 * @param callback
 	 */
 	void updateResource(ResourceDTO resourceDTO, AsyncCallback<ResourceDTO> callback);
+	
+	/**
+	 * getting all existing EventtypeParticipationHasAdditionalAttributes in the REA DB
+	 * @param callback
+	 */
+	void getEventtypeParticipationsHasAdditionalAttribtes(EventtypeParticipationDTO participation , AsyncCallback<List<EventtypeParticipationHasAdditionalAttributeDTO>> callback);
 	
 	void saveDuality(DualityDTO dualityDTO,AsyncCallback<DualityDTO> callback);
 

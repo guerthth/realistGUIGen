@@ -2,11 +2,21 @@ package master.realist.REAlistGUIGenerator.client;
 
 
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.gwt.core.client.EntryPoint;
+import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
+import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -35,11 +45,25 @@ public class REAlistGUIGenerator implements EntryPoint {
 	// tab panel containing all administration panels as tabs
 	private TabPanel administrationTabPanel = new TabPanel();
 	
+	// Dualitytype panel 
+	private DualityTypePanel dualitytypePanel = new DualityTypePanel();
+	
+	// Async READB Service
+	private READBServiceAsync reaDBSvc = GWT.create(READBService.class);	
+	
+	// READBEntryContainer
+	private READBEntryContainer reaDBEntryContainer;
 
 	/**
 	 * On module load method
 	 */
 	public void onModuleLoad() {
+		
+		// initialize READBEntryContainer
+		reaDBEntryContainer = READBEntryContainer.getInstance();
+		
+		// setup the lists in the READBEntryContainer
+		callGetAgents();
 		
 		// mainpanel stype
 		mainPanel.addStyleName("fullsizePanel");
@@ -59,7 +83,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 		
 		// Assemble the stack panel
 		stackPanel.add(administrationTabPanel, "Entity Administration");
-		stackPanel.add(new DualityTypePanel(),"Business Case Creation");
+		stackPanel.add(dualitytypePanel,"Business Case Creation");
 		stackPanel.showStack(0);
 		stackPanel.addStyleName("fullsizePanel");
 		
@@ -71,6 +95,40 @@ public class REAlistGUIGenerator implements EntryPoint {
 		mainPanel.add(stackPanel);
 		
 	}
+	
+	
+	/**
+	 * Calling the getAgents method of the READBService
+	 */
+	private void callGetAgents(){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+	    
+	    // Set up the callback object.
+	    AsyncCallback<List<AgentDTO>> callback = new AsyncCallback<List<AgentDTO>>() {
+
+			public void onFailure(Throwable caught) {
+				logREADBRPCFailure("getAgents()");
+		    	caught.printStackTrace();
+			}
+
+			public void onSuccess(List<AgentDTO> result) {
+				
+				reaDBEntryContainer.getExistingAgentDTOs().clear();
+				
+				reaDBEntryContainer.setExistingAgentDTOs(result);
+				
+			}
+	    	
+	    };
+	    
+	    // Make the call
+	    reaDBSvc.getAgents(callback);
+	}
+	   
 
 	
 	/**

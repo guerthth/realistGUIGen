@@ -116,6 +116,13 @@ public interface READBServiceAsync
      * GWT-RPC service  asynchronous (client-side) interface
      * @see master.realist.REAlistGUIGenerator.client.READBService
      */
+    void getEventtypeParticipationsHasAdditionalAttribtes( master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO participation, AsyncCallback<java.util.List<master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO>> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
     void saveDuality( master.realist.REAlistGUIGenerator.shared.dto.DualityDTO dualityDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.DualityDTO> callback );
 
 

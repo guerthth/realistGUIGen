@@ -12,6 +12,10 @@ import javax.persistence.Embeddable;
 public class EventtypeparticipationHasAdditionalattributeId implements
 		java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 741420389620425409L;
 	private String eventTypeParticipationEventTypeId;
 	private String eventTypeParticipationAgentTypeId;
 	private String attributeId;

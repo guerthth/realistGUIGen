@@ -16,6 +16,7 @@ import master.realist.REAlistGUIGenerator.shared.DateValidator;
 import master.realist.REAlistGUIGenerator.shared.NumericValidator;
 import master.realist.REAlistGUIGenerator.shared.TextValidator;
 import master.realist.REAlistGUIGenerator.shared.Validator;
+import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
@@ -42,6 +43,9 @@ public class AgentPanel extends VerticalPanel{
 	// Logger
 	private final static Logger logger = Logger.getLogger("AgentPanelLogger");
 	
+	// READBEntryContainer
+	private READBEntryContainer reaDBEntryContainer;
+	
 	// Panel for Agent Administration + Agent ArrayList
 	private Label agentSelectionIntroductionLabel = new Label("Agent Administration");
 	private HorizontalPanel agentTableAndAddEditPanel = new HorizontalPanel();
@@ -58,7 +62,6 @@ public class AgentPanel extends VerticalPanel{
 	private Button agentOkButton = new Button("Ok");
 	private HorizontalPanel agentAddPanel = new HorizontalPanel();
 	private Button agentAddButton = new Button("Add");	
-	private ArrayList<AgentDTO> existingAgentDTOs = new ArrayList<AgentDTO>();
 		
 	// Arraylist for existing agenttypes
 	private ArrayList<AgenttypeDTO> existingAgenttypeDTOs = new ArrayList<AgenttypeDTO>();
@@ -85,6 +88,11 @@ public class AgentPanel extends VerticalPanel{
 	 * Constructor
 	 */
 	public AgentPanel(){
+		
+		// initialize READBEntryContainer
+		reaDBEntryContainer = READBEntryContainer.getInstance();
+		
+		// populate AgentPanel
 		populateAgentPanel();
 	}
 	
@@ -176,7 +184,6 @@ public class AgentPanel extends VerticalPanel{
 		agentAddButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				updateAgentAddEditPanel(null);
-				
 			}
 		});
 						
@@ -285,12 +292,12 @@ public class AgentPanel extends VerticalPanel{
 
 			public void onSuccess(List<AgentDTO> result) {
 				
-				existingAgentDTOs.clear();
+				reaDBEntryContainer.getExistingAgentDTOs().clear();
 				
 				for(AgentDTO adto : result){
 					
 					// adding the AgentDTOs to the existingAgentDTOs arrayList
-					existingAgentDTOs.add(adto);
+					reaDBEntryContainer.getExistingAgentDTOs().add(adto);
 					
 					// final variable needed for the button specifications
 					final AgentDTO currentAgentDTO = adto;
@@ -354,8 +361,8 @@ public class AgentPanel extends VerticalPanel{
 			// setting the values of the agents
 			agentSaveActionState = true;
 			
-			if(existingAgentDTOs.size()>0){
-				int lastId = existingAgentDTOs.get(existingAgentDTOs.size()-1).getId();
+			if(reaDBEntryContainer.getExistingAgentDTOs().size()>0){
+				int lastId = reaDBEntryContainer.getExistingAgentDTOs().get(reaDBEntryContainer.getExistingAgentDTOs().size()-1).getId();
 				agentIdTextTextBox.setText(String.valueOf(lastId+1));
 				
 			}else{	
@@ -365,6 +372,10 @@ public class AgentPanel extends VerticalPanel{
 			agentNameTextBox.setText("");
 			agentTypeListBox.setItemSelected(0, true);
 			
+			// reset selected index and AgentDTO in ListBox
+			selectedIndexInListBox = 0;
+			selectedAgenttypeDTOInListBox = existingAgenttypeDTOs.get(0);
+
 			// adding the additional attribute labels and textfields for the initially selected agenttype
 			addAdditionalAttributesForSelectedAgenttype(false);
 			
@@ -554,7 +565,7 @@ public class AgentPanel extends VerticalPanel{
 		
 		// check if the actionstate is 'save'
 		if(!agentSaveActionState){
-			int indexOfUpdateObject = existingAgentDTOs.indexOf(updatedAgentObject);
+			int indexOfUpdateObject = reaDBEntryContainer.getExistingAgentDTOs().indexOf(updatedAgentObject);
 			String oldName = agentUpdateObject.getName();
 			String updatedName = agentNameTextBox.getText();
 			
@@ -667,7 +678,7 @@ public class AgentPanel extends VerticalPanel{
 				Window.alert("New Agent '" + result.getName() + "' added to REA DB with Id " + result.getId() );
 				
 				// adding the added agentDTO to the list of agentDTOs
-				existingAgentDTOs.add(result);
+				reaDBEntryContainer.getExistingAgentDTOs().add(result);
 				
 				final AgentDTO savedAgentDTO = result;
 				
@@ -780,14 +791,14 @@ public class AgentPanel extends VerticalPanel{
 	    		
 	    		// update the dagentDTO arraylist
 
-	    		existingAgentDTOs.get(updatedListIndex).setName(result.getName());
-	    		existingAgentDTOs.get(updatedListIndex).setAgenttypes(result.getAgenttypes());
+	    		reaDBEntryContainer.getExistingAgentDTOs().get(updatedListIndex).setName(result.getName());
+	    		reaDBEntryContainer.getExistingAgentDTOs().get(updatedListIndex).setAgenttypes(result.getAgenttypes());
 	    		
 	    		// update entries from flextable
 	    		agentSelectionFlexTable.setText(updatedListIndex + 1, 1, result.getName());
 	    		agentSelectionFlexTable.setText(updatedListIndex + 1, 2, result.getAgenttypes().iterator().next().getName());
 	    		
-				updateAgentAddEditPanel(existingAgentDTOs.get(updatedListIndex));
+				updateAgentAddEditPanel(reaDBEntryContainer.getExistingAgentDTOs().get(updatedListIndex));
 	    	}
 	    };
 	    
@@ -803,7 +814,7 @@ public class AgentPanel extends VerticalPanel{
 	 */
 	private void deleteAgent(AgentDTO deleteAgentDTO){
 		
-		final int removedListIndex = existingAgentDTOs.indexOf(deleteAgentDTO);
+		final int removedListIndex = reaDBEntryContainer.getExistingAgentDTOs().indexOf(deleteAgentDTO);
 		
 		// Initialize the service proxy.
 	    if (reaDBSvc == null) {
@@ -823,7 +834,7 @@ public class AgentPanel extends VerticalPanel{
 				Window.alert("Agent with Id " + result + " was deleted from the REA DB");
 				
 				// remove entries from arrayList
-				existingAgentDTOs.remove(removedListIndex);
+				reaDBEntryContainer.getExistingAgentDTOs().remove(removedListIndex);
 				// remove entries from flextable
 				agentSelectionFlexTable.removeRow(removedListIndex+1);
 				
@@ -834,7 +845,7 @@ public class AgentPanel extends VerticalPanel{
 				
 				// if no agents existagentaddeditpanel is set to invisible
 				// the same happens to the agentSelectionFlexTable
-				if(existingAgentDTOs.size() == 0){
+				if(reaDBEntryContainer.getExistingAgentDTOs().size() == 0){
 					agentAddEditPanel.setVisible(false);
 				}
 				

@@ -9,6 +9,8 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 
@@ -106,6 +108,13 @@ public interface READBService extends RemoteService{
 	 * @return updated resource object
 	 */
 	public ResourceDTO updateResource(ResourceDTO resourceDTO);
+	
+	/**
+	 * getting all existing EventtypeParticipationHasAdditionalAttributes in the REA DB
+	 * @param participation
+	 * @return
+	 */
+	public List<EventtypeParticipationHasAdditionalAttributeDTO> getEventtypeParticipationsHasAdditionalAttribtes(EventtypeParticipationDTO participation);
 	
 	public DualityDTO saveDuality(DualityDTO dualityDTO);
 	

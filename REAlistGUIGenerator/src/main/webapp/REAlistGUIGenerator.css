@@ -102,9 +102,19 @@ body {
   width: 100%;
 }
 
-/* Panel half secreen size */
+/* Panel with three quarter screen size */
+.threequartersizePanel {
+  width: 75%;
+}
+
+/* Panel half screen size */
 .halfsizePanel {
-  width: 45%;
+  width: 50%;
+}
+
+/* Panel quarter screen size */
+.quartersizePanel {
+  width: 25%;
 }
 
 /* Error Style when textbox validation fails. Only for Validation purposes*/
@@ -112,4 +122,64 @@ body {
 	border: 2px solid red; 
 }
 
+/*********************************/
+/*       DualitytypePanel	     */
+/*********************************/
+
+
+/* Admin addEdit Header Labels */
+.dualitytypeSelection {
+  margin-bottom: 6px;
+  font-size:120%;
+  margin-top: 6px;
+}
+
+/* Dualitytype Select Button */
+.gwt-Button-select {
+  width: 10%;
+  margin: 10px 0px 10px 0px;
+}
+
+/* Admin addEdit Header Labels */
+.dualitytypeLabelLabel {
+  margin-bottom: 6px;
+  font-size:120%;
+  margin-top: 6px;
+}
+
+/*********************************/
+/*       EventContentPanel	     */
+/*********************************/
+
+
+/* Datepicker Panels */
+.datePickerPanel {
+  margin-left: 30px;
+}
+
+/* eventtypeAttributePanel */
+.eventtypeAttributePanel {
+  width: 60%;
+}
+
+/* eventtypeDatePanel */
+.eventtypeDatePanel {
+  width: 40%;
+}
+
+/*************************************************/
+/*       Participation and Stockflow Panel	     */
+/*************************************************/
+
+.participationStockflowPanel {
+  width: 50%;
+  border: 1px solid silver;
+  padding: 2px;
+  margin-bottom:6px;
+}
+
+.participationSpecificationLabel {
+  margin: 10px 0px 10px 0px;
+  font-size:120%;
+}
 

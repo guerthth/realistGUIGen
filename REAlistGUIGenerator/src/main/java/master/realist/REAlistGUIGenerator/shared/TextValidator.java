@@ -21,8 +21,9 @@ public class TextValidator extends Validator {
 	 * @return true or false
 	 */
 	public boolean validate(String value) {
-		if(value.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$") || (value.matches("^[A-Za-z0-9._-]+")) 
-				&& value.length() <= maxtextLength){
+		if(value.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$") || (value.matches("^[a-zA-Z0-9][a-zA-Z0-9 ]+$") 
+				|| value.matches("^[a-zA-Z0-9]+")) 	&& value.length() <= maxtextLength){
+			
 			errorMessage = "";
 	        return true;
 		} else{

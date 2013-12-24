@@ -72,6 +72,7 @@ public class AgentDAO {
 	}
 	
 	
+	
 	/**
 	 * Saving an agentDTO object as agentobject to the REA DB
 	 * @param agentDTO object that should be stored in REA DB

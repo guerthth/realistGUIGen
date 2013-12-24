@@ -12,6 +12,7 @@ import master.realist.REAlistGUIGenerator.server.daos.DualityStatusDAO;
 import master.realist.REAlistGUIGenerator.server.daos.DualitytypeDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventHasAdditionalattributevalueDAO;
+import master.realist.REAlistGUIGenerator.server.daos.EventtypeParticipationHasAdditionalAttributeDAO;
 import master.realist.REAlistGUIGenerator.server.daos.ResourceDAO;
 import master.realist.REAlistGUIGenerator.server.daos.ResourcetypeDAO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
@@ -21,6 +22,8 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 import master.realist.REAlistGUIGenerator.shared.util.SpringUtil;
@@ -195,6 +198,19 @@ public class READBServiceImpl extends RemoteServiceServlet implements READBServi
 		ResourceDAO resourcehandler = (ResourceDAO) SpringUtil.context.getBean("resourcedao");
 		return resourcehandler.updateResource(resourceDTO);
 	}
+	
+	
+	/**
+	 * getting all existing EventtypeParticipationHasAdditionalAttributes in the REA DB
+	 * @param participation
+	 * @return list of EventtypeParticipationHasAdditionalAttributes
+	 */
+	public List<EventtypeParticipationHasAdditionalAttributeDTO> getEventtypeParticipationsHasAdditionalAttribtes(EventtypeParticipationDTO participation){
+		EventtypeParticipationHasAdditionalAttributeDAO eventParticipationhasAdditionalAttributeHandler = 
+				(EventtypeParticipationHasAdditionalAttributeDAO) SpringUtil.context.getBean("eventtypeparticipationhasadditionalattributedao");
+		return eventParticipationhasAdditionalAttributeHandler.getList(participation.getAgenttypeId(), participation.getEventtypeId());
+	}
+	
 	
 	
 	/**

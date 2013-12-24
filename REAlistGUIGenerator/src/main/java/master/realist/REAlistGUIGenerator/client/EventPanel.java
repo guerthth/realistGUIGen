@@ -30,13 +30,16 @@ public class EventPanel extends TabPanel{
 	 */
 	private void populateEventPanel(){
 		
+		// apply style for the EventPanel
+		this.addStyleName("fullsizePanel");
+		
 		// retrieve all eventtypes that occur in the specified duality and save them to
 		// arraylists for increments and decrements
 		ArrayList<EventtypeDTO> incrementEventtypes = new ArrayList<EventtypeDTO>();
 		ArrayList<EventtypeDTO> decrementEventtypes = new ArrayList<EventtypeDTO>();
 				
 		for(EventtypeDTO etdto : selectedDualityType.getEventtypes()){
-					
+	
 			if(etdto.getIsIncrement()){
 				incrementEventtypes.add(etdto);
 			}else{
@@ -49,12 +52,14 @@ public class EventPanel extends TabPanel{
 		
 		// adding tabs for increment event sets
 		for(EventtypeDTO increment : incrementEventtypes){
+
 			trimmedEventTypeName = increment.getName().substring(increment.getName().indexOf("_")+1);
 			this.add(new EventContentPanel(increment), trimmedEventTypeName);
 		}
 		
 		// adding tabls for decrement event sets
 		for(EventtypeDTO decrement : decrementEventtypes){
+
 			trimmedEventTypeName = decrement.getName().substring(decrement.getName().indexOf("_")+1);
 			this.add(new EventContentPanel(decrement), trimmedEventTypeName);
 		}

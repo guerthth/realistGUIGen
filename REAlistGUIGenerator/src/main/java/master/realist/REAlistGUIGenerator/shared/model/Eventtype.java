@@ -3,8 +3,10 @@ package master.realist.REAlistGUIGenerator.shared.model;
 // Generated Dec 10, 2013 2:10:07 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
@@ -37,12 +40,12 @@ public class Eventtype implements java.io.Serializable {
 	private Boolean isExceptionEvent;
 	private Boolean isSeries;
 	private Set<Event> events = new HashSet<Event>(0);
-	private Set<EventtypeHasAdditionalattribute> eventtypeHasAdditionalattributes = new HashSet<EventtypeHasAdditionalattribute>(
+	private Set<EventtypeHasAdditionalattribute> eventtypeHasAdditionalattributes = new LinkedHashSet<EventtypeHasAdditionalattribute>(
 			0);
 	private Set<FactorEventtype> factorEventtypes = new HashSet<FactorEventtype>(
 			0);
 	private Set<Commitment> commitments = new HashSet<Commitment>(0);
-	private Set<Eventtypeparticipation> eventtypeparticipations = new HashSet<Eventtypeparticipation>(
+	private Set<Eventtypeparticipation> eventtypeparticipations = new LinkedHashSet<Eventtypeparticipation>(
 			0);
 	private Set<Eventtypestockflow> eventtypestockflows = new HashSet<Eventtypestockflow>(
 			0);
@@ -177,6 +180,7 @@ public class Eventtype implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eventtype")
+	@OrderBy
 	public Set<EventtypeHasAdditionalattribute> getEventtypeHasAdditionalattributes() {
 		return this.eventtypeHasAdditionalattributes;
 	}
@@ -204,6 +208,8 @@ public class Eventtype implements java.io.Serializable {
 		this.commitments = commitments;
 	}
 
+	// GENERATED @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventtype")
+	// OWN 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "eventtype")
 	public Set<Eventtypeparticipation> getEventtypeparticipations() {
 		return this.eventtypeparticipations;
