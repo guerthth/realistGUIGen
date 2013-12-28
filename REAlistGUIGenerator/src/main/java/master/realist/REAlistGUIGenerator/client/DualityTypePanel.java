@@ -1,14 +1,30 @@
 package master.realist.REAlistGUIGenerator.client;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
+import master.realist.REAlistGUIGenerator.shared.dto.AgentHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -16,12 +32,16 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DualityTypePanel extends VerticalPanel {
 
 	// Logger
 	private final static Logger logger = Logger.getLogger("DualityTypePanelLogger");
+	
+	// READBEntryContainer
+	private READBEntryContainer reaDBEntryContainer;
 	
 	// DualitytypeSelection panel + ArrayList
 	private Label agentSelectionIntroductionLabel = new Label("Business Case Administration");
@@ -32,6 +52,16 @@ public class DualityTypePanel extends VerticalPanel {
 	private List<DualitytypeDTO> existingDualitytypeDTOs = new ArrayList<DualitytypeDTO>();
 	private Button dualitytypeSelectionButton = new Button("Create new");
 	
+	// dualitystatusAndDualityAddPanel
+	private HorizontalPanel dualitystatusAndDualityAddPanel = new HorizontalPanel();
+	private FlexTable dualitystatusAndDualityAddFlexTable = new FlexTable();
+	private Label dualitystatusLabel = new Label("Choose Status: ");
+	private ListBox dualitystatusListBox = new ListBox();
+	private Button dualityAddButton = new Button("Add Business Case");
+	
+	// list of existing dualitystatus in REA DB
+	private List<DualityStatusDTO> dualitystatusList = new ArrayList<DualityStatusDTO>();
+	
 	// Asyn READB Service
 	private READBServiceAsync reaDBSvc = GWT.create(READBService.class);	
 	
@@ -41,11 +71,27 @@ public class DualityTypePanel extends VerticalPanel {
 	// Eventtype Tab Panel
 	private TabPanel eventypeSetTabPanel;
 	
+	// DualityDTO object that will be saved as Duality object in the REA DB
+	private DualityDTO saveDualityDTO;
+	
+	// Lists keeping track of events of the duality and the corresponding attributes + textboxes for validation
+	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap = new HashMap<EventDTO,Map<AttributeDTO,CustomTextBox>>();
+
+	// Lists keeping track of events of the duality and the corresponding attributes + textboxes for validation (participations)
+	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap = new HashMap<EventDTO,Map<AttributeDTO,CustomTextBox>>();
+
+	// list of eventdtos that should be saved to the REA DB
+	private List<EventDTO> saveEventDTOList = new ArrayList<EventDTO>();
 	
 	/**
 	 * Constructor
 	 */
 	public DualityTypePanel(){
+		
+		// initialize READBEntryContainer
+		reaDBEntryContainer = READBEntryContainer.getInstance();
+		
+		// populate the DualityTypePanel
 		populateDualityTypePanel();
 	}
 	
@@ -139,32 +185,281 @@ public class DualityTypePanel extends VerticalPanel {
 	 */
 	private void loadDualitytypeContent(int selectedIndex){
 		
-		// TODO: INCLUDE THIS
-		// since a new Dualitytype content is loaded the arraylist for
-		// eventdtos to save has to be refreshed
-		//saveEventDTOList.clear();
-		// the same happens for additional attributes
-		//eventAttributeMap.clear();
+		// clear eventtypeAttributeLabelMap
+		eventtypeAttributeLabelMap.clear();
 		
+		// clear saveEventDTOList
+		saveEventDTOList.clear();
 		
 		//retrieve selected DualitytypeDTO object
 		DualitytypeDTO selectedDualityType = existingDualitytypeDTOs.get(selectedIndex);
 		currentDualityType = selectedDualityType;
 		
-		// removing the tabpanel from the main panel if it already exists to avoid adding it several times
+		// DualityDTO object that will be saved as Duality to the REA DB
+		saveDualityDTO = new DualityDTO();
+		saveDualityDTO.setDualitytype(currentDualityType);
+		
+		// removing the tabpanel from theDualityTypePanel if it already exists to avoid adding it several times
 		if(eventypeSetTabPanel != null){
 			this.remove(eventypeSetTabPanel);
 		}
 		
+		// removing dualitystatusAndDualityAddPanel from the main DualityTypePanel if it already exists
+		if(dualitystatusAndDualityAddPanel != null){
+			this.remove(dualitystatusAndDualityAddPanel);
+			//also refresh dualitystatuslistbox content
+			dualitystatusListBox.clear();
+		}
+		
 		// Tab Panel for Eventtypes of a specific Duality
-		eventypeSetTabPanel = new EventPanel(selectedDualityType);
+		eventypeSetTabPanel = new EventPanel(saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, eventtypeParticipationAttributeLabelMap);
 		
 		// preselecting the first tab of the panel
 		eventypeSetTabPanel.selectTab(0);
 		
 		// add the tabpanel to the main panel
 		this.add(eventypeSetTabPanel);
+		
+		// format dualitystatusAndDualityAddPanel
+		dualitystatusAndDualityAddFlexTable.setWidget(0, 0, dualitystatusLabel);
+		dualitystatusAndDualityAddFlexTable.setWidget(0, 1, dualitystatusListBox);
+		dualitystatusAndDualityAddFlexTable.setWidget(0, 2, dualityAddButton);
+		dualitystatusAndDualityAddFlexTable.setCellSpacing(5);
+		
+		// populate dualitystatusListBox
+		populateDualityStatusListBox();
+		
+		// add duality button functionality
+		dualityAddButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
 
+				saveDuality();
+			}
+		});
+		
+		dualitystatusAndDualityAddPanel.add(dualitystatusAndDualityAddFlexTable);
+		
+		// styles
+		dualitystatusAndDualityAddPanel.addStyleName("fullsizePanel");
+		dualitystatusAndDualityAddPanel.addStyleName("dualityAdd");
+		
+		// add panel for dualitystatus selection and adding the dualitytype to the REA DB
+		this.add(dualitystatusAndDualityAddPanel);
+
+	}
+	
+	/**
+	 * Method populating the dualityStatusListBox with the existing dualitystatus in the REA DB
+	 */
+	private void populateDualityStatusListBox(){
+		
+		// list of all existing dualitystatusDTOs
+		dualitystatusList = reaDBEntryContainer.getExistingDualityStatusDTOs();
+		
+		if(dualitystatusList.size() == 0){
+			
+			dualitystatusListBox.addItem("No dualitytypes exist");
+			return;
+		}
+		
+		// adding all existing dualitystatus in REA DB to the listbox
+		for(DualityStatusDTO status : dualitystatusList){
+			
+			dualitystatusListBox.addItem(status.getStatus());
+		}
+	}
+	
+	
+	/**
+	 * Saving the specified duality to the database
+	 */
+	private void saveDuality(){
+		
+		if(!dualitytypeTextBoxValidationResult()){
+			return;
+		} 
+				
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+
+	    // Set up the callback object.
+	    AsyncCallback<DualityDTO> callback = new AsyncCallback<DualityDTO>() {
+
+			public void onFailure(Throwable caught) {
+				logREADBRPCFailure("getAgents()");
+		    	caught.printStackTrace();
+			}
+
+			public void onSuccess(DualityDTO result) {
+				
+				Window.alert("Save new Duality with Id '" + result.getId() + "'");
+				
+				for(EventDTO eventdto : saveEventDTOList){
+	    		  	eventdto.setDuality(result);
+	    		  	
+	    		  	// generate additional attributes for eventdto
+	    		  	eventdto.setAdditionalAttributeValues(createAttributeValueSetForSelectedEventDTO(eventdto));
+	    		  	
+	  	    		saveEvent(eventdto);
+	  	      	}
+				
+			}
+	    	
+	    };
+	    
+	    // selected dualitystatus
+	    DualityStatusDTO dualitystatusDTO = dualitystatusList.get(dualitystatusListBox.getSelectedIndex());
+	    
+	    // dualitytypeDTO
+	    DualitytypeDTO dualitytypeDTO = new DualitytypeDTO();
+	 	dualitytypeDTO.setId(currentDualityType.getId());
+	 	dualitytypeDTO.setName(currentDualityType.getName());
+	 	dualitytypeDTO.setConversion(currentDualityType.isConversion());
+	    
+	    // create DualityDTO object that will be saved in the database
+	    //DualityDTO dualityDTO = createDualityDTO();
+	    saveDualityDTO.setDualitystatus(dualitystatusDTO);
+	    saveDualityDTO.setDate(new Date());
+	    saveDualityDTO.setDualitytype(dualitytypeDTO);
+	    
+	    // Make the call
+	    reaDBSvc.saveDuality(saveDualityDTO, callback);
+	    //reaDBSvc.saveDuality(dualityDTO, callback);
+	}
+	
+	
+	/**
+	 * Method creating a Set of additional attribute values for a specific eventdto
+	 * @param eventdto
+	 * @return attributes
+	 */
+	private Set<EventHasAdditionalattributevalueDTO> createAttributeValueSetForSelectedEventDTO(EventDTO eventdto){
+		
+		// creating additional attribute values for eventDTO
+	    Set<EventHasAdditionalattributevalueDTO> attributes = new LinkedHashSet<EventHasAdditionalattributevalueDTO>();
+	    
+	    // get the attributeLabelMap for the current event
+	    Map<AttributeDTO,CustomTextBox> attributeLabelMap = eventtypeAttributeLabelMap.get(eventdto);
+	    
+	    // run through the elements in the labelmap 
+	    for(AttributeDTO attribute : attributeLabelMap.keySet()){
+	    	
+	    	String textBoxContent = attributeLabelMap.get(attribute).getText();
+	    	
+	    	// create additional attribute value DTO object
+	    	EventHasAdditionalattributevalueDTO attributevalue = new EventHasAdditionalattributevalueDTO();
+	    	attributevalue.setEvent(eventdto);
+	    	attributevalue.setAttribute(attribute);
+	    	
+	    	// setting the value depending on the datatype
+	    	if (attribute.getDatatype().equals("INT") || attribute.getDatatype().equals("DOUBLE")){
+	    		attributevalue.setNumericValue(Double.parseDouble(textBoxContent));
+	    	} else if (attribute.getDatatype().equals("VARCHAR")){
+	    		attributevalue.setTextualValue(textBoxContent);
+	    	} else if (attribute.getDatatype().equals("BOOLEAN")){
+	    		attributevalue.setBooleanValue(Boolean.valueOf(textBoxContent));
+	    	} else {		
+	    		Date date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(textBoxContent);
+	    		attributevalue.setDatetimeValue(date);
+	    	}
+	    	
+	    	// adding the attributevalue to the attribues set
+	    	attributes.add(attributevalue);
+	    	
+	    }
+	    
+	    return attributes;
+	    
+	}
+	
+	
+	/**
+	 * Saving the included events to the database
+	 */
+	private void saveEvent(EventDTO savedEventdto){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+
+	    // Set up the callback object.
+	    AsyncCallback<EventDTO> callback = new AsyncCallback<EventDTO>() {
+	      public void onFailure(Throwable caught) {
+	    	  logREADBRPCFailure("saveEvent()");
+	    	  caught.printStackTrace();
+	      }
+
+	      public void onSuccess(EventDTO result) {
+	    	  
+	    	  Window.alert("Event " + result.getEventtype().getId() + " has been saved to the DB with id " + result.getId());
+	    	  
+	      }
+	    };
+	    
+	    // Make the call to the stock price service.
+	    reaDBSvc.saveEvent(savedEventdto, callback);
+	    
+	}
+	
+	
+	/**
+	 * Method creating a dualityDTO object that will be saved to the REA DB
+	 * @return
+	 */
+	private DualityDTO createDualityDTO(){
+		
+		// dualitytypeDTO
+	    DualitytypeDTO dualitytypeDTO = new DualitytypeDTO();
+	 	dualitytypeDTO.setId(currentDualityType.getId());
+	 	dualitytypeDTO.setName(currentDualityType.getName());
+	 	dualitytypeDTO.setConversion(currentDualityType.isConversion());
+	 	
+	 	 // selected dualitystatus
+	    DualityStatusDTO dualitystatusDTO = dualitystatusList.get(dualitystatusListBox.getSelectedIndex());
+	 	
+	 	// dualityDTO
+		DualityDTO dualityDTO = new DualityDTO();
+	    dualityDTO.setDualitytype(dualitytypeDTO);
+	    dualityDTO.setDate(new Date());
+	    dualityDTO.setDualitystatus(dualitystatusDTO);
+	    
+	    return dualityDTO;
+	}
+	
+	
+	/**
+	 * Method validating all textboxes relevant for a Dualitytype
+	 * @return True if all validations are passed. False if one fails
+	 */
+	private boolean dualitytypeTextBoxValidationResult(){
+		
+		boolean validationResult = true;
+		
+		// Eventtype Attributes
+		for(EventDTO edto : eventtypeAttributeLabelMap.keySet()){
+			for(AttributeDTO adto : eventtypeAttributeLabelMap.get(edto).keySet()){
+				
+				if(!eventtypeAttributeLabelMap.get(edto).get(adto).validate()){
+					validationResult = false;
+				}
+				
+			}
+		}
+		
+		// Partcipation Attributes
+		for(EventDTO edto : eventtypeParticipationAttributeLabelMap.keySet()){
+			for(AttributeDTO adto : eventtypeParticipationAttributeLabelMap.get(edto).keySet()){
+				
+				if(!eventtypeParticipationAttributeLabelMap.get(edto).get(adto).validate()){
+					validationResult = false;
+				}
+			}
+		}
+		
+		return validationResult;
 	}
 
 	

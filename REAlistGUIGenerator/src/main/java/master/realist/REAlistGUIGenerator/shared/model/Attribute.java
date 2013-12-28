@@ -32,7 +32,7 @@ public class Attribute implements java.io.Serializable {
 	private String id;
 	private String name;
 	private String datatype;
-	private Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues = new HashSet<EventHasAdditionalattributevalue>(
+	private Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues = new LinkedHashSet<EventHasAdditionalattributevalue>(
 			0);
 	private Set<AgentHasAdditionalattributevalue> agentHasAdditionalattributevalues = new LinkedHashSet<AgentHasAdditionalattributevalue>(
 			0);
@@ -134,7 +134,7 @@ public class Attribute implements java.io.Serializable {
 		this.datatype = datatype;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.attribute")
 	public Set<EventHasAdditionalattributevalue> getEventHasAdditionalattributevalues() {
 		return this.eventHasAdditionalattributevalues;
 	}

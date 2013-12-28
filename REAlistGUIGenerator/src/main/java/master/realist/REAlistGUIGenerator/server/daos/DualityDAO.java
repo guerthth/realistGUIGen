@@ -1,25 +1,76 @@
 package master.realist.REAlistGUIGenerator.server.daos;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import master.realist.REAlistGUIGenerator.server.util.HibernateUtil;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.model.Duality;
-import master.realist.REAlistGUIGenerator.shared.model.Dualitystatus;
 
 public class DualityDAO {
 	
 	private HibernateUtil hibernateUtil;
 	
+	
+	/**
+	 * Getting all existing duality entries in the REA DB
+	 * @return dualityDTOlist list of all existing dualities in REA DB
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DualityDTO> getDualityList(){
+		
+		Session session = null;
+		List<Duality> existingDualities = null;
+		List<DualityDTO> dualityDTOlist = null;
+		
+		try{
+			
+			session = hibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			existingDualities = new ArrayList<Duality>(session.createQuery("from Duality").list());
+			
+			if(existingDualities != null){
+				dualityDTOlist = new ArrayList<DualityDTO>();
+				
+				for(Duality duality : existingDualities){
+					
+					// since lazy fetching is used, events need to be initialized
+					Hibernate.initialize(duality.getEvents());
+	
+					// adding the created dualityDTOs to the List that is returned
+					dualityDTOlist.add(createDualityDTO(duality));
+
+				}
+			}
+			
+			session.getTransaction().commit();
+			
+		} catch(Exception e){
+			e.printStackTrace();
+			if(session != null){session.getTransaction().rollback();}
+			
+		} finally {
+			if(session != null) {
+				session.close();
+			}	
+		}
+		
+		return dualityDTOlist;
+	}
+	
+	
+	/**
+	 * Method saving a new duality object to the REA DB
+	 * @param dualityDTO
+	 * @return dualityId of the new inserted duality object
+	 */
 	public int saveDuality(DualityDTO dualityDTO){
 		
-		// Helper status since no entries exists yet
-		// TODO: crosscheck with Dieter
-		Dualitystatus status = new Dualitystatus();
-		status.setId(1);
-		
 		Duality duality = new Duality(dualityDTO);
-		duality.setDualitystatus(status);
+		
 		Session session = null;
 		int dualityId = 0;
 		
@@ -42,6 +93,46 @@ public class DualityDAO {
 		
 		return dualityId;
 	}
+	
+	
+	/**
+	 * Deleting a duality object from the REA DB 
+	 * @param id of the duality object that should be deleted
+	 */
+	public void deleteDuality(int id){
+		
+		Session session = null;
+		
+		try{
+			
+			session = hibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			Duality deleteDuality = (Duality) session.get(Duality.class, id);
+			session.delete(deleteDuality);
+			session.getTransaction().commit();
+			
+		} catch(Exception e){
+			
+			e.printStackTrace();
+			if(session != null){session.getTransaction().rollback();}
+		} finally {
+			if(session != null){
+				session.close();
+			}
+		}
+	}
+	
+	
+	/**
+	 * Method creating a DualityDTO object from 
+	 * @param duality
+	 * @return
+	 */
+	private DualityDTO createDualityDTO(Duality duality){
+		
+		return new DualityDTO(duality);
+	}
+	
 	
 	/**
 	 * Getter for HibernateUtil object

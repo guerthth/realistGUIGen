@@ -3,6 +3,8 @@ package master.realist.REAlistGUIGenerator.shared.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import master.realist.REAlistGUIGenerator.shared.model.Duality;
+
 public class DualityDTO implements Serializable{
 
 	/**
@@ -13,7 +15,20 @@ public class DualityDTO implements Serializable{
 	private int id;
 	private DualitytypeDTO dualitytype;
 	private Date date;
+	private DualityStatusDTO dualitystatus;
 	// TODO: add eventDTOs
+	
+	
+	/**
+	 * Method creating a DualityDTO object from a Duality object
+	 * @param duality
+	 */
+	public DualityDTO(Duality duality){
+		
+		this.id = duality.getId();
+		this.dualitytype = new DualitytypeDTO(duality.getDualitytype());
+	}
+	
 	
 	/**
 	 * Default Constructor
@@ -22,6 +37,7 @@ public class DualityDTO implements Serializable{
 		
 	}
 	
+
 	/**
 	 * Constructor
 	 * @param id 
@@ -57,6 +73,14 @@ public class DualityDTO implements Serializable{
 
 	public void setDualitytype(DualitytypeDTO dualitytype) {
 		this.dualitytype = dualitytype;
+	}
+	
+	public DualityStatusDTO getDualitystatus() {
+		return dualitystatus;
+	}
+
+	public void setDualitystatus(DualityStatusDTO dualitystatus) {
+		this.dualitystatus = dualitystatus;
 	}
 	
 	

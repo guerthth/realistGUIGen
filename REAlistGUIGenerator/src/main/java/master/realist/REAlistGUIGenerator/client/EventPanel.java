@@ -1,10 +1,16 @@
 package master.realist.REAlistGUIGenerator.client;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * Class representing the Panel for Events
@@ -14,14 +20,23 @@ import com.google.gwt.user.client.ui.TabPanel;
 public class EventPanel extends TabPanel{
 	
 	private DualitytypeDTO selectedDualityType;
+	private DualityDTO saveDualityDTO;
+	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap;
+	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap;
+	private List<EventDTO> saveEventDTOList;
 	
 	/**
 	 * Constructor
-	 * @param selectedDualityType
+	 * @param dualityDTO
 	 */
-	public EventPanel(DualitytypeDTO selectedDualityType){
+	public EventPanel(DualityDTO dualityDTO, List<EventDTO> saveEventDTOList, Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap,
+						Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap){
 		
-		this.selectedDualityType = selectedDualityType;
+		this.saveDualityDTO = dualityDTO;
+		this.selectedDualityType = dualityDTO.getDualitytype();
+		this.eventtypeAttributeLabelMap = eventtypeAttributeLabelMap;
+		this.eventtypeParticipationAttributeLabelMap = eventtypeParticipationAttributeLabelMap;
+		this.saveEventDTOList = saveEventDTOList;
 		populateEventPanel();
 	}
 	
@@ -39,7 +54,7 @@ public class EventPanel extends TabPanel{
 		ArrayList<EventtypeDTO> decrementEventtypes = new ArrayList<EventtypeDTO>();
 				
 		for(EventtypeDTO etdto : selectedDualityType.getEventtypes()){
-	
+			
 			if(etdto.getIsIncrement()){
 				incrementEventtypes.add(etdto);
 			}else{
@@ -54,14 +69,14 @@ public class EventPanel extends TabPanel{
 		for(EventtypeDTO increment : incrementEventtypes){
 
 			trimmedEventTypeName = increment.getName().substring(increment.getName().indexOf("_")+1);
-			this.add(new EventContentPanel(increment), trimmedEventTypeName);
+			this.add(new EventContentPanel(increment, saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, eventtypeParticipationAttributeLabelMap), trimmedEventTypeName);
 		}
 		
 		// adding tabls for decrement event sets
 		for(EventtypeDTO decrement : decrementEventtypes){
 
 			trimmedEventTypeName = decrement.getName().substring(decrement.getName().indexOf("_")+1);
-			this.add(new EventContentPanel(decrement), trimmedEventTypeName);
+			this.add(new EventContentPanel(decrement, saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, eventtypeParticipationAttributeLabelMap), trimmedEventTypeName);
 		}
 		
 		

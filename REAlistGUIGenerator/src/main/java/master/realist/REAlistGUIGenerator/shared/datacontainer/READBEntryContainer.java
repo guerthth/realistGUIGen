@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 
 /**
  * Class administrating all Lists of retrieved entities (DualityStatus, Agent, Resource)
@@ -18,6 +19,10 @@ public class READBEntryContainer {
 	
 	// List of existing Agents in REA DB
 	private List<AgentDTO> existingAgentDTOs = new ArrayList<AgentDTO>();
+	
+	// List of existing DualityStatus in REA DB
+	private List<DualityStatusDTO> existingDualityStatusDTOs = new ArrayList<DualityStatusDTO>();
+
 	
 	/**
 	 * Default Constructor
@@ -41,7 +46,7 @@ public class READBEntryContainer {
 
 	/**
 	 * Getter for list of existing agents in READB
-	 * @return existingAgentDTOs ist of existing agents in READB
+	 * @return existingAgentDTOs list of existing agents in READB
 	 */
 	public List<AgentDTO> getExistingAgentDTOs() {
 		return existingAgentDTOs;
@@ -49,9 +54,26 @@ public class READBEntryContainer {
 
 	/**
 	 * Setter for list of existing agents in READB
-	 * @param existingAgentDTOs ist of existing agents in READB
+	 * @param existingAgentDTOs list of existing agents in READB
 	 */
 	public void setExistingAgentDTOs(List<AgentDTO> existingAgentDTOs) {
 		this.existingAgentDTOs = existingAgentDTOs;
+	}
+	
+	/**
+	 * Getter for list of existing dualitystatus in REA DB
+	 * @return existingDualityStatusDTOs list of existing dualitystatus in REA DB
+	 */
+	public List<DualityStatusDTO> getExistingDualityStatusDTOs() {
+		return existingDualityStatusDTOs;
+	}
+
+	/**
+	 * Setter for list of existing dualitystatus in REA DB
+	 * @param existingDualityStatusDTOs list of existing dualitystatus in REA DB
+	 */
+	public void setExistingDualityStatusDTOs(
+			List<DualityStatusDTO> existingDualityStatusDTOs) {
+		this.existingDualityStatusDTOs = existingDualityStatusDTOs;
 	}
 }

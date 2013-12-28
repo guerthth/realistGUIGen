@@ -1,5 +1,9 @@
 package master.realist.REAlistGUIGenerator.client;
 
+import java.util.Map;
+
+import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
 
@@ -17,19 +21,32 @@ public class ParticipationPanel extends VerticalPanel{
 	// eventtypeDTO object, the participation is created for
 	private EventtypeDTO eventtypeDTO;
 	
+	// eventDTO object, the participation is created for
+	private EventDTO eventdto;
+	
 	// Label for Paricipation Specification
 	private Label participationSpecificationLabel = new Label("Participating agents:");
 	
 	// TabPanel for all existing (or new created, if series) participations
 	private TabPanel participationTabPanel = new TabPanel();
 	
+	// map keeping track of eventtypes and their corresponding attributes + textboxes
+	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap;
+	
+	
 	/**
 	 * Default Constructor
 	 */
-	public ParticipationPanel(EventtypeDTO eventtypeDTO){
+	public ParticipationPanel(EventtypeDTO eventtypeDTO, EventDTO eventdto, Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap){
 		
 		// setting eventtypeDTO
 		this.eventtypeDTO = eventtypeDTO;
+		
+		// setting eventDTO
+		this.eventdto = eventdto;
+		
+		// setting eventtypeAttributeLabelMap
+		this.eventtypeParticipationAttributeLabelMap = eventtypeParticipationAttributeLabelMap;
 		
 		// populating the ParticipationPanel
 		populateParticipationPanel();
@@ -57,7 +74,8 @@ public class ParticipationPanel extends VerticalPanel{
 		// add a tab for each participation of the current eventtype
 		for(EventtypeParticipationDTO etp : eventtypeDTO.getParticipations()){
 			
-			participationTabPanel.add(new ParticipationContentPanel(etp, participationTabPanel),etp.getAgenttypeId());
+			participationTabPanel.add(new ParticipationContentPanel(etp, eventdto, participationTabPanel, eventtypeParticipationAttributeLabelMap, eventtypeDTO),etp.getAgenttypeId());
+		
 		}
 		
 		// set selected tab to the first

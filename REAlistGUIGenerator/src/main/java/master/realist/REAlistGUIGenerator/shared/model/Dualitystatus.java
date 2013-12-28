@@ -41,7 +41,7 @@ public class Dualitystatus implements java.io.Serializable {
 	public Dualitystatus(DualityStatusDTO dualityStatusDTO){
 		this.id = dualityStatusDTO.getId();
 		this.status = dualityStatusDTO.getStatus();
-		// TODO: Dealing with dualities
+		
 	}
 	
 	public Dualitystatus() {

@@ -15,10 +15,15 @@ import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContain
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -29,7 +34,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -63,7 +67,13 @@ public class ParticipationContentPanel extends VerticalPanel{
 	ArrayList<AgentDTO> possibleAgents = new ArrayList<AgentDTO>();
 	
 	// Map keeping track of attributeIDs and corresponding TextBoxes
-	private Map<AttributeDTO,TextBox> participationAttributeLabelMap = new HashMap<AttributeDTO,TextBox>();
+	private Map<AttributeDTO,CustomTextBox> participationAttributeLabelMap = new HashMap<AttributeDTO,CustomTextBox>();
+
+	// EventtypeDTO object the participation belongs to
+	private EventtypeDTO eventtypeDTO;
+	
+	// EventDTO object the participation belongs to
+	private EventDTO eventDTO;
 	
 	// Asyn READB Service
 	private READBServiceAsync reaDBSvc = GWT.create(READBService.class);
@@ -73,12 +83,19 @@ public class ParticipationContentPanel extends VerticalPanel{
 	// Tabpanel object the ParticipationContentPanel is added to
 	private TabPanel participationTabPanel = null;
 	
+	// map keeping track of eventtypes and their corresponding attributes + textboxes
+	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap; 
+	
+	// participationDTO object for current participation
+	private ParticipationDTO participationdto;
+	
 	
 	/**
 	 * Default Constructor
 	 * @param participation
 	 */
-	public ParticipationContentPanel(EventtypeParticipationDTO participation, TabPanel participationTabPanel){
+	public ParticipationContentPanel(EventtypeParticipationDTO participation, EventDTO eventdto , TabPanel participationTabPanel, 
+										Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap, EventtypeDTO eventtypeDTO){
 		
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();		
@@ -86,8 +103,21 @@ public class ParticipationContentPanel extends VerticalPanel{
 		// set participation
 		this.participation = participation;
 		
+		// set eventtypeDTO
+		this.eventtypeDTO = eventtypeDTO;
+		
 		// set tabpanel
 		this.participationTabPanel = participationTabPanel;
+		
+		// set eventtypeAttributeLabelMap
+		this.eventtypeParticipationAttributeLabelMap = eventtypeParticipationAttributeLabelMap;
+		
+		// set eventdto
+		this.eventDTO = eventdto;
+
+		// set participationdto and add it to the list of current eventdto
+		this.participationdto = new ParticipationDTO();
+		this.eventDTO.getParticipations().add(participationdto);
 		
 		// populate ParticipationContentPanel
 		populateParticipationContenPanel();
@@ -114,6 +144,17 @@ public class ParticipationContentPanel extends VerticalPanel{
 		// apply style for participatingAgentListBox
 		participatingAgentListBox.addStyleName("fullsizePanel");
 		
+		// ChangeHandler for participatingAgentListBox
+		participatingAgentListBox.addChangeHandler(new ChangeHandler(){
+			public void onChange(ChangeEvent event){
+				
+				// TODO: 
+				Window.alert("Participating agent changed to : " + possibleAgents.get(participatingAgentListBox.getSelectedIndex()).getName());
+				// if change occured, reset agent
+				participationdto.setAgent(possibleAgents.get(participatingAgentListBox.getSelectedIndex()));
+			}
+		});
+		
 		// adding participating agent labels to the flextable
 		participationAttributeFlexTable.setWidget(0, 0, participatingAgentLabel);
 		participationAttributeFlexTable.setWidget(0, 1, participatingAgentListBox);
@@ -133,7 +174,7 @@ public class ParticipationContentPanel extends VerticalPanel{
 		participationAttributeSeriesAddButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				Window.alert("add new participation");
-				participationTabPanel.add(new ParticipationContentPanel(participation, participationTabPanel), participation.getAgenttypeId());		
+				participationTabPanel.add(new ParticipationContentPanel(participation, eventDTO, participationTabPanel, eventtypeParticipationAttributeLabelMap, eventtypeDTO), participation.getAgenttypeId());		
 			}
 		});
 		
@@ -186,6 +227,8 @@ public class ParticipationContentPanel extends VerticalPanel{
 			}
 			
 		}
+		
+		participationdto.setAgent(possibleAgents.get(participatingAgentListBox.getSelectedIndex()));
 	}
 	
 	
@@ -253,6 +296,8 @@ public class ParticipationContentPanel extends VerticalPanel{
 					// adding entries to participationAttributeMap that stores all additional participation attributes
 					participationAttributeLabelMap.put(etphaa.getAttribute(),attributeTextBox);
 				}
+				
+				eventtypeParticipationAttributeLabelMap.put(eventDTO, participationAttributeLabelMap);
 				
 			}
 	    	

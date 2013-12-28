@@ -3,8 +3,6 @@ package master.realist.REAlistGUIGenerator.shared.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-import master.realist.REAlistGUIGenerator.shared.model.EventHasAdditionalattributevalueId;
-
 public class EventHasAdditionalattributevalueDTO implements Serializable{
 
 	/**
@@ -12,13 +10,12 @@ public class EventHasAdditionalattributevalueDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = -3477127386241401089L;
 	
-	private EventHasAdditionalattributevalueIdDTO id;
 	private EventDTO event;
 	private AttributeDTO attribute;
-	private Double numeric;
-	private String textual;
-	private Boolean boolean_;
-	private Date datetime;
+	private Double numericValue;
+	private String textualValue;
+	private Boolean booleanValue;
+	private Date datetimeValue;
 	
 	/**
 	 * Default Constructor
@@ -27,28 +24,8 @@ public class EventHasAdditionalattributevalueDTO implements Serializable{
 		
 	}
 
-	public EventHasAdditionalattributevalueDTO(
-			EventHasAdditionalattributevalueIdDTO id, EventDTO event,
-			AttributeDTO attribute, Double numeric, String textual,
-			Boolean boolean_, Date datetime) {
-		super();
-		this.id = id;
-		this.event = event;
-		this.attribute = attribute;
-		this.numeric = numeric;
-		this.textual = textual;
-		this.boolean_ = boolean_;
-		this.datetime = datetime;
-	}
-
-	public EventHasAdditionalattributevalueIdDTO getId() {
-		return id;
-	}
-
-	public void setId(EventHasAdditionalattributevalueIdDTO id) {
-		this.id = id;
-	}
-
+	
+	// Getters and Setters
 	public EventDTO getEvent() {
 		return event;
 	}
@@ -65,41 +42,40 @@ public class EventHasAdditionalattributevalueDTO implements Serializable{
 		this.attribute = attribute;
 	}
 
-	public Double getNumeric() {
-		return numeric;
+	public Double getNumericValue() {
+		return numericValue;
 	}
 
-	public void setNumeric(Double numeric) {
-		this.numeric = numeric;
+	public void setNumericValue(Double numericValue) {
+		this.numericValue = numericValue;
 	}
 
-	public String getTextual() {
-		return textual;
+	public String getTextualValue() {
+		return textualValue;
 	}
 
-	public void setTextual(String textual) {
-		this.textual = textual;
+	public void setTextualValue(String textualValue) {
+		this.textualValue = textualValue;
 	}
 
-	public Boolean getBoolean_() {
-		return boolean_;
+	public Boolean getBooleanValue() {
+		return booleanValue;
 	}
 
-	public void setBoolean_(Boolean boolean_) {
-		this.boolean_ = boolean_;
+	public void setBooleanValue(Boolean booleanValue) {
+		this.booleanValue = booleanValue;
 	}
 
-	public Date getDatetime() {
-		return datetime;
+	public Date getDatetimeValue() {
+		return datetimeValue;
 	}
 
-	public void setDatetime(Date datetime) {
-		this.datetime = datetime;
+	public void setDatetimeValue(Date datetimeValue) {
+		this.datetimeValue = datetimeValue;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+
+	
 
 	
 

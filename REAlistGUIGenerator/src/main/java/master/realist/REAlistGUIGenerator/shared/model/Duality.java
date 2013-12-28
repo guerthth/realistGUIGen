@@ -51,10 +51,11 @@ public class Duality implements java.io.Serializable {
 	 * @param dualityDTO
 	 */
 	public Duality(DualityDTO dualityDTO){
-		// TODO: Adding all the attributes
+		
 		id = dualityDTO.getId();
 		date = dualityDTO.getDate();
 		dualitytype = new Dualitytype(dualityDTO.getDualitytype());
+		dualitystatus = new Dualitystatus(dualityDTO.getDualitystatus());
 	}
 	
 	public Duality() {

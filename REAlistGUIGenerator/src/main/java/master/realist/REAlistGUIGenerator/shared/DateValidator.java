@@ -17,11 +17,13 @@ public class DateValidator extends Validator{
 		boolean isDate = true;
 		
 		try{
-			DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(value);
+			//DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(value);
+			DateTimeFormat.getFormat("yyyy-MM-dd").parse(value);
 			errorMessage = "";
 		} catch(Exception e){
 			isDate = false;
-			errorMessage = "Enter a valid Date String (yyyy-MM-dd HH:mm:ss)";
+			//errorMessage = "Enter a valid Date String (yyyy-MM-dd HH:mm:ss)";
+			errorMessage = "Enter a valid Date String (yyyy-MM-dd)";
 		}
 		
 		return isDate;

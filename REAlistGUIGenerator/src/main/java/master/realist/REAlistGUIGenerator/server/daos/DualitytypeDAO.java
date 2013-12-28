@@ -102,6 +102,68 @@ public class DualitytypeDAO {
 
 		return dualitytypeDTOlist;
 	}
+	
+	
+	/**
+	 * Saving an dualitytypeDTO object as dualitytype object to the REA DB
+	 * @param dualitytypeDTO object that should be stored in REA DB
+	 * @return dualitytypeId (String) of inserted object
+	 */
+	public String saveDualityttype(DualitytypeDTO dualitytypeDTO){
+		
+		Session session = null;
+		Dualitytype dualitytype = new Dualitytype(dualitytypeDTO);
+		String dualitytypeId = "";
+		
+		try{
+			
+			session = hibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			session.save(dualitytype);
+			dualitytypeId = dualitytype.getId();
+			session.getTransaction().commit();
+			
+		} catch(Exception e) {
+			
+			e.printStackTrace();
+			if(session != null){session.getTransaction().rollback();}
+			
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+		
+		return dualitytypeId;
+	}
+	
+	
+	/**
+	 * Deleting an dualitytype object from the REA DB 
+	 * @param id of the dualitytype object that should be deleted
+	 */
+	public void deleteDualitytype(String id){
+		
+		Session session = null;
+		
+		try{
+			
+			session = hibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			Dualitytype deleteDualitytype = (Dualitytype) session.get(Dualitytype.class, id);
+			session.delete(deleteDualitytype);
+			session.getTransaction().commit();
+			
+		} catch(Exception e){
+			
+			e.printStackTrace();
+			if(session != null){session.getTransaction().rollback();}
+		} finally {
+			if(session != null){
+				session.close();
+			}
+		}
+	}
 
 	
 	/**

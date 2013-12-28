@@ -1,11 +1,11 @@
 package master.realist.REAlistGUIGenerator.client;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import master.realist.REAlistGUIGenerator.shared.TextValidator;
 import master.realist.REAlistGUIGenerator.shared.Validator;
+import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 
 import com.google.gwt.core.client.GWT;
@@ -25,6 +25,9 @@ public class DualityStatusPanel extends VerticalPanel{
 	// Logger
 	private final static Logger logger = Logger.getLogger("DualityStatusPanelLogger");
 	
+	// READBEntryContainer
+	private READBEntryContainer reaDBEntryContainer;
+	
 	// Panel for DualityStatus Administration + Resource ArrayList
 	private Label statusSelectionIntroductionLabel = new Label("DualityStatus Administration");
 	private HorizontalPanel tableAndAddEditPanel = new HorizontalPanel();
@@ -39,7 +42,7 @@ public class DualityStatusPanel extends VerticalPanel{
 	private Button dualityStatusOkButton = new Button("Ok");
 	private HorizontalPanel dualityStatusChooseAddPanel = new HorizontalPanel();
 	private Button dualityStatusAddButton = new Button("Add");	
-	private ArrayList<DualityStatusDTO> existingDualityStatusDTOs = new ArrayList<DualityStatusDTO>();
+	//private ArrayList<DualityStatusDTO> existingDualityStatusDTOs = new ArrayList<DualityStatusDTO>();
 	
 	// flag that specifies if a user wants to save or update
 	private boolean saveActionState = true;
@@ -57,6 +60,11 @@ public class DualityStatusPanel extends VerticalPanel{
 	 * Constructor
 	 */
 	public DualityStatusPanel(){
+		
+		// initialize READBEntryContainer
+		reaDBEntryContainer = READBEntryContainer.getInstance();	
+		
+		// populate dualitystatusPanel
 		populateDualityStatusPanel();
 	}
 	
@@ -179,12 +187,12 @@ public class DualityStatusPanel extends VerticalPanel{
 
 			public void onSuccess(List<DualityStatusDTO> result) {
 				
-				existingDualityStatusDTOs.clear();
+				reaDBEntryContainer.getExistingDualityStatusDTOs().clear();
 				
 				for(DualityStatusDTO dsdto : result){
 					
 					// adding the DualityStatusDTOs to the existingDualityStatusDTOs arrayList
-					existingDualityStatusDTOs.add(dsdto);
+					reaDBEntryContainer.getExistingDualityStatusDTOs().add(dsdto);
 					
 					// final variable needed for the button specifications
 					final DualityStatusDTO currentDualityStatusDTO = dsdto;
@@ -242,8 +250,8 @@ public class DualityStatusPanel extends VerticalPanel{
 			// setting the value of the dualitystatus id
 			saveActionState = true;
 			
-			if(existingDualityStatusDTOs.size()>0){
-				int lastId = existingDualityStatusDTOs.get(existingDualityStatusDTOs.size()-1).getId();
+			if(reaDBEntryContainer.getExistingDualityStatusDTOs().size()>0){
+				int lastId = reaDBEntryContainer.getExistingDualityStatusDTOs().get(reaDBEntryContainer.getExistingDualityStatusDTOs().size()-1).getId();
 				dualityStatusIdTextTextBox.setText(String.valueOf(lastId+1));
 				
 			}else{	
@@ -285,7 +293,7 @@ public class DualityStatusPanel extends VerticalPanel{
 		
 		// check if the actionstate is 'save'
 		if(!saveActionState){
-			int indexOfUpdateObbject = existingDualityStatusDTOs.indexOf(updatedObject);
+			int indexOfUpdateObbject = reaDBEntryContainer.getExistingDualityStatusDTOs().indexOf(updatedObject);
 			String oldStatusCode = updateObject.getStatus();
 			String updatedStatus = dualityStatusStatusCodeTextBox.getText();
 			if(oldStatusCode.matches(updatedStatus)){
@@ -324,7 +332,7 @@ public class DualityStatusPanel extends VerticalPanel{
 				logger.info(addDualityStatusMsg);
 				
 				// adding the added dualitystatusDTO to the list of dualitydtos
-				existingDualityStatusDTOs.add(result);
+				reaDBEntryContainer.getExistingDualityStatusDTOs().add(result);
 				
 				final DualityStatusDTO savedDualityStatusDTO = result;
 				
@@ -405,11 +413,11 @@ public class DualityStatusPanel extends VerticalPanel{
 	    		
 	    		// update the dualitySatusDTO arraylist
 	    		//existingDualityStatusDTOs.set(updatedListIndex, result);
-	    		existingDualityStatusDTOs.get(updatedListIndex).setStatus(result.getStatus());
+	    		reaDBEntryContainer.getExistingDualityStatusDTOs().get(updatedListIndex).setStatus(result.getStatus());
 	    		// update entries from flextable
 				statusSelectionFlexTable.setText(updatedListIndex + 1, 1, result.getStatus());
 	    		
-				updateDualityStatusAddEditPanel(existingDualityStatusDTOs.get(updatedListIndex));
+				updateDualityStatusAddEditPanel(reaDBEntryContainer.getExistingDualityStatusDTOs().get(updatedListIndex));
 	    	}
 	    };
 	    
@@ -426,7 +434,7 @@ public class DualityStatusPanel extends VerticalPanel{
 	 */
 	private void deleteDualityStatus(DualityStatusDTO deleteDualityStatusDTO){
 		
-		final int removedListIndex = existingDualityStatusDTOs.indexOf(deleteDualityStatusDTO);
+		final int removedListIndex = reaDBEntryContainer.getExistingDualityStatusDTOs().indexOf(deleteDualityStatusDTO);
 		
 		// Initialize the service proxy.
 	    if (reaDBSvc == null) {
@@ -448,7 +456,7 @@ public class DualityStatusPanel extends VerticalPanel{
 				logger.info(deleteDualityStatusMsg);
 				
 				// remove entries from arrayList
-				existingDualityStatusDTOs.remove(removedListIndex);
+				reaDBEntryContainer.getExistingDualityStatusDTOs().remove(removedListIndex);
 				// remove entries from flextable
 				statusSelectionFlexTable.removeRow(removedListIndex+1);
 				
@@ -458,7 +466,7 @@ public class DualityStatusPanel extends VerticalPanel{
 				}
 				
 				// if not dualitystatus exist dualitystatusaddeditpanel is set to invisible
-				if(existingDualityStatusDTOs.size() == 0){
+				if(reaDBEntryContainer.getExistingDualityStatusDTOs().size() == 0){
 					dualityStatusAddEditPanel.setVisible(false);
 				}
 			}

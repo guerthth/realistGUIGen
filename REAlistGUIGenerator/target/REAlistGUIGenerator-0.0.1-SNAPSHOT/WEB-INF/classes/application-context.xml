@@ -44,11 +44,7 @@
     <bean id="eventdao" class="master.realist.REAlistGUIGenerator.server.daos.EventDAO">
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>
-    
-    <bean id="eventHasAdditionalattributevalueDAO" class="master.realist.REAlistGUIGenerator.server.daos.EventHasAdditionalattributevalueDAO">
-    	<property name="hibernateUtil" ref="hibernateutil"></property>
-    </bean>
-    
+
     <bean id="eventtypeparticipationhasadditionalattributedao" class="master.realist.REAlistGUIGenerator.server.daos.EventtypeParticipationHasAdditionalAttributeDAO">
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>

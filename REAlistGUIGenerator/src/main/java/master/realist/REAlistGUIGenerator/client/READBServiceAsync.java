@@ -112,10 +112,28 @@ public interface READBServiceAsync {
 	 * @param callback
 	 */
 	void getEventtypeParticipationsHasAdditionalAttribtes(EventtypeParticipationDTO participation , AsyncCallback<List<EventtypeParticipationHasAdditionalAttributeDTO>> callback);
-	
-	void saveDuality(DualityDTO dualityDTO,AsyncCallback<DualityDTO> callback);
 
+	/**
+	 * Retrieving all existing dualities in the REA DB
+	 * @param callback
+	 */
+	void getDualities(AsyncCallback<List<DualityDTO>> callback);
+	
+	/**
+	 * saving a dualityDTO object as duality object in the REA DB
+	 * @param dualityDTO object that should be saved
+	 * @return saved dualityDTO object
+	 */
+	void saveDuality(DualityDTO dualityDTO, AsyncCallback<DualityDTO> callback);
+	
+	/**
+	 * deleting a dualityDTI object from the REA DB
+	 * @param dualityId Id of the duality object that should be deleted from the REA DB
+	 * @param callback
+	 */
+	void deleteDuality(Integer dualityId, AsyncCallback<Integer> callback);
+	
 	void saveEvent(EventDTO eventDTO, AsyncCallback<EventDTO> callback);
 	
-	void saveEventHasAdditionalattributevalue(EventHasAdditionalattributevalueDTO addattrvalDTO, AsyncCallback<EventHasAdditionalattributevalueDTO> callback);
+	//void saveEventHasAdditionalattributevalue(EventHasAdditionalattributevalueDTO addattrvalDTO, AsyncCallback<EventHasAdditionalattributevalueDTO> callback);
 }

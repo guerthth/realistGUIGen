@@ -123,6 +123,13 @@ public interface READBServiceAsync
      * GWT-RPC service  asynchronous (client-side) interface
      * @see master.realist.REAlistGUIGenerator.client.READBService
      */
+    void getDualities( AsyncCallback<java.util.List<master.realist.REAlistGUIGenerator.shared.dto.DualityDTO>> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
     void saveDuality( master.realist.REAlistGUIGenerator.shared.dto.DualityDTO dualityDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.DualityDTO> callback );
 
 
@@ -130,14 +137,14 @@ public interface READBServiceAsync
      * GWT-RPC service  asynchronous (client-side) interface
      * @see master.realist.REAlistGUIGenerator.client.READBService
      */
-    void saveEvent( master.realist.REAlistGUIGenerator.shared.dto.EventDTO eventDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.EventDTO> callback );
+    void deleteDuality( java.lang.Integer dualityId, AsyncCallback<java.lang.Integer> callback );
 
 
     /**
      * GWT-RPC service  asynchronous (client-side) interface
      * @see master.realist.REAlistGUIGenerator.client.READBService
      */
-    void saveEventHasAdditionalattributevalue( master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO addattrvalDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO> callback );
+    void saveEvent( master.realist.REAlistGUIGenerator.shared.dto.EventDTO eventDTO, AsyncCallback<master.realist.REAlistGUIGenerator.shared.dto.EventDTO> callback );
 
 
     /**

@@ -116,10 +116,28 @@ public interface READBService extends RemoteService{
 	 */
 	public List<EventtypeParticipationHasAdditionalAttributeDTO> getEventtypeParticipationsHasAdditionalAttribtes(EventtypeParticipationDTO participation);
 	
+	/**
+	 * Retrieving all existing dualities in the REA DB
+	 * @return list of existing DualityDTOs
+	 */
+	public List<DualityDTO> getDualities();
+	
+	/**
+	 * saving a dualityDTO object as duality object in the REA DB
+	 * @param dualityDTO object that should be saved
+	 * @return saved dualityDTO object
+	 */
 	public DualityDTO saveDuality(DualityDTO dualityDTO);
+
+	/**
+	 * deleting an dualityDTO object from the REA DB
+	 * @param dualityId Id of the duality object that should be deleted from the REA DB
+	 * @return Id of the deleted object
+	 */
+	public Integer deleteDuality(Integer dualityId);
 	
 	public EventDTO saveEvent(EventDTO eventDTO);
 	
-	public EventHasAdditionalattributevalueDTO saveEventHasAdditionalattributevalue(EventHasAdditionalattributevalueDTO addattrvalDTO);
+	//public EventHasAdditionalattributevalueDTO saveEventHasAdditionalattributevalue(EventHasAdditionalattributevalueDTO addattrvalDTO);
 	
 }

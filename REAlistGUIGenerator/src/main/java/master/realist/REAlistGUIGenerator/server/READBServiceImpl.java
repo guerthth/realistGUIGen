@@ -11,7 +11,6 @@ import master.realist.REAlistGUIGenerator.server.daos.DualityDAO;
 import master.realist.REAlistGUIGenerator.server.daos.DualityStatusDAO;
 import master.realist.REAlistGUIGenerator.server.daos.DualitytypeDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventDAO;
-import master.realist.REAlistGUIGenerator.server.daos.EventHasAdditionalattributevalueDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventtypeParticipationHasAdditionalAttributeDAO;
 import master.realist.REAlistGUIGenerator.server.daos.ResourceDAO;
 import master.realist.REAlistGUIGenerator.server.daos.ResourcetypeDAO;
@@ -21,7 +20,6 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
@@ -212,21 +210,44 @@ public class READBServiceImpl extends RemoteServiceServlet implements READBServi
 	}
 	
 	
+	/**
+	 * Retrieving all existing dualities in the REA DB
+	 * @return list of existing DualityDTOs
+	 */
+	public List<DualityDTO> getDualities(){
+		
+		DualityDAO dualityhandler = (DualityDAO) SpringUtil.context.getBean("dualitydao");
+		return dualityhandler.getDualityList();
+	}
+	
 	
 	/**
-	 * Service method saving a dualityDTO as duality object to the REA DB
-	 * @param dualityDTO
-	 * @return dualityDTO with stored ID of dbentry
+	 * saving a dualityDTO object as duality object in the REA DB
+	 * @param dualityDTO object that should be saved
+	 * @return saved dualityDTO object
 	 */
-	public DualityDTO saveDuality(DualityDTO dualityDTO) {
+	public DualityDTO saveDuality(DualityDTO dualityDTO){
 		
 		DualityDAO dualityhandler = (DualityDAO) SpringUtil.context.getBean("dualitydao");
 		int savedId = dualityhandler.saveDuality(dualityDTO);
 		dualityDTO.setId(savedId);
-		
 		return dualityDTO;
-		
 	}
+	
+
+	/**
+	 * deleting an dualityDTO object from the REA DB
+	 * @param dualityId Id of the duality object that should be deleted from the REA DB
+	 * @return Id of the deleted object
+	 */
+	public Integer deleteDuality(Integer dualityId){
+		
+		DualityDAO dualityhandler = (DualityDAO) SpringUtil.context.getBean("dualitydao");
+		dualityhandler.deleteDuality(dualityId);
+		
+		return dualityId;
+	}
+	
 	
 	/**
 	 * Service method saving an eventDTO as event object to the DB
@@ -241,26 +262,6 @@ public class READBServiceImpl extends RemoteServiceServlet implements READBServi
 		
 		return eventDTO;
 	}
-
-	/**
-	 * Service method saving an EventHasAdditionalattributevalueDTO as EventHasAdditionalattributevalue object to the DB
-	 * @param addattrvalDTO
-	 * @return addattrvalDTO with stored ID of dbentry
-	 */
-	public EventHasAdditionalattributevalueDTO saveEventHasAdditionalattributevalue(
-			EventHasAdditionalattributevalueDTO addattrvalDTO) {
-		// TODO Auto-generated method stub
-		System.out.println(addattrvalDTO.getId());
-		System.out.println(addattrvalDTO.getId().getAttributeId());
-		System.out.println(addattrvalDTO.getId().getEventId());
-		
-		EventHasAdditionalattributevalueDAO eventHasAdditionalattributevaluehandler = 
-				(EventHasAdditionalattributevalueDAO) SpringUtil.context.getBean("eventHasAdditionalattributevalueDAO");
-		
-		return eventHasAdditionalattributevaluehandler.saveEventHasAdditionalattributevalue(addattrvalDTO);
-
-	}
-
 
 
 }

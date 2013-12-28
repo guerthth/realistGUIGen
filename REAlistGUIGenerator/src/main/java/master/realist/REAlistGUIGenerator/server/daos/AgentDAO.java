@@ -28,7 +28,7 @@ public class AgentDAO {
 
 	/**
 	 * Getting all existing agents entries in the REA DB
-	 * @return agentDTOlist list of all existing agents in REA DB
+	 * @return agentDTOlist list of all existing agents indto.get REA DB
 	 */
 	@SuppressWarnings("unchecked")
 	public List<AgentDTO> getAgentList(){

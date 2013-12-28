@@ -4,6 +4,7 @@ package master.realist.REAlistGUIGenerator.shared.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,12 +14,14 @@ import javax.persistence.GeneratedValue;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -54,7 +57,7 @@ public class Event implements java.io.Serializable {
 			0);
 	private Set<Stockflow> stockflows = new HashSet<Stockflow>(0);
 	private Set<Fulfills> fulfillses = new HashSet<Fulfills>(0);
-	private Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues = new HashSet<EventHasAdditionalattributevalue>(
+	private Set<EventHasAdditionalattributevalue> eventHasAdditionalattributevalues = new LinkedHashSet<EventHasAdditionalattributevalue>(
 			0);
 	private Set<Reconciliation> reconciliationsForDecEventId = new HashSet<Reconciliation>(
 			0);
@@ -62,7 +65,7 @@ public class Event implements java.io.Serializable {
 			0);
 	private Set<Reconciliation> reconciliationsForIncEventId = new HashSet<Reconciliation>(
 			0);
-	private Set<Participation> participations = new HashSet<Participation>(0);
+	private Set<Participation> participations = new LinkedHashSet<Participation>(0);
 
 	/**
 	 * Added constructor to convert a eventdto object to an event object
@@ -73,6 +76,10 @@ public class Event implements java.io.Serializable {
 		this.id = eventDTO.getId();
 		this.eventtype = new Eventtype(eventDTO.getEventtype());
 		this.duality = new Duality(eventDTO.getDuality());
+		this.agentByProvideAgentId = new Agent(eventDTO.getProvideAgent());
+		this.agentByReceiveAgentId = new Agent(eventDTO.getReceiveAgent());
+		this.dateStart = eventDTO.getDateStart();
+		this.dateEnd = eventDTO.getDateEnd();
 	}
 	
 	public Event() {
@@ -285,7 +292,8 @@ public class Event implements java.io.Serializable {
 		this.fulfillses = fulfillses;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.event", cascade=CascadeType.ALL)
+	@OrderBy
 	public Set<EventHasAdditionalattributevalue> getEventHasAdditionalattributevalues() {
 		return this.eventHasAdditionalattributevalues;
 	}

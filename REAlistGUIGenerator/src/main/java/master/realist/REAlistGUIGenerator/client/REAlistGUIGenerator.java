@@ -2,21 +2,18 @@ package master.realist.REAlistGUIGenerator.client;
 
 
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.AgenttypeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -64,6 +61,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 		
 		// setup the lists in the READBEntryContainer
 		callGetAgents();
+		callGetDualityStatus();
 		
 		// mainpanel stype
 		mainPanel.addStyleName("fullsizePanel");
@@ -128,6 +126,40 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    // Make the call
 	    reaDBSvc.getAgents(callback);
 	}
+	
+	
+	/**
+	 * Calling the getDualityStatus method of the READBService
+	 */
+	private void callGetDualityStatus(){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+	    
+	    // Set up the callback object.
+	    AsyncCallback<List<DualityStatusDTO>> callback = new AsyncCallback<List<DualityStatusDTO>>() {
+
+			public void onFailure(Throwable caught) {
+				logREADBRPCFailure("getDualityStatus()");
+		    	caught.printStackTrace();
+			}
+
+			public void onSuccess(List<DualityStatusDTO> result) {
+				
+				reaDBEntryContainer.getExistingDualityStatusDTOs().clear();
+				
+				reaDBEntryContainer.setExistingDualityStatusDTOs(result);
+				
+			}
+	    	
+	    };
+	    
+	    // Make the call
+	    reaDBSvc.getDualityStatus(callback);
+	    
+	}	
 	   
 
 	

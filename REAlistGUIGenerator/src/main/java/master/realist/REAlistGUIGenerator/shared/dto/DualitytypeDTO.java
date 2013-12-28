@@ -3,6 +3,8 @@ package master.realist.REAlistGUIGenerator.shared.dto;
 import java.io.Serializable;
 import java.util.Set;
 
+import master.realist.REAlistGUIGenerator.shared.model.Dualitytype;
+
 public class DualitytypeDTO implements Serializable{
 	
 	/**
@@ -15,6 +17,19 @@ public class DualitytypeDTO implements Serializable{
 	private boolean isConversion;
 	private Set<EventtypeDTO> eventtypes;
 
+	
+	/**
+	 * Constructor transforming a Dualitytype object to a DualtytypeDTO object
+	 * @param dualitytype
+	 */
+	public DualitytypeDTO(Dualitytype dualitytype){
+		
+		this.id = dualitytype.getId();
+		this.name = dualitytype.getName();
+		this.isConversion = dualitytype.isIsConversion();
+	}
+	
+	
 	public DualitytypeDTO() {
 		
 	}
