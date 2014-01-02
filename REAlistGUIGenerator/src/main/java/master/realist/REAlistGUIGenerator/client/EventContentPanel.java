@@ -245,8 +245,18 @@ public class EventContentPanel extends VerticalPanel{
 		eventdto.setEventtype(eventtypeDTO);
 		eventdto.setDateEnd(endeventdate);
 		eventdto.setDateStart(starteventdate);
-		eventdto.setProvideAgent(possibleProvideAgents.get(eventtypeProvideAgentListBox.getSelectedIndex()));
-		eventdto.setReceiveAgent(possibleReceiveAgents.get(eventtypeReceiveAgentListBox.getSelectedIndex()));
+		if(possibleProvideAgents.size() > 0){
+			eventdto.setProvideAgent(possibleProvideAgents.get(eventtypeProvideAgentListBox.getSelectedIndex()));
+		} else{
+			eventdto.setProvideAgent(null);
+		}
+		
+		if(possibleReceiveAgents.size() > 0 ){
+			eventdto.setReceiveAgent(possibleReceiveAgents.get(eventtypeReceiveAgentListBox.getSelectedIndex()));
+		} else {
+			eventdto.setReceiveAgent(null);
+		}
+		
 		
 		// add the eventDTO to the list of eventdtos that should be saved
 		saveEventDTOList.add(eventdto);

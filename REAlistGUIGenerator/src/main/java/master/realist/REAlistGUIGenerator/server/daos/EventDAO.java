@@ -7,14 +7,22 @@ import org.hibernate.Session;
 import master.realist.REAlistGUIGenerator.server.util.HibernateUtil;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.model.Agent;
 import master.realist.REAlistGUIGenerator.shared.model.Attribute;
 import master.realist.REAlistGUIGenerator.shared.model.Event;
 import master.realist.REAlistGUIGenerator.shared.model.EventHasAdditionalattributevalue;
+import master.realist.REAlistGUIGenerator.shared.model.Participation;
 
 public class EventDAO {
 	
 	private HibernateUtil hibernateUtil;
 	
+	/**
+	 * Method saving events in the REA DB
+	 * @param eventDTO
+	 * @return
+	 */
 	public int saveEvent(EventDTO eventDTO){
 		
 		Event event = new Event(eventDTO);
@@ -23,8 +31,10 @@ public class EventDAO {
 		int dualityId = 0;
 		
 		Set<EventHasAdditionalattributevalueDTO> additionalAttributeValues = eventDTO.getAdditionalAttributeValues();
+		Set<ParticipationDTO> participations = eventDTO.getParticipations();
 				
-		Attribute additionalAttribute;
+		Agent provideAgent;
+		Agent receiveAgent;
 		
 		try{
 			session = hibernateUtil.getSessionFactory().openSession();
@@ -36,13 +46,49 @@ public class EventDAO {
 				for(EventHasAdditionalattributevalueDTO dto : additionalAttributeValues){
 					
 					// Retrieve the already stored attribute object
-					additionalAttribute = (Attribute) session.get(Attribute.class, dto.getAttribute().getId());
+					Attribute additionalAttribute = (Attribute) session.get(Attribute.class, dto.getAttribute().getId());
 					
 					// add the additional attribute values to the event objects list
 					event.getEventHasAdditionalattributevalues().add(createAdditionalAttributeValue(event,additionalAttribute,dto));
 				
 				}
 			}
+			
+			//provide agent
+			if(eventDTO.getProvideAgent() != null){
+				
+				// retrieve existing provide agent
+				provideAgent = (Agent) session.get(Agent.class, eventDTO.getProvideAgent().getId());
+				event.setAgentByProvideAgentId(provideAgent);
+			}
+		
+			// receive agent
+			if(eventDTO.getReceiveAgent() != null){
+				
+				// retrieve existing receive agent
+				receiveAgent = (Agent) session.get(Agent.class, eventDTO.getReceiveAgent().getId());
+				event.setAgentByReceiveAgentId(receiveAgent);
+			}
+			
+			// participations
+			if(participations != null){
+				
+				for(ParticipationDTO dto : participations){
+					
+					// retrieve already stored agent
+					Agent participatingAgent = (Agent) session.get(Agent.class, dto.getAgent().getId());
+					
+					// create participation and save it
+					Participation participation = createParticipation(event, participatingAgent, dto);
+					session.save(participation);
+					
+					// add participations to the events participation list
+					//event.getParticipations().add(participation);
+					
+				}
+			}
+			
+	
 			
 			session.save(event);
 			session.getTransaction().commit();
@@ -84,6 +130,26 @@ public class EventDAO {
 		additionalEventAttributeValue.setTextualValue(dto.getTextualValue());
 		
 		return additionalEventAttributeValue;
+	}
+	
+	
+	/**
+	 * Method creating a Participation for a soecific ParticipationDTO
+	 * @param event event object the participation belongs to
+	 * @param agent participating agent in participation
+	 * @param participationDTO participationDTO that is converted
+	 * @return participation
+	 */
+	private Participation createParticipation(Event event, Agent agent,  ParticipationDTO participationDTO){
+		
+		// create a Participation object and set its values
+		Participation participation = new Participation();
+		participation.setAgent(agent);
+		participation.getEvents().add(event);
+		
+		// TODO : Additional attributes for participation
+		
+		return participation;
 	}
 	
 	

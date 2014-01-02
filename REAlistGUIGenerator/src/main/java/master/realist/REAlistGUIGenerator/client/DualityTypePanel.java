@@ -258,7 +258,7 @@ public class DualityTypePanel extends VerticalPanel {
 		
 		if(dualitystatusList.size() == 0){
 			
-			dualitystatusListBox.addItem("No dualitytypes exist");
+			dualitystatusListBox.addItem("No dualitystatus exists");
 			return;
 		}
 		
