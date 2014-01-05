@@ -74,6 +74,9 @@ public class DualityStatusPanel extends VerticalPanel{
 	 */
 	private void populateDualityStatusPanel(){
 		
+		// styles for tableAndAddEditPanel
+		//tableAndAddEditPanel.addStyleName("fullsizePanel");
+		
 		// get all the existing dualitystatus (they are added to the existingDualityStatusDTOs arrayList)
 		callGetDualityStatus();
 		
@@ -99,7 +102,7 @@ public class DualityStatusPanel extends VerticalPanel{
 		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 2, "adminFlexTableEditRemoveColumn");
 		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 3, "adminFlexTableEditRemoveColumn");
 		statusSelectionFlexTable.addStyleName("adminFlexTable");
-			
+		
 		// Adding the statusSelectionFlexTable to the statusSelectionEmptyMessageFlexTablePanel
 		tableAndAddEditPanel.add(statusSelectionFlexTable);				
 		
@@ -132,7 +135,7 @@ public class DualityStatusPanel extends VerticalPanel{
 		// applying style for dualityStatusAddEditPanel
 		dualityStatusAddEditPanel.addStyleName("adminFlexTable");
 		dualityStatusAddEditPanel.addStyleName("addEditPanel");
-		
+
 		// adding the dualityStatusAddEditPanel to the tableAndAddEditPanel
 		tableAndAddEditPanel.add(dualityStatusAddEditPanel);
 		

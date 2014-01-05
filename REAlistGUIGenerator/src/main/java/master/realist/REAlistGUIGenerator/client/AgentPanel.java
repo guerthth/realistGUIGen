@@ -102,6 +102,9 @@ public class AgentPanel extends VerticalPanel{
 	 */
 	private void populateAgentPanel(){
 		
+		// styles for tableAndAddEditPanel
+		//agentTableAndAddEditPanel.addStyleName("fullsizePanel");
+		
 		// get all the existing agenttypes (they are added to the existingAgenttypeDTOs arrayList)
 		callGetAgenttypes();
 		
@@ -659,6 +662,8 @@ public class AgentPanel extends VerticalPanel{
 			
 			return;
 		}
+		
+		// SAVING
 		
 		// Initialize the service proxy.
 	    if (reaDBSvc == null) {

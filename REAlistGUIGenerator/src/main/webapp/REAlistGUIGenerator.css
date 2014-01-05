@@ -60,13 +60,15 @@ body {
 
 /* Admin addEditpanels */
 .addEditPanel {
-  margin: 0px 0px 0px 10px;
+  margin: 0px 0px 0px 30px;
+  /*width: 100%;*/
+  /* background-color:#b0c4de; */
 }
 
 /* Admin addEdit Header Labels */
 .addEditHeaderLabel {
   margin-bottom: 6px;
-  font-size:120%;
+  font-size:140%;
   margin-top: 6px;
 }
 
@@ -188,5 +190,17 @@ body {
 .participationSpecificationLabel {
   margin: 10px 0px 10px 0px;
   font-size:120%;
+}
+
+/*************************************************/
+/*      				Colors	     			 */
+/*************************************************/
+
+.lightgreen {
+	background-color:#58FAD0;
+}
+
+.lightred {
+	background-color:#FE642E;
 }
 

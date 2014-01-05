@@ -67,6 +67,7 @@ public class CustomTextBox extends TextBox {
 			errorMessage = validator.getErrorMessage();
 		}
 		setErrorStyles(validationResult);
+		
 	    return validationResult;
 	}
 	

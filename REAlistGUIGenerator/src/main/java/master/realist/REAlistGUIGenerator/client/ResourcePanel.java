@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -119,8 +120,8 @@ public class ResourcePanel extends VerticalPanel{
 		resourceSelectionFlexTable.setText(0, 2, "Resourcetype");
 		resourceSelectionFlexTable.setText(0, 3, "IsBulk");
 		resourceSelectionFlexTable.setText(0, 4, "IsIdentifiable");
-		resourceSelectionFlexTable.setText(0, 5, "QoH");
-		resourceSelectionFlexTable.setText(0, 6, "IsComposed");
+		resourceSelectionFlexTable.setText(0, 5, "IsComposed");
+		resourceSelectionFlexTable.setText(0, 6, "QoH");
 		resourceSelectionFlexTable.setText(0, 7, "Edit");
 		resourceSelectionFlexTable.setText(0, 8, "Remove");
 		
@@ -157,6 +158,11 @@ public class ResourcePanel extends VerticalPanel{
 		resourceAddEditHeader.addStyleName("addEditHeaderLabel");
 		resourceAddEditPanel.add(resourceAddEditHeader);
 		
+		// resourceIsBulkTextBox and resourceIsIdentifiableTextBox can not be edited
+		// the values are set depending on the chosen resourcetype
+		resourceIsBulkTextBox.setReadOnly(true);
+		resourceIsIdentifiableTextBox.setReadOnly(true);
+		
 		// Populating the resourceAddEditFlexTable
 		resourceAddEditFlexTable.setWidget(0, 0, resourceIdLabel);
 		resourceAddEditFlexTable.setWidget(0, 1, resourceIdTextTextBox);
@@ -168,10 +174,8 @@ public class ResourcePanel extends VerticalPanel{
 		resourceAddEditFlexTable.setWidget(3, 1, resourceIsBulkTextBox);
 		resourceAddEditFlexTable.setWidget(4,0, resourceIsIdentifiableLabel);
 		resourceAddEditFlexTable.setWidget(4, 1, resourceIsIdentifiableTextBox);
-		resourceAddEditFlexTable.setWidget(5,0, resourceQoHLabel);
-		resourceAddEditFlexTable.setWidget(5, 1, resourceQoHTextBox);
-		resourceAddEditFlexTable.setWidget(6,0, resourceIsComposedLabel);
-		resourceAddEditFlexTable.setWidget(6, 1, resourceIsComposedTextBox);
+		resourceAddEditFlexTable.setWidget(5,0, resourceIsComposedLabel);
+		resourceAddEditFlexTable.setWidget(5, 1, resourceIsComposedTextBox);
 		
 		// adding the resourceAddEditFlexTable to the resourceAddEditPanel
 		resourceAddEditPanel.add(resourceAddEditFlexTable);
@@ -233,10 +237,12 @@ public class ResourcePanel extends VerticalPanel{
 				}
 						
 				if(resourceSaveActionState){
-					Window.alert("ListBox Save Change!");
+
+					resetBulkAndIdentifiableTextBox();
 					addAdditionalAttributesForSelectedResourcetype(false);
 				}else{
-					Window.alert("ListBox Update Change!");
+
+					resetBulkAndIdentifiableTextBox();
 					addAdditionalAttributesForSelectedResourcetype(false);
 				}
 						
@@ -276,7 +282,12 @@ public class ResourcePanel extends VerticalPanel{
 					
 					// firstRetrievedResourcetypeDTO is set to the first atdto
 					if(!firstIsSet){
+						
 						selectedResourcetypeDTOInListBox = rtdto;
+						
+						// reset the values in the IsBulk and IsIdentifiable Textbox
+						resetBulkAndIdentifiableTextBox();
+						
 						firstIsSet = true;
 					}
 					
@@ -358,9 +369,17 @@ public class ResourcePanel extends VerticalPanel{
 					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableColumn");
 					resourceSelectionFlexTable.setText(row, 4, String.valueOf(rdto.isIdentifiable()));
 					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 4, "adminFlexTableColumn");
-					resourceSelectionFlexTable.setText(row, 5, String.valueOf(rdto.getQoH()));
+					resourceSelectionFlexTable.setText(row, 5, String.valueOf(rdto.getIsComposed()));
 					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 5, "adminFlexTableColumn");
-					resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getIsComposed()));
+					
+					char afterdot = String.valueOf(rdto.getQoH()).charAt(String.valueOf(rdto.getQoH()).indexOf(".")+1);
+					if(afterdot == '0'){
+						resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()).substring(0, String.valueOf(rdto.getQoH()).indexOf(".")));
+					} else {
+						resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()));
+					}
+					// TODO: Substring or not? resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()).substring(0, String.valueOf(rdto.getQoH()).indexOf(".")));
+					
 					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 6, "adminFlexTableColumn");
 					resourceSelectionFlexTable.setWidget(row, 7, updateResourceButton);
 					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 7, "adminFlexTableEditRemoveColumn");
@@ -401,10 +420,16 @@ public class ResourcePanel extends VerticalPanel{
 			
 			resourceNameTextBox.setText("");
 			resourceTypeListBox.setItemSelected(0, true);
-			resourceIsBulkTextBox.setText("");
-			resourceIsIdentifiableTextBox.setText("");
+			
+			// reset selected index and ResourceDTO in ListBox
+			selectedIndexInListBox = 0;
+			selectedResourcetypeDTOInListBox = existingResourcetypeDTOs.get(0);
+			
 			resourceQoHTextBox.setText("");
 			resourceIsComposedTextBox.setText("");
+			
+			// update the values of the isBulk and IsIdentifiable textbox
+			resetBulkAndIdentifiableTextBox();
 			
 			// adding the additional attribute labels and textfields for the initially selected resourcetype
 			addAdditionalAttributesForSelectedResourcetype(false);
@@ -447,7 +472,6 @@ public class ResourcePanel extends VerticalPanel{
 			resourceQoHTextBox.setText(String.valueOf(resourceDTO.getQoH()));
 			resourceIsComposedTextBox.setText(String.valueOf(resourceDTO.getIsComposed()));
 			
-			
 			selectedIndexInListBox = selectedIndex;
 			selectedResourcetypeDTOInListBox = existingResourcetypeDTOs.get(selectedIndexInListBox);
 			
@@ -478,10 +502,14 @@ public class ResourcePanel extends VerticalPanel{
 				
 				int row = resourceAddEditFlexTable.getRowCount();
 				
+				// the treashold vor fixed attributes either is 7 or 6 depending on the fact if a resource is bulk or not
+				int treshold = 7;
+				if (!selectedResourcetypeDTOInListBox.isBulk()){treshold = 6;};
+				
 				// if more than 7 exist. delete all but the first three
-				if(row > 7){
-					for(int i = 7; i < row; i++){
-						resourceAddEditFlexTable.removeRow(7);
+				if(row > treshold){
+					for(int i = treshold; i < row; i++){
+						resourceAddEditFlexTable.removeRow(treshold);
 					}
 				}
 				
@@ -524,16 +552,25 @@ public class ResourcePanel extends VerticalPanel{
 		} else{
 			
 			if(resourcetypeAttributes != null){
-							
+					
+				// Numberformats for string formatting
+				// TODO: DOES NOT WORK DUE TO GWT ISSUES
+				NumberFormat nf1 = NumberFormat.getFormat("");
+				
 				// get additional attribute values for resourceDTO that should be updated
 				Set<ResourceHasAdditionalattributevalueDTO> additionalattributevalues = resourceUpdateObject.getAdditionalAttributeValues();
 							
 				int row = resourceAddEditFlexTable.getRowCount();
-							
+					
+				// the treashold vor fixed attributes either is 7 or 6 depending on the fact if a resource is bulk or not
+				int treshold = 7;
+				if (!selectedResourcetypeDTOInListBox.isBulk()){treshold = 6;};
+				
+				
 				// if more than 7 exist. delete all but the first three
-				if(row > 7){
-					for(int i = 7; i < row; i++){
-						resourceAddEditFlexTable.removeRow(7);
+				if(row > treshold){
+					for(int i = treshold; i < row; i++){
+						resourceAddEditFlexTable.removeRow(treshold);
 					}
 				}
 
@@ -547,8 +584,9 @@ public class ResourcePanel extends VerticalPanel{
 					
 					// set textBoxContent and Validators (depending on datatypes)
 					if (rdto.getAttribute().getDatatype().equals("INT") || rdto.getAttribute().getDatatype().equals("DOUBLE")){
-
-						textBoxContent = String.valueOf(rdto.getNumericValue());
+						
+						//textBoxContent= String.valueOf(rdto.getNumericValue());
+						textBoxContent = nf1.format(rdto.getNumericValue());
 						attributeValidator = new NumericValidator();
 						
 			    	} else if (rdto.getAttribute().getDatatype().equals("VARCHAR")){
@@ -593,7 +631,7 @@ public class ResourcePanel extends VerticalPanel{
 	 * 
 	 */
 	private void addNewResource(){
-	
+		
 		// Only add if the validation does not fail
 		if(!resourceTextBoxValidationResult()){
 			return;
@@ -732,6 +770,8 @@ public class ResourcePanel extends VerticalPanel{
 			return;
 		}
 		
+		// SAVING
+		
 		// Initialize the service proxy.
 	    if (reaDBSvc == null) {
 	    	reaDBSvc = GWT.create(READBService.class);
@@ -785,8 +825,8 @@ public class ResourcePanel extends VerticalPanel{
 				resourceSelectionFlexTable.setText(row, 2, rtdto.getId());
 				resourceSelectionFlexTable.setText(row, 3, String.valueOf(result.isBulk()));
 				resourceSelectionFlexTable.setText(row, 4, String.valueOf(result.isIdentifiable()));
-				resourceSelectionFlexTable.setText(row, 5, String.valueOf(result.getQoH()));
-				resourceSelectionFlexTable.setText(row, 6, String.valueOf(result.getIsComposed()));
+				resourceSelectionFlexTable.setText(row, 5, String.valueOf(result.getIsComposed()));
+				resourceSelectionFlexTable.setText(row, 6, String.valueOf(result.getQoH()));
 				resourceSelectionFlexTable.setWidget(row, 7, updateResourceButton);
 				resourceSelectionFlexTable.setWidget(row, 8, deleteResourceButton);
 				
@@ -898,8 +938,8 @@ public class ResourcePanel extends VerticalPanel{
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 2, result.getResourcetype().getName());
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 3, String.valueOf(result.isBulk()));
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 4, String.valueOf(result.isIdentifiable()));
-	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 5, String.valueOf(result.getQoH()));
-	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 6, String.valueOf(result.getIsComposed()));
+	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 5, String.valueOf(result.getIsComposed()));
+	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 6, String.valueOf(result.getQoH()));
 	    		
 				updateResourceAddEditPanel(existingResourceDTOs.get(updatedListIndex));
 	    	}
@@ -974,8 +1014,13 @@ public class ResourcePanel extends VerticalPanel{
 	    resourceDTO.setResourcetype(selectedResourcetypeDTOInListBox);
 	    resourceDTO.setBulk(Boolean.valueOf(resourceIsBulkTextBox.getText()));
 	    resourceDTO.setIdentifiable(Boolean.valueOf(resourceIsIdentifiableTextBox.getText()));
-	    resourceDTO.setQoH(Double.parseDouble(resourceQoHTextBox.getText()));
 	    resourceDTO.setIsComposed(Boolean.valueOf(resourceIsComposedTextBox.getText()));
+	    if(resourceQoHTextBox.getText().equals("")){
+	    	resourceDTO.setQoH(1);
+	    } else {
+	    	resourceDTO.setQoH(Double.parseDouble(resourceQoHTextBox.getText()));
+	    }
+	    
 	    
 	    // setting additionalattributevalues for resourceDTO
 	    resourceDTO.setAdditionalAttributeValues(createAttributeValueSetForSelectedResourcetype(resourceDTO));
@@ -1093,10 +1138,15 @@ public class ResourcePanel extends VerticalPanel{
 		// validate the resourcename, is bulk, isidentifiable, QoH, isComposed textboxs first
 		// if this validation fails, validationResult is set to false immediately
 		if(!resourceNameTextBox.validate() || !resourceIsBulkTextBox.validate() || !resourceIsIdentifiableTextBox.validate() 
-				|| !resourceQoHTextBox.validate() || !resourceIsComposedTextBox.validate()){
+				|| !resourceIsComposedTextBox.validate()){
 			validationResult = false;
 		}
 		
+		// If the selected resource is a bulk resource, the QoH is also validated
+		if(selectedResourcetypeDTOInListBox.isBulk() && validationResult == false){
+			validationResult = resourceQoHTextBox.validate();
+		}
+			
 		// run through all entries of the attributeLabelMap and validate the textboxes
 		for(AttributeDTO adto : attributeLabelMap.keySet()){
 				
@@ -1107,6 +1157,29 @@ public class ResourcePanel extends VerticalPanel{
 		}
 		
 		return validationResult;
+	}
+	
+	
+	/**
+	 * Method resting the values in the
+	 */
+	private void resetBulkAndIdentifiableTextBox(){
+		
+		// set the values in the resourceIsBulkTextBox and resourceIsIdentifiableTextBox
+		if(selectedResourcetypeDTOInListBox.isBulk()){
+			
+			resourceIsIdentifiableTextBox.setText("false");
+			resourceIsBulkTextBox.setText("true");
+			
+			// QoH label and textbox are only visible if the resourcetype is bulk
+			resourceAddEditFlexTable.setWidget(6,0, resourceQoHLabel);
+			resourceAddEditFlexTable.setWidget(6, 1, resourceQoHTextBox);
+			
+		} else if (selectedResourcetypeDTOInListBox.isIdentifiable()){
+			
+			resourceIsIdentifiableTextBox.setText("true");
+			resourceIsBulkTextBox.setText("false");
+		}
 	}
 	
 	/**
