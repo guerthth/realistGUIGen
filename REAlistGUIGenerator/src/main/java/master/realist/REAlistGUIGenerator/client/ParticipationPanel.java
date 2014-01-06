@@ -1,11 +1,13 @@
 package master.realist.REAlistGUIGenerator.client;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -31,13 +33,20 @@ public class ParticipationPanel extends VerticalPanel{
 	private TabPanel participationTabPanel = new TabPanel();
 	
 	// map keeping track of eventtypes and their corresponding attributes + textboxes
-	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap;
+	private Map<EventDTO,Map<ParticipationDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap;
+	//private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap;
 	
+	// participationmap
+	private Map<ParticipationDTO, Map<AttributeDTO, CustomTextBox>> participationMap = new HashMap<ParticipationDTO, Map<AttributeDTO, CustomTextBox>>();
+	
+	// Map specific for participationdtos and attrtibutes + textboxes 
+	// has to be created here to stay up to date
+	//private Map<ParticipationDTO, Map<AttributeDTO, CustomTextBox>> participationAttributeValueMap = new HashMap<ParticipationDTO, Map<AttributeDTO, CustomTextBox>>();
 	
 	/**
 	 * Default Constructor
 	 */
-	public ParticipationPanel(EventtypeDTO eventtypeDTO, EventDTO eventdto, Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap){
+	public ParticipationPanel(EventtypeDTO eventtypeDTO, EventDTO eventdto, Map<EventDTO,Map<ParticipationDTO, Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap){
 		
 		// setting eventtypeDTO
 		this.eventtypeDTO = eventtypeDTO;
@@ -59,7 +68,7 @@ public class ParticipationPanel extends VerticalPanel{
 	private void populateParticipationPanel(){
 		
 		// apply styles
-		this.addStyleName("participationStockflowPanel");
+		this.addStyleName("participationPanel");
 		
 		// apply styles for the participationSpecificationLabel
 		participationSpecificationLabel.addStyleName("participationSpecificationLabel");
@@ -74,7 +83,7 @@ public class ParticipationPanel extends VerticalPanel{
 		// add a tab for each participation of the current eventtype
 		for(EventtypeParticipationDTO etp : eventtypeDTO.getParticipations()){
 			
-			participationTabPanel.add(new ParticipationContentPanel(etp, eventdto, participationTabPanel, eventtypeParticipationAttributeLabelMap, eventtypeDTO),etp.getAgenttypeId());
+			participationTabPanel.add(new ParticipationContentPanel(etp, eventdto, participationTabPanel, eventtypeParticipationAttributeLabelMap, participationMap, eventtypeDTO),etp.getAgenttypeId());
 		
 		}
 		

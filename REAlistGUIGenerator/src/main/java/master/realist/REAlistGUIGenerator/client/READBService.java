@@ -8,9 +8,10 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowHasAdditionalAttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 
@@ -112,9 +113,16 @@ public interface READBService extends RemoteService{
 	/**
 	 * getting all existing EventtypeParticipationHasAdditionalAttributes in the REA DB
 	 * @param participation
-	 * @return
+	 * @return all existing EventtypeParticipationHasAdditionalAttributes in the REA DB
 	 */
 	public List<EventtypeParticipationHasAdditionalAttributeDTO> getEventtypeParticipationsHasAdditionalAttribtes(EventtypeParticipationDTO participation);
+	
+	/**
+	 * getting all existing EventtypeStockflowHasAdditionalAttributes in the REA DB
+	 * @param stockflow
+	 * @return all existing EventtypeStockflowHasAdditionalAttributes in the REA DB
+	 */
+	public List<EventtypeStockflowHasAdditionalAttributeDTO> getEventtypeStockflowHasAdditionalAttributes(EventtypeStockflowDTO stockflow);
 	
 	/**
 	 * Retrieving all existing dualities in the REA DB
@@ -137,7 +145,5 @@ public interface READBService extends RemoteService{
 	public Integer deleteDuality(Integer dualityId);
 	
 	public EventDTO saveEvent(EventDTO eventDTO);
-	
-	//public EventHasAdditionalattributevalueDTO saveEventHasAdditionalattributevalue(EventHasAdditionalattributevalueDTO addattrvalDTO);
 	
 }

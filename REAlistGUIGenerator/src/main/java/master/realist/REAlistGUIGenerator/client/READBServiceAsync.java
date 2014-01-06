@@ -8,9 +8,10 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowHasAdditionalAttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 
@@ -113,6 +114,13 @@ public interface READBServiceAsync {
 	 */
 	void getEventtypeParticipationsHasAdditionalAttribtes(EventtypeParticipationDTO participation , AsyncCallback<List<EventtypeParticipationHasAdditionalAttributeDTO>> callback);
 
+	/**
+	 * getting all existing EventtypeStockflowHasAdditionalAttributes in the REA DB
+	 * @param stockflow
+	 * @param callback
+	 */
+	void getEventtypeStockflowHasAdditionalAttributes(EventtypeStockflowDTO stockflow, AsyncCallback<List<EventtypeStockflowHasAdditionalAttributeDTO>> callback);
+	
 	/**
 	 * Retrieving all existing dualities in the REA DB
 	 * @param callback

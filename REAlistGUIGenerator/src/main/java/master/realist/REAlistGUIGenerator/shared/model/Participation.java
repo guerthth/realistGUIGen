@@ -3,6 +3,7 @@ package master.realist.REAlistGUIGenerator.shared.model;
 // Generated Dec 10, 2013 2:10:07 PM by Hibernate Tools 4.0.0
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -12,12 +13,14 @@ import javax.persistence.GeneratedValue;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
@@ -37,7 +40,7 @@ public class Participation implements java.io.Serializable {
 	private Integer participationId;
 	private Agent agent;
 	private Set<Event> events = new HashSet<Event>(0);
-	private Set<ParticipationHasAdditionalattributevalue> participationHasAdditionalattributevalues = new HashSet<ParticipationHasAdditionalattributevalue>(
+	private Set<ParticipationHasAdditionalattributevalue> participationHasAdditionalattributevalues = new LinkedHashSet<ParticipationHasAdditionalattributevalue>(
 			0);
 	private Set<Commitment> commitments = new HashSet<Commitment>(0);
 
@@ -104,7 +107,8 @@ public class Participation implements java.io.Serializable {
 		this.events = events;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "participation")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.participation", cascade=CascadeType.ALL)
+	@OrderBy
 	public Set<ParticipationHasAdditionalattributevalue> getParticipationHasAdditionalattributevalues() {
 		return this.participationHasAdditionalattributevalues;
 	}

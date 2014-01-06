@@ -13,7 +13,7 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import master.realist.REAlistGUIGenerator.shared.dto.EventtypeHasAdditionalattributeDTO;
+
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
 
 /**

@@ -44,7 +44,7 @@ public class Attribute implements java.io.Serializable {
 			0);
 	private Set<ParticipationHasAdditionalattributevalue> participationHasAdditionalattributevalues = new HashSet<ParticipationHasAdditionalattributevalue>(
 			0);
-	private Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues = new HashSet<StockflowHasAdditionalattributevalue>(
+	private Set<StockflowHasAdditionalattributevalue> stockflowHasAdditionalattributevalues = new LinkedHashSet<StockflowHasAdditionalattributevalue>(
 			0);
 	private Set<ResourceHasAdditionalattributevalue> resourceHasAdditionalattributevalues = new HashSet<ResourceHasAdditionalattributevalue>(
 			0);
@@ -184,7 +184,7 @@ public class Attribute implements java.io.Serializable {
 		this.eventtypeparticipationHasAdditionalattributes = eventtypeparticipationHasAdditionalattributes;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.attribute")
 	public Set<ParticipationHasAdditionalattributevalue> getParticipationHasAdditionalattributevalues() {
 		return this.participationHasAdditionalattributevalues;
 	}
@@ -194,7 +194,7 @@ public class Attribute implements java.io.Serializable {
 		this.participationHasAdditionalattributevalues = participationHasAdditionalattributevalues;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.attribute")
 	public Set<StockflowHasAdditionalattributevalue> getStockflowHasAdditionalattributevalues() {
 		return this.stockflowHasAdditionalattributevalues;
 	}

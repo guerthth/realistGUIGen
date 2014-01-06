@@ -84,7 +84,11 @@ public class ParticipationContentPanel extends VerticalPanel{
 	private TabPanel participationTabPanel = null;
 	
 	// map keeping track of eventtypes and their corresponding attributes + textboxes
-	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap; 
+	private Map<EventDTO,Map<ParticipationDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap; 
+	//private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap; 
+	
+	// participationMap
+	private Map <ParticipationDTO, Map<AttributeDTO, CustomTextBox>> participationMap;
 	
 	// participationDTO object for current participation
 	private ParticipationDTO participationdto;
@@ -95,7 +99,8 @@ public class ParticipationContentPanel extends VerticalPanel{
 	 * @param participation
 	 */
 	public ParticipationContentPanel(EventtypeParticipationDTO participation, EventDTO eventdto , TabPanel participationTabPanel, 
-										Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap, EventtypeDTO eventtypeDTO){
+										Map<EventDTO,Map<ParticipationDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap, 
+										Map<ParticipationDTO, Map<AttributeDTO, CustomTextBox>> participationMap, EventtypeDTO eventtypeDTO){
 		
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();		
@@ -114,6 +119,9 @@ public class ParticipationContentPanel extends VerticalPanel{
 		
 		// set eventdto
 		this.eventDTO = eventdto;
+		
+		// set participationMap
+		this.participationMap = participationMap;
 
 		// set participationdto and add it to the list of current eventdto
 		this.participationdto = new ParticipationDTO();
@@ -139,10 +147,10 @@ public class ParticipationContentPanel extends VerticalPanel{
 		participationAttributeFlexTable.addStyleName("fullsizePanel");
 		participationAttributeFlexTable.getColumnFormatter().addStyleName(0, "quartersizePanel");
 		participationAttributeFlexTable.getColumnFormatter().addStyleName(1, "threequartersizePanel");
-		participationAttributeFlexTable.setCellPadding(4);
+		participationAttributeFlexTable.setCellPadding(2);
 		
 		// apply style for participatingAgentListBox
-		participatingAgentListBox.addStyleName("fullsizePanel");
+		participatingAgentListBox.addStyleName("attributeTableTextBox");
 		
 		// ChangeHandler for participatingAgentListBox
 		participatingAgentListBox.addChangeHandler(new ChangeHandler(){
@@ -174,7 +182,7 @@ public class ParticipationContentPanel extends VerticalPanel{
 		participationAttributeSeriesAddButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				Window.alert("add new participation");
-				participationTabPanel.add(new ParticipationContentPanel(participation, eventDTO, participationTabPanel, eventtypeParticipationAttributeLabelMap, eventtypeDTO), participation.getAgenttypeId());		
+				participationTabPanel.add(new ParticipationContentPanel(participation, eventDTO, participationTabPanel, eventtypeParticipationAttributeLabelMap, participationMap, eventtypeDTO), participation.getAgenttypeId());		
 			}
 		});
 		
@@ -202,10 +210,9 @@ public class ParticipationContentPanel extends VerticalPanel{
 	private void populateParticipatingAgentListBox(){
 		
 		// if no agenty exist in the REA DB, the values of the provideagent and
-		// receiveagent listboxes are set to "No Agents exist"
+		// receiveagent listboxes are set to "No Agents found"
 		if(reaDBEntryContainer.getExistingAgentDTOs().size() == 0){
-			String noAgentsString = "No Agents exist";
-			participatingAgentListBox.addItem(noAgentsString);
+			String noAgentsString = "No agents found";
 			participatingAgentListBox.addItem(noAgentsString);
 			return;
 		}
@@ -220,15 +227,25 @@ public class ParticipationContentPanel extends VerticalPanel{
 			
 			// if agenttype in agentlist equals agenttype for current participation
 			// add the agentDTO to the possibleAgents list and add the Id as Item in the participatingAgentListBox
-			if(participation.getAgenttypeId().equals(agenttype.getId())){
-				
+			if(agenttypeFits(agenttype)){
+
 				possibleAgents.add(adto);
 				participatingAgentListBox.addItem(adto.getName());
 			}
 			
 		}
 		
-		participationdto.setAgent(possibleAgents.get(participatingAgentListBox.getSelectedIndex()));
+		// if no agents exist for selection
+		if (participatingAgentListBox.getItemCount() == 0){
+			
+			String noAgentsString = "No matches found";
+			participatingAgentListBox.addItem(noAgentsString);
+			participationdto.setAgent(null);
+			
+		} else {
+			participationdto.setAgent(possibleAgents.get(participatingAgentListBox.getSelectedIndex()));
+		}
+			
 	}
 	
 	
@@ -297,7 +314,11 @@ public class ParticipationContentPanel extends VerticalPanel{
 					participationAttributeLabelMap.put(etphaa.getAttribute(),attributeTextBox);
 				}
 				
-				eventtypeParticipationAttributeLabelMap.put(eventDTO, participationAttributeLabelMap);
+				// add ParticipationDTO with CustomTextBoxesto participationMap
+				participationMap.put(participationdto, participationAttributeLabelMap);
+				
+				// add ParticipationMap to eventtypeParticipationAttributeLabelMap
+				eventtypeParticipationAttributeLabelMap.put(eventDTO, participationMap);
 				
 			}
 	    	
@@ -306,6 +327,31 @@ public class ParticipationContentPanel extends VerticalPanel{
 	    // Make the call
 	    reaDBSvc.getEventtypeParticipationsHasAdditionalAttribtes(participation, callback);
 		
+	}
+	
+	
+	/**
+	 * Method checking if an agenttype (or one of its parent agenttypes) fits the type needed in the participation.
+	 * @param agenttype
+	 * @return agenttypefirst
+	 */
+	private boolean agenttypeFits(AgenttypeDTO agenttype){
+		
+		boolean agenttypefirst = false;
+		
+		AgenttypeDTO currentagenttype = agenttype;
+		
+		if(participation.getAgenttypeId().equals(currentagenttype.getId())){
+			agenttypefirst = true;
+		} else if(agenttype.getParentAgenttypeId() != null){
+			// check agenttypes of parentagents
+			currentagenttype = agenttype.getParentAgenttypeId();
+			agenttypefirst = agenttypeFits(currentagenttype);
+		} else {
+			agenttypefirst = false;
+		}
+		
+		return agenttypefirst;
 	}
 	
 	

@@ -5,6 +5,7 @@ import java.util.List;
 
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 
 /**
  * Class administrating all Lists of retrieved entities (DualityStatus, Agent, Resource)
@@ -22,6 +23,9 @@ public class READBEntryContainer {
 	
 	// List of existing DualityStatus in REA DB
 	private List<DualityStatusDTO> existingDualityStatusDTOs = new ArrayList<DualityStatusDTO>();
+	
+	// List of existing Resources in REA DB
+	private List<ResourceDTO> existingResourceDTOs = new ArrayList<ResourceDTO>();
 
 	
 	/**
@@ -76,4 +80,22 @@ public class READBEntryContainer {
 			List<DualityStatusDTO> existingDualityStatusDTOs) {
 		this.existingDualityStatusDTOs = existingDualityStatusDTOs;
 	}
+
+	/**
+	 * Getter for list of existing resources in REA DB
+	 * @return list of existing resources in REA DB
+	 */
+	public List<ResourceDTO> getExistingResourceDTOs() {
+		return existingResourceDTOs;
+	}
+
+	/**
+	 * Setter for list of existing resources in REA DB
+	 * @param existingResourceDTOs list of existing resources in REA DB
+	 */
+	public void setExistingResourceDTOs(List<ResourceDTO> existingResourceDTOs) {
+		this.existingResourceDTOs = existingResourceDTOs;
+	}
+	
+	
 }

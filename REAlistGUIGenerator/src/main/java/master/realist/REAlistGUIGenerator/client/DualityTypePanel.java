@@ -10,15 +10,16 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
-import master.realist.REAlistGUIGenerator.shared.dto.AgentHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
-import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.StockflowDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.StockflowHasAdditionalattributevalueDTO;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -32,7 +33,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DualityTypePanel extends VerticalPanel {
@@ -78,8 +78,14 @@ public class DualityTypePanel extends VerticalPanel {
 	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap = new HashMap<EventDTO,Map<AttributeDTO,CustomTextBox>>();
 
 	// Lists keeping track of events of the duality and the corresponding attributes + textboxes for validation (participations)
-	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap = new HashMap<EventDTO,Map<AttributeDTO,CustomTextBox>>();
+	private Map<EventDTO,Map<ParticipationDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap = new HashMap<EventDTO,Map<ParticipationDTO,Map<AttributeDTO,CustomTextBox>>>();
 
+	// Lists keeping track of events of the duality and the corresponding attributes + textboxes for validation (stockflows)
+	private Map<EventDTO,Map<StockflowDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeStockflowAttributeLabelMap = new HashMap<EventDTO,Map<StockflowDTO,Map<AttributeDTO,CustomTextBox>>>();
+	
+	// Map keeping track of the fixed stockflow attribute textboxes
+	private Map<EventDTO, Map<StockflowDTO, ArrayList<CustomTextBox>>> eventtypeStockflowFixedAttributeMap = new HashMap<EventDTO, Map<StockflowDTO, ArrayList<CustomTextBox>>>();
+	
 	// list of eventdtos that should be saved to the REA DB
 	private List<EventDTO> saveEventDTOList = new ArrayList<EventDTO>();
 	
@@ -118,7 +124,16 @@ public class DualityTypePanel extends VerticalPanel {
 		// listen for mouse events on the dualitytypeSelectionButton
 		dualitytypeSelectionButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
+				
 			    loadDualitytypeContent(dualitytypeListBox.getSelectedIndex());
+			}
+		});
+		
+		// add duality button functionality
+		dualityAddButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+				saveDuality();
 			}
 		});
 		
@@ -185,8 +200,11 @@ public class DualityTypePanel extends VerticalPanel {
 	 */
 	private void loadDualitytypeContent(int selectedIndex){
 		
-		// clear eventtypeAttributeLabelMap
+		// clear maps
 		eventtypeAttributeLabelMap.clear();
+		eventtypeParticipationAttributeLabelMap.clear();
+		eventtypeStockflowAttributeLabelMap.clear();
+		eventtypeStockflowFixedAttributeMap.clear();
 		
 		// clear saveEventDTOList
 		saveEventDTOList.clear();
@@ -212,7 +230,8 @@ public class DualityTypePanel extends VerticalPanel {
 		}
 		
 		// Tab Panel for Eventtypes of a specific Duality
-		eventypeSetTabPanel = new EventPanel(saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, eventtypeParticipationAttributeLabelMap);
+		eventypeSetTabPanel = new EventPanel(saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, 
+									eventtypeParticipationAttributeLabelMap, eventtypeStockflowAttributeLabelMap, eventtypeStockflowFixedAttributeMap);
 		
 		// preselecting the first tab of the panel
 		eventypeSetTabPanel.selectTab(0);
@@ -228,14 +247,6 @@ public class DualityTypePanel extends VerticalPanel {
 		
 		// populate dualitystatusListBox
 		populateDualityStatusListBox();
-		
-		// add duality button functionality
-		dualityAddButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
-
-				saveDuality();
-			}
-		});
 		
 		dualitystatusAndDualityAddPanel.add(dualitystatusAndDualityAddFlexTable);
 		
@@ -301,6 +312,33 @@ public class DualityTypePanel extends VerticalPanel {
 	    		  	
 	    		  	// generate additional attributes for eventdto
 	    		  	eventdto.setAdditionalAttributeValues(createAttributeValueSetForSelectedEventDTO(eventdto));
+	    		  	
+	    		  	// generate additional attribute for participationdtos of event
+	    		  	for(ParticipationDTO participationdto : eventtypeParticipationAttributeLabelMap.get(eventdto).keySet()){
+	    		  		
+	    		  		participationdto.setAdditionalAttributeValues(createAttributeValuesForparticipationDTO(participationdto, eventdto));
+	    		  		
+	    		  	}
+	    		  	
+	    		  	// generate additional attribute values for stockflowdtos of event
+	    		  	for(StockflowDTO stockflowdto : eventtypeStockflowAttributeLabelMap.get(eventdto).keySet()){
+	    		  		
+	    		  		stockflowdto.setAdditionalAttributeValues(createAttributeValuesForstockflowDTO(stockflowdto, eventdto));
+	    		  	}
+	    		  	
+	    		  	// fixed valued for stock flows
+	    			for(EventDTO edto : eventtypeStockflowFixedAttributeMap.keySet()){
+	    				
+	    				for(StockflowDTO sfdto : eventtypeStockflowFixedAttributeMap.get(edto).keySet()){
+	    					
+	    					sfdto.setPricePerUnit(Double.parseDouble(eventtypeStockflowFixedAttributeMap.get(edto).get(sfdto).get(0).getText()));
+	    					if(eventtypeStockflowFixedAttributeMap.get(edto).get(sfdto).size() > 1){
+	    						sfdto.setQuantity(Double.parseDouble(eventtypeStockflowFixedAttributeMap.get(edto).get(sfdto).get(1).getText()));
+	    					}
+
+	    				}
+
+	    			}
 	    		  	
 	  	    		saveEvent(eventdto);
 	  	      	}
@@ -374,6 +412,95 @@ public class DualityTypePanel extends VerticalPanel {
 	    
 	}
 	
+	/**
+	 * Method creating a Set of additional attribute values for a specific participationdto
+	 * @param participation
+	 * @param eventdto
+	 * @return
+	 */
+	private Set<ParticipationHasAdditionalattributevalueDTO> createAttributeValuesForparticipationDTO(ParticipationDTO participation, EventDTO eventdto){
+		
+		// creating additional attribute values for participationDTO
+	    Set<ParticipationHasAdditionalattributevalueDTO> attributes = new LinkedHashSet<ParticipationHasAdditionalattributevalueDTO>();
+	    
+	    // get the attributeLabelMap for the current participation
+	    Map<AttributeDTO,CustomTextBox> attributeLabelMap = eventtypeParticipationAttributeLabelMap.get(eventdto).get(participation);
+		
+	    // run through the elements in the labelmap 
+	    for(AttributeDTO attribute : attributeLabelMap.keySet()){
+	    	
+	    	String textBoxContent = attributeLabelMap.get(attribute).getText();
+	    	
+	    	// create additional attribute value DTO object
+	    	ParticipationHasAdditionalattributevalueDTO attributevalue = new ParticipationHasAdditionalattributevalueDTO();
+	    	attributevalue.setParticipation(participation);
+	    	attributevalue.setAttribute(attribute);
+	    	
+	    	// setting the value depending on the datatype
+	    	if (attribute.getDatatype().equals("INT") || attribute.getDatatype().equals("DOUBLE")){
+	    		attributevalue.setNumericValue(Double.parseDouble(textBoxContent));
+	    	} else if (attribute.getDatatype().equals("VARCHAR")){
+	    		attributevalue.setTextualValue(textBoxContent);
+	    	} else if (attribute.getDatatype().equals("BOOLEAN")){
+	    		attributevalue.setBooleanValue(Boolean.valueOf(textBoxContent));
+	    	} else {		
+	    		Date date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(textBoxContent);
+	    		attributevalue.setDatetimeValue(date);
+	    	}
+	    	
+	    	// adding the attributevalue to the attribues set
+	    	attributes.add(attributevalue);
+	    	
+	    }
+	    
+	    return attributes;
+	}
+	
+	
+	/**
+	 * Method creating a Set of additional attribute values for a specific stockflowdto
+	 * @param stockflow
+	 * @param eventdto
+	 * @return
+	 */
+	private Set<StockflowHasAdditionalattributevalueDTO> createAttributeValuesForstockflowDTO(StockflowDTO stockflow, EventDTO eventdto){
+		
+		// creating additional attribute values for stockflowDTO
+	    Set<StockflowHasAdditionalattributevalueDTO> attributes = new LinkedHashSet<StockflowHasAdditionalattributevalueDTO>();
+	    
+	    // get the attributeLabelMap for the current stockflow
+	    Map<AttributeDTO,CustomTextBox> attributeLabelMap = eventtypeStockflowAttributeLabelMap.get(eventdto).get(stockflow);
+		
+	    // run through the elements in the labelmap 
+	    for(AttributeDTO attribute : attributeLabelMap.keySet()){
+	    	
+	    	String textBoxContent = attributeLabelMap.get(attribute).getText();
+	    	
+	    	// create additional attribute value DTO object
+	    	StockflowHasAdditionalattributevalueDTO attributevalue = new StockflowHasAdditionalattributevalueDTO();
+	    	attributevalue.setStockflow(stockflow);
+	    	attributevalue.setAttribute(attribute);
+	    	
+	    	// setting the value depending on the datatype
+	    	if (attribute.getDatatype().equals("INT") || attribute.getDatatype().equals("DOUBLE")){
+	    		attributevalue.setNumericValue(Double.parseDouble(textBoxContent));
+	    	} else if (attribute.getDatatype().equals("VARCHAR")){
+	    		attributevalue.setTextualValue(textBoxContent);
+	    	} else if (attribute.getDatatype().equals("BOOLEAN")){
+	    		attributevalue.setBooleanValue(Boolean.valueOf(textBoxContent));
+	    	} else {		
+	    		Date date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(textBoxContent);
+	    		attributevalue.setDatetimeValue(date);
+	    	}
+	    	
+	    	// adding the attributevalue to the attribues set
+	    	attributes.add(attributevalue);
+	    	
+	    }
+	    
+	    return attributes;
+	}
+	
 	
 	/**
 	 * Saving the included events to the database
@@ -406,38 +533,13 @@ public class DualityTypePanel extends VerticalPanel {
 	
 	
 	/**
-	 * Method creating a dualityDTO object that will be saved to the REA DB
-	 * @return
-	 */
-	private DualityDTO createDualityDTO(){
-		
-		// dualitytypeDTO
-	    DualitytypeDTO dualitytypeDTO = new DualitytypeDTO();
-	 	dualitytypeDTO.setId(currentDualityType.getId());
-	 	dualitytypeDTO.setName(currentDualityType.getName());
-	 	dualitytypeDTO.setConversion(currentDualityType.isConversion());
-	 	
-	 	 // selected dualitystatus
-	    DualityStatusDTO dualitystatusDTO = dualitystatusList.get(dualitystatusListBox.getSelectedIndex());
-	 	
-	 	// dualityDTO
-		DualityDTO dualityDTO = new DualityDTO();
-	    dualityDTO.setDualitytype(dualitytypeDTO);
-	    dualityDTO.setDate(new Date());
-	    dualityDTO.setDualitystatus(dualitystatusDTO);
-	    
-	    return dualityDTO;
-	}
-	
-	
-	/**
 	 * Method validating all textboxes relevant for a Dualitytype
 	 * @return True if all validations are passed. False if one fails
 	 */
 	private boolean dualitytypeTextBoxValidationResult(){
 		
 		boolean validationResult = true;
-		
+		// TODO: maybe change to 1 loop with 3 loops inside!
 		// Eventtype Attributes
 		for(EventDTO edto : eventtypeAttributeLabelMap.keySet()){
 			for(AttributeDTO adto : eventtypeAttributeLabelMap.get(edto).keySet()){
@@ -449,14 +551,44 @@ public class DualityTypePanel extends VerticalPanel {
 			}
 		}
 		
-		// Partcipation Attributes
-		for(EventDTO edto : eventtypeParticipationAttributeLabelMap.keySet()){
-			for(AttributeDTO adto : eventtypeParticipationAttributeLabelMap.get(edto).keySet()){
-				
-				if(!eventtypeParticipationAttributeLabelMap.get(edto).get(adto).validate()){
-					validationResult = false;
+		// fixed stockflow attributes
+		for(EventDTO edto : eventtypeStockflowFixedAttributeMap.keySet()){
+			
+			for(StockflowDTO sfdto : eventtypeStockflowFixedAttributeMap.get(edto).keySet()){
+				for(CustomTextBox ct : eventtypeStockflowFixedAttributeMap.get(edto).get(sfdto)){
+					if(!ct.validate()){
+						validationResult = false;
+					}
 				}
 			}
+
+		}
+		
+		// Stockflow Attributes
+		for(EventDTO edto : eventtypeStockflowAttributeLabelMap.keySet()){
+			for(StockflowDTO sfdto : eventtypeStockflowAttributeLabelMap.get(edto).keySet()){
+				for(AttributeDTO adto : eventtypeStockflowAttributeLabelMap.get(edto).get(sfdto).keySet()){
+					
+					if(!eventtypeStockflowAttributeLabelMap.get(edto).get(sfdto).get(adto).validate()){
+						validationResult = false;
+					}
+				}
+			}
+			
+		}
+		
+		// Partcipation Attributes
+		for(EventDTO edto : eventtypeParticipationAttributeLabelMap.keySet()){
+			for(ParticipationDTO pdto : eventtypeParticipationAttributeLabelMap.get(edto).keySet()){
+				
+				for(AttributeDTO adto : eventtypeParticipationAttributeLabelMap.get(edto).get(pdto).keySet()){
+					
+					if(!eventtypeParticipationAttributeLabelMap.get(edto).get(pdto).get(adto).validate()){
+						validationResult = false;
+					}
+				}
+			}
+			
 		}
 		
 		return validationResult;

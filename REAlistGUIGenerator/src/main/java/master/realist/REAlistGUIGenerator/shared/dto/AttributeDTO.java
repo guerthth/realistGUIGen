@@ -6,6 +6,7 @@ import master.realist.REAlistGUIGenerator.shared.model.AgenttypeHasAdditionalatt
 import master.realist.REAlistGUIGenerator.shared.model.Attribute;
 import master.realist.REAlistGUIGenerator.shared.model.EventtypeHasAdditionalattribute;
 import master.realist.REAlistGUIGenerator.shared.model.EventtypeparticipationHasAdditionalattribute;
+import master.realist.REAlistGUIGenerator.shared.model.EventtypestockflowHasAdditionalattribute;
 import master.realist.REAlistGUIGenerator.shared.model.ResourcetypeHasAdditionalattribute;
 
 public class AttributeDTO implements Serializable{
@@ -67,6 +68,16 @@ public class AttributeDTO implements Serializable{
 		this.id = etphaa.getAttribute().getId();
 		this.name = etphaa.getAttribute().getName();
 		this.datatype = etphaa.getAttribute().getDatatype();
+	}
+	
+	/**
+	 * Constructor converting an EventtypestockflowHasAdditionalattribute object to a AttributeDTO object
+	 * @param etsfhaa
+	 */
+	public AttributeDTO(EventtypestockflowHasAdditionalattribute etsfhaa){
+		this.id = etsfhaa.getAttribute().getId();
+		this.name = etsfhaa.getAttribute().getName();
+		this.datatype = etsfhaa.getAttribute().getDatatype();
 	}
 	
 	/**

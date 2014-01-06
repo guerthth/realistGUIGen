@@ -4,7 +4,6 @@ package master.realist.REAlistGUIGenerator.client;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -22,6 +21,8 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.StockflowDTO;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -101,7 +102,7 @@ public class EventContentPanel extends VerticalPanel{
 	// sort of the event (decrement or increment)
 	private String eventsort;
 	// eventtypeDTO object the EventContentPanel is created for
-	EventtypeDTO eventtypeDTO;
+	private EventtypeDTO eventtypeDTO;
 	
 	// flag depicting if the event belongs to a conversion or not
 	private boolean isConversion;
@@ -113,8 +114,13 @@ public class EventContentPanel extends VerticalPanel{
 	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap;
 	
 	// map keeping track of eventtypeparticipations and their corresponding attributes + textboxes
-	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap;
+	private Map<EventDTO,Map<ParticipationDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap;
+	//private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap;
+	
+	// map keeping track of eventtypestockflows and their corresponding attributes + textboxes
+	private Map<EventDTO,Map<StockflowDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeStockflowAttributeLabelMap;
 
+	
 	// list of possible Provide Agents
 	private ArrayList<AgentDTO> possibleProvideAgents = new ArrayList<AgentDTO>();
 
@@ -126,13 +132,19 @@ public class EventContentPanel extends VerticalPanel{
 	
 	// EventDTO object that will be saved to the REA DB
 	private EventDTO eventdto;
+
+	// Map keeping track of the fixed stockflow attribute textboxes
+	private Map<EventDTO, Map<StockflowDTO, ArrayList<CustomTextBox>>> eventtypeStockflowFixedAttributeMap;
 	
 	
 	/**
 	 * Constructor
 	 */
 	public EventContentPanel(EventtypeDTO selectedEventtypeDTO, DualityDTO saveDualityDTO, List<EventDTO> saveEventDTOList,
-			Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap, Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap){
+			Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap, 
+			Map<EventDTO,Map<ParticipationDTO, Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap,
+			Map<EventDTO,Map<StockflowDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeStockflowAttributeLabelMap,
+			Map<EventDTO, Map<StockflowDTO, ArrayList<CustomTextBox>>> eventtypeStockflowFixedAttributeMap){
 		
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();		
@@ -159,11 +171,17 @@ public class EventContentPanel extends VerticalPanel{
 		// set eventtypeParticipationAttributeLabelMap
 		this.eventtypeParticipationAttributeLabelMap = eventtypeParticipationAttributeLabelMap;
 		
+		// set eventtypeStockflowAttributeLabelMap
+		this.eventtypeStockflowAttributeLabelMap = eventtypeStockflowAttributeLabelMap;
+		
 		// set saveEventDTOList
 		this.saveEventDTOList = saveEventDTOList;
 		
 		// set  eventdto
 		this.eventdto = new EventDTO();
+		
+		// set the eventtypeStockflowFixedAttributeMap
+		this.eventtypeStockflowFixedAttributeMap = eventtypeStockflowFixedAttributeMap;
 		
 		// define whether the event belongs to a conversion or not
 		this.isConversion = saveDualityDTO.getDualitytype().isConversion();
@@ -178,15 +196,25 @@ public class EventContentPanel extends VerticalPanel{
 	private void populateEventContentPanel(){
 		
 		// apply style for the EventContentPanel
-		this.addStyleName("fullsizePanel");
+		this.addStyleName("fullsizePanel");		
 		
 		// set spacing to 10
 		this.setSpacing(10);
 		
 		// Definitions for eventtypeActualNametextBox
-		eventtypeActualNametextBox.setText(eventtypeDTO.getName());
+		eventtypeActualNametextBox.setText(eventtypeDTO.getName().substring(eventtypeDTO.getName().indexOf("_")+1));
 		eventtypeActualNametextBox.setReadOnly(true);
-		eventtypeActualNametextBox.setVisibleLength(eventtypeDTO.getName().length());
+		//eventtypeActualNametextBox.setVisibleLength(eventtypeDTO.getName().length());
+		
+		// styles for eventtypeAttributeFlexTable + labels + listboxes
+		eventtypeAttributeFlexTable.addStyleName("fullsizePanel");
+		eventtypeAttributeFlexTable.getColumnFormatter().addStyleName(0, "quartersizePanel");
+		eventtypeAttributeFlexTable.getColumnFormatter().addStyleName(1, "threequartersizePanel");
+		eventtypeAttributeFlexTable.setCellPadding(2);
+		
+		eventtypeActualNametextBox.setStyleName("attributeTableTextBox");
+		eventtypeProvideAgentListBox.setStyleName("attributeTableListBox");
+		eventtypeReceiveAgentListBox.setStyleName("attributeTableListBox");
 		
 		// adding event name labels to the flextable
 		eventtypeAttributeFlexTable.setWidget(0, 0, eventtypeNameLabel);
@@ -219,10 +247,12 @@ public class EventContentPanel extends VerticalPanel{
 		// Generation of labels and textboxes for additional attributes of events
 		populateEventtypeAttributeFlexTable();	
 		
-		// apply styles for the eventAttributeDatePanel
+		// apply styles for the eventAttributeDatePanel, eventtypeDatePanel, and eventtypeAttributePanel
 		eventAttributeDatePanel.addStyleName("fullsizePanel");
+		eventtypeAttributePanel.addStyleName("eventtypeAttributePanel");
+		eventtypeDatePanel.addStyleName("eventtypeDatePanel");
 		
-		// adding the flextable to the eventtypeAttributePanel
+		// adding the flextable to the eventtypeAttributePanel 
 		eventtypeAttributePanel.add(eventtypeAttributeFlexTable);
 		
 		// creating the datepanels
@@ -281,7 +311,7 @@ public class EventContentPanel extends VerticalPanel{
 		// if no participations exist for eventtypeDTO, set provideagent and
 		// receiveagent listboxes to "No Participations exist"
 		if(eventtypeDTO.getParticipations() == null){
-			String noAgentsString = "No Participations exist";
+			String noAgentsString = "No participating agents";
 			eventtypeReceiveAgentListBox.addItem(noAgentsString);
 			eventtypeProvideAgentListBox.addItem(noAgentsString);
 			return;
@@ -301,9 +331,10 @@ public class EventContentPanel extends VerticalPanel{
 			AgenttypeDTO agenttype = adto.getAgenttypes().iterator().next();
 			
 			for(EventtypeParticipationDTO etpdto : eventtypeDTO.getParticipations()){
-				
+
 				// if agenttypeIds match
-				if(etpdto.getAgenttypeId().equals(agenttype.getId())){
+				if(agenttypeFits(agenttype, etpdto)){
+				//TODO: if(etpdto.getAgenttypeId().equals(agenttype.getId())){
 					
 					if(this.isConversion){
 						
@@ -360,11 +391,11 @@ public class EventContentPanel extends VerticalPanel{
 		
 		// if the listBoxes are still empty, set their text to "No matching agents found"
 		if(eventtypeProvideAgentListBox.getItemCount() == 0){
-			eventtypeProvideAgentListBox.addItem("No matching agents found");
+			eventtypeProvideAgentListBox.addItem("No agents found");
 		} 
 		
 		if(eventtypeReceiveAgentListBox.getItemCount() == 0){
-			eventtypeReceiveAgentListBox.addItem("No matching agents found");
+			eventtypeReceiveAgentListBox.addItem("No agents found");
 		}
 		
 		// set selected indexis
@@ -410,8 +441,12 @@ public class EventContentPanel extends VerticalPanel{
 	    	
 	    	// adding validator to attributeTextBox
 	    	attributeTextBox.addValidator(attributeValidator);
+	    	
+	    	// styles for attributetextbox
+	    	attributeTextBox.addStyleName("attributeTableTextBox");
 			
 			int row = eventtypeAttributeFlexTable.getRowCount();
+
 			eventtypeAttributeFlexTable.setWidget(row, 0, attributeLabel);
 			eventtypeAttributeFlexTable.setWidget(row, 1, attributeTextBox);
 						
@@ -489,11 +524,36 @@ public class EventContentPanel extends VerticalPanel{
 		
 		// creating the 2 Panels
 		eventtypeParticipationPanel = new ParticipationPanel(eventtypeDTO, eventdto, eventtypeParticipationAttributeLabelMap);
-		eventtypeStockFlowPanel = new StockflowPanel(eventtypeDTO); // TODO:
+		eventtypeStockFlowPanel = new StockflowPanel(eventtypeDTO, eventdto, eventtypeStockflowAttributeLabelMap, eventtypeStockflowFixedAttributeMap);
 		
 		// adding the Panels to the eventtypeParticipationAndStockflowPanel
 		eventtypeParticipationAndStockflowPanel.add(eventtypeParticipationPanel);
 		eventtypeParticipationAndStockflowPanel.add(eventtypeStockFlowPanel);
+
+	}
+	
+	/**
+	 * Method checking if an agenttype (or one of its parent agenttypes) fits the type needed in the participation.
+	 * @param agenttype
+	 * @return agenttypefirst
+	 */
+	private boolean agenttypeFits(AgenttypeDTO agenttype, EventtypeParticipationDTO participation){
+		
+		boolean agenttypefirst = false;
+		
+		AgenttypeDTO currentagenttype = agenttype;
+		
+		if(participation.getAgenttypeId().equals(currentagenttype.getId())){
+			agenttypefirst = true;
+		} else if(agenttype.getParentAgenttypeId() != null){
+			// check agenttypes of parentagents
+			currentagenttype = agenttype.getParentAgenttypeId();
+			agenttypefirst = agenttypeFits(currentagenttype, participation);
+		} else {
+			agenttypefirst = false;
+		}
+		
+		return agenttypefirst;
 	}
 	
 	

@@ -28,12 +28,21 @@ public class EventtypeDTO implements Serializable{
 	private boolean isSeries;
 	private Set<AttributeDTO> attributes;
 	private Set<EventtypeParticipationDTO> participations;
+	private Set<EventtypeStockflowDTO> stockflows;
 	
 	/**
 	 * Default Constructor
 	 */
 	public EventtypeDTO(){
 		
+	}
+	
+	public Set<EventtypeStockflowDTO> getStockflows() {
+		return stockflows;
+	}
+
+	public void setStockflows(Set<EventtypeStockflowDTO> stockflows) {
+		this.stockflows = stockflows;
 	}
 	
 	public Set<EventtypeParticipationDTO> getParticipations() {

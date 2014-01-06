@@ -123,6 +123,13 @@ public interface READBServiceAsync
      * GWT-RPC service  asynchronous (client-side) interface
      * @see master.realist.REAlistGUIGenerator.client.READBService
      */
+    void getEventtypeStockflowHasAdditionalAttributes( master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowDTO stockflow, AsyncCallback<java.util.List<master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowHasAdditionalAttributeDTO>> callback );
+
+
+    /**
+     * GWT-RPC service  asynchronous (client-side) interface
+     * @see master.realist.REAlistGUIGenerator.client.READBService
+     */
     void getDualities( AsyncCallback<java.util.List<master.realist.REAlistGUIGenerator.shared.dto.DualityDTO>> callback );
 
 

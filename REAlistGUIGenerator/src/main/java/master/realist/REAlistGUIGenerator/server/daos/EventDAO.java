@@ -8,11 +8,18 @@ import master.realist.REAlistGUIGenerator.server.util.HibernateUtil;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationHasAdditionalattributevalueDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.StockflowDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.StockflowHasAdditionalattributevalueDTO;
 import master.realist.REAlistGUIGenerator.shared.model.Agent;
 import master.realist.REAlistGUIGenerator.shared.model.Attribute;
 import master.realist.REAlistGUIGenerator.shared.model.Event;
 import master.realist.REAlistGUIGenerator.shared.model.EventHasAdditionalattributevalue;
 import master.realist.REAlistGUIGenerator.shared.model.Participation;
+import master.realist.REAlistGUIGenerator.shared.model.ParticipationHasAdditionalattributevalue;
+import master.realist.REAlistGUIGenerator.shared.model.Resource;
+import master.realist.REAlistGUIGenerator.shared.model.Stockflow;
+import master.realist.REAlistGUIGenerator.shared.model.StockflowHasAdditionalattributevalue;
 
 public class EventDAO {
 	
@@ -32,6 +39,7 @@ public class EventDAO {
 		
 		Set<EventHasAdditionalattributevalueDTO> additionalAttributeValues = eventDTO.getAdditionalAttributeValues();
 		Set<ParticipationDTO> participations = eventDTO.getParticipations();
+		Set<StockflowDTO> stockflows = eventDTO.getStockflows();
 				
 		Agent provideAgent;
 		Agent receiveAgent;
@@ -70,6 +78,21 @@ public class EventDAO {
 				event.setAgentByReceiveAgentId(receiveAgent);
 			}
 			
+			// stockflows
+			if(stockflows != null){
+				
+				for(StockflowDTO dto : stockflows){
+					
+					// retrieve already stored resource
+					Resource affectedResource = (Resource) session.get(Resource.class, dto.getResource().getId());
+					
+					// create Stockflow and save it
+					Stockflow stockflow = createStockflow(event, affectedResource, dto, session);
+					session.save(stockflow);
+					
+				}
+			}
+			
 			// participations
 			if(participations != null){
 				
@@ -79,11 +102,8 @@ public class EventDAO {
 					Agent participatingAgent = (Agent) session.get(Agent.class, dto.getAgent().getId());
 					
 					// create participation and save it
-					Participation participation = createParticipation(event, participatingAgent, dto);
+					Participation participation = createParticipation(event, participatingAgent, dto, session);
 					session.save(participation);
-					
-					// add participations to the events participation list
-					//event.getParticipations().add(participation);
 					
 				}
 			}
@@ -134,22 +154,114 @@ public class EventDAO {
 	
 	
 	/**
-	 * Method creating a Participation for a soecific ParticipationDTO
+	 * Method creating a Participation for a specific ParticipationDTO
 	 * @param event event object the participation belongs to
 	 * @param agent participating agent in participation
 	 * @param participationDTO participationDTO that is converted
 	 * @return participation
 	 */
-	private Participation createParticipation(Event event, Agent agent,  ParticipationDTO participationDTO){
+	private Participation createParticipation(Event event, Agent agent,  ParticipationDTO participationDTO, Session session){
 		
 		// create a Participation object and set its values
 		Participation participation = new Participation();
 		participation.setAgent(agent);
 		participation.getEvents().add(event);
 		
-		// TODO : Additional attributes for participation
+		// Additional attributes for participation
+		if(participationDTO.getAdditionalAttributeValues() != null){
+			for(ParticipationHasAdditionalattributevalueDTO phaavdto : participationDTO.getAdditionalAttributeValues()){
+				
+				// retrieve existing attribute
+				Attribute addAttribute = (Attribute) session.get(Attribute.class, phaavdto.getAttribute().getId());
+
+				// add the additional attribute value to the db
+				participation.getParticipationHasAdditionalattributevalues().add(createAdditionalParticipationAttributevalue(participation, addAttribute, phaavdto));
+			}
+		}
+		
 		
 		return participation;
+	}
+	
+	
+	/**
+	 * Method creating a ParticipationHasAdditionalattributevalue for a specific ParticipationHasAdditionalattributevalueDTO, 
+	 * participation, and attribute
+	 * @param participation
+	 * @param attribute
+	 * @param dto
+	 * @return
+	 */
+	private ParticipationHasAdditionalattributevalue createAdditionalParticipationAttributevalue(Participation participation, Attribute attribute, ParticipationHasAdditionalattributevalueDTO dto){
+		
+		// create an ParticipationHasAdditionalattributevalue object and set its values	
+		ParticipationHasAdditionalattributevalue additionalParticipationAttributeValue = null;
+				
+		additionalParticipationAttributeValue = new ParticipationHasAdditionalattributevalue();
+		additionalParticipationAttributeValue.setParticipation(participation);
+		additionalParticipationAttributeValue.setAttribute(attribute);
+		additionalParticipationAttributeValue.setBooleanValue(dto.getBooleanValue());
+		additionalParticipationAttributeValue.setDatetimeValue(dto.getDatetimeValue());
+		additionalParticipationAttributeValue.setNumericValue(dto.getNumericValue());
+		additionalParticipationAttributeValue.setTextualValue(dto.getTextualValue());
+				
+		return additionalParticipationAttributeValue;
+	}
+	
+	/**
+	 * Method creating a Stockflow for a specific StockflowDTO
+	 * @param event event object the stockflow belongs to
+	 * @param resource affected resource during stockflow
+	 * @param stockflowDTO stockflowDTO that is converted
+	 * @return stockflow
+	 */
+	private Stockflow createStockflow(Event event, Resource resource, StockflowDTO stockflowDTO, Session session){
+		
+		// create Stockflow object and set its values
+		Stockflow stockflow = new Stockflow();
+		stockflow.setResource(resource);
+		stockflow.setPricePerUnit(stockflowDTO.getPricePerUnit());
+		stockflow.setQuantity(stockflowDTO.getQuantity());
+		stockflow.getEvents().add(event);
+		
+		// Additional attributes for stockflow
+		if(stockflowDTO.getAdditionalAttributeValues() != null){
+			for(StockflowHasAdditionalattributevalueDTO sfhaavdto : stockflowDTO.getAdditionalAttributeValues()){
+				
+				// retrieve existing attribute
+				Attribute addAttribute = (Attribute) session.get(Attribute.class, sfhaavdto.getAttribute().getId());
+
+				// add the additional attribute value to the db
+				stockflow.getStockflowHasAdditionalattributevalues().add(createAdditionalStockflowAttributevalue(stockflow, addAttribute, sfhaavdto));
+			}
+		}
+		
+		
+		return stockflow;
+	}
+	
+	/**
+	 * Method creating a StockflowHasAdditionalattributevalue for a specific StckflowHasAdditionalattributevalueDTO, 
+	 * stockflow, and attribute
+	 * @param stockflow
+	 * @param attribute
+	 * @param dto
+	 * @return
+	 */
+	private StockflowHasAdditionalattributevalue createAdditionalStockflowAttributevalue(Stockflow stockflow, Attribute attribute, StockflowHasAdditionalattributevalueDTO dto){
+		
+		// create an StockflowHasAdditionalattributevalue object and set its values	
+		StockflowHasAdditionalattributevalue additionalStockflowAttributeValue = null;
+						
+		additionalStockflowAttributeValue = new StockflowHasAdditionalattributevalue();
+		additionalStockflowAttributeValue.setStockflow(stockflow);
+		additionalStockflowAttributeValue.setAttribute(attribute);
+		additionalStockflowAttributeValue.setBooleanValue(dto.getBooleanValue());
+		additionalStockflowAttributeValue.setDatetimeValue(dto.getDatetimeValue());
+		additionalStockflowAttributeValue.setNumericValue(dto.getNumericValue());
+		additionalStockflowAttributeValue.setTextualValue(dto.getTextualValue());
+						
+		return additionalStockflowAttributeValue;
 	}
 	
 	

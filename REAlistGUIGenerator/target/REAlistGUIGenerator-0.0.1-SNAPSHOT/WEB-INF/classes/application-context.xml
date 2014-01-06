@@ -49,6 +49,10 @@
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>
     
+    <bean id="eventtypestockflowhasadditionalattributedao" class="master.realist.REAlistGUIGenerator.server.daos.EventtypeStockflowHasAdditionalAttributeDAO">
+    	<property name="hibernateUtil" ref="hibernateutil"></property>
+    </bean>
+    
      <bean id="eventtypeparticipationdao" class="master.realist.REAlistGUIGenerator.server.daos.EventtypeParticipationDAO">
     	<property name="hibernateUtil" ref="hibernateutil"></property>
     </bean>

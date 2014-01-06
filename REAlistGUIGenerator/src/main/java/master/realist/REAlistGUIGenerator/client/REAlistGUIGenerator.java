@@ -5,14 +5,12 @@ package master.realist.REAlistGUIGenerator.client;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
-
+import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.StackPanel;
@@ -32,6 +30,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 	private VerticalPanel mainPanel = new VerticalPanel();  
 
 	// stack panel containing sections for entity administration and business case creation
+	//private StackLayoutPanel stackPanel = new StackLayoutPanel(Unit.EM);
 	private StackPanel stackPanel = new StackPanel();
 	
 	// administration panels
@@ -62,6 +61,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 		// setup the lists in the READBEntryContainer
 		callGetAgents();
 		callGetDualityStatus();
+		callGetResources();
 		
 		// mainpanel stype
 		mainPanel.addStyleName("fullsizePanel");
@@ -70,8 +70,6 @@ public class REAlistGUIGenerator implements EntryPoint {
 		logger.setLevel(Level.INFO);
 
 		// create Administration Panels and apply styles to set their widhts to 100%
-		
-		
 		// Assemble administration tabpanel
 		administrationTabPanel.add(dualityStatusPanel,"Dualitystatus");
 		administrationTabPanel.add(agentPanel,"Agents");
@@ -85,6 +83,24 @@ public class REAlistGUIGenerator implements EntryPoint {
 		stackPanel.showStack(0);
 		stackPanel.addStyleName("fullsizePanel");
 		
+		// listener when selection changes
+		/**
+		stackPanel.addHandler(new ClickHandler()
+			{
+			    public void onClick(ClickEvent clickEvent)
+			    {
+			        // if the business case creation section is selected, reload the dualitytypePanel
+			        if(stackPanel.getSelectedIndex() == 1){
+			        	// populate the DualityTypePanel
+			    		dualitytypePanel.populateDualityTypePanel();
+			        	Window.alert("business case");
+			        } else{
+			        	Window.alert("admins");
+			        }
+			    }
+			}, ClickEvent.getType()
+		);
+		**/
 		
 		// Associate the Main panel with the HTML host page.
 		RootPanel.get("readb").add(mainPanel);	
@@ -160,6 +176,39 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    reaDBSvc.getDualityStatus(callback);
 	    
 	}	
+	
+	
+	/**
+	 * Calling the getResources method of the READBService
+	 */
+	private void callGetResources(){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+	    
+	    // Set up the callback object.
+	    AsyncCallback<List<ResourceDTO>> callback = new AsyncCallback<List<ResourceDTO>>() {
+
+			public void onFailure(Throwable caught) {
+				logREADBRPCFailure("getResources()");
+		    	caught.printStackTrace();
+			}
+
+			public void onSuccess(List<ResourceDTO> result) {
+				
+				reaDBEntryContainer.getExistingResourceDTOs().clear();
+				
+				reaDBEntryContainer.setExistingResourceDTOs(result);
+			}
+	    	
+	    };
+	    
+	    // Make the call
+	    reaDBSvc.getResources(callback);
+	   
+	}
 	   
 
 	

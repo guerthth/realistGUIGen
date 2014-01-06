@@ -124,6 +124,7 @@ body {
 	border: 2px solid red; 
 }
 
+
 /*********************************/
 /*       DualitytypePanel	     */
 /*********************************/
@@ -163,33 +164,58 @@ body {
 
 /* Datepicker Panels */
 .datePickerPanel {
-  margin-left: 30px;
+  /* margin-left: 30px; */
 }
 
-/* eventtypeAttributePanel */
-.eventtypeAttributePanel {
-  width: 60%;
+/* attributeTableTextBox */
+.attributeTableTextBox{
+ width:50%;	
 }
 
-/* eventtypeDatePanel */
-.eventtypeDatePanel {
-  width: 40%;
+/* attributeTableListBox */
+.attributeTableListBox{
+ width:30%;	
 }
 
 /*************************************************/
 /*       Participation and Stockflow Panel	     */
 /*************************************************/
 
-.participationStockflowPanel {
-  width: 50%;
+.stockflowPanel {
+  /*width: 100%;*/
   border: 1px solid silver;
   padding: 2px;
   margin-bottom:6px;
+  margin-right:0%;
+}
+
+.participationPanel {
+ /* width: 50%;*/
+  border: 1px solid silver;
+  padding: 2px;
+  margin-bottom:6px;
+  margin-left:0%;
 }
 
 .participationSpecificationLabel {
   margin: 10px 0px 10px 0px;
   font-size:120%;
+}
+
+/*************************************************/
+/*      	eventtypeAttributePanel				 */
+/*     		and eventtypeDatePanel	     		 */
+/*************************************************/
+.eventtypeAttributePanel {
+	right:50%;
+	margin-right:0%;
+	width:75%;
+}
+
+.eventtypeDatePanel{
+	left:50%;
+	margin-left:0%;
+	width:100%;
 }
 
 /*************************************************/
@@ -204,3 +230,15 @@ body {
 	background-color:#FE642E;
 }
 
+.lightyellow {
+	background-color:#CCFF99;
+}
+
+
+/*************************************************/
+/*      			Set Absolute     			 */
+/*************************************************/
+
+.absolutePosition {
+	position:absolute;
+}

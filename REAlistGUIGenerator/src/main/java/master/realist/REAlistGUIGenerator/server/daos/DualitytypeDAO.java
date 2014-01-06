@@ -14,6 +14,7 @@ import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowDTO;
 import master.realist.REAlistGUIGenerator.shared.model.Dualitytype;
 import master.realist.REAlistGUIGenerator.shared.model.Eventtype;
 import master.realist.REAlistGUIGenerator.shared.model.EventtypeHasAdditionalattribute;
@@ -211,9 +212,23 @@ public class DualitytypeDAO {
 			}
 		}
 		
+		// STOCKFLOWS
+		// list of existing stockflows
+		Set<Eventtypestockflow> eventtypestockflows = et.getEventtypestockflows();
 		
-		// TODO: list of existing stockflows
+		// only a list of the attribute DTOs is needed
+		Set<EventtypeStockflowDTO> eventtypestockflowDTOs = 
+				new LinkedHashSet<EventtypeStockflowDTO>(eventtypestockflows != null ? eventtypestockflows.size() : 0);
+						
+		// using the stockflows for the eventtype
+		if(eventtypestockflowDTOs != null){
+			for(Eventtypestockflow etsf : eventtypestockflows){
+				
+				eventtypestockflowDTOs.add(createEventtypeStockflowDTO(etsf));
+			}
+		}		
 		
+		// PARTICIPATIONS
 		// list of existing participations
 		Set<Eventtypeparticipation> eventtypeparticipations =  et.getEventtypeparticipations();
 
@@ -229,9 +244,11 @@ public class DualitytypeDAO {
 			}
 		}
 		
+		// setting everything for eventtypedto
 		EventtypeDTO eventtypeDTO = new EventtypeDTO(et);
 		eventtypeDTO.setAttributes(additionalEventtypeAttributeDTOs);
 		eventtypeDTO.setParticipations(eventtypeparticipationDTOs);
+		eventtypeDTO.setStockflows(eventtypestockflowDTOs);
 
 		return eventtypeDTO;
 	}
@@ -263,6 +280,33 @@ public class DualitytypeDAO {
 		
 		return eventtypeparticipationDTO;
 		
+	}
+	
+	/**
+	 * Creates an EventtypeStockflowDTO object for an Eventtypestockflow object
+	 * @param etsf
+	 * @return
+	 */
+	private EventtypeStockflowDTO createEventtypeStockflowDTO(Eventtypestockflow etsf){
+		
+		// Set of additional attributes
+		Set<EventtypestockflowHasAdditionalattribute> eventtypeStockflowAttributes = etsf.getEventtypestockflowHasAdditionalattributes();
+				
+		// only a list of the attribute DTOs is needed
+		Set<AttributeDTO> additionalEventtypeStockflowAttributeDTOs = 
+				new LinkedHashSet<AttributeDTO>(eventtypeStockflowAttributes != null ? eventtypeStockflowAttributes.size() : 0);
+		
+		if(eventtypeStockflowAttributes != null){
+			for(EventtypestockflowHasAdditionalattribute etsfhaa : etsf.getEventtypestockflowHasAdditionalattributes()){
+						
+				additionalEventtypeStockflowAttributeDTOs.add(new AttributeDTO(etsfhaa));
+			}
+		}
+				
+		EventtypeStockflowDTO eventtypestockflowDTO = new EventtypeStockflowDTO(etsf);
+		eventtypestockflowDTO.setEventtypeStockflowAttributes(additionalEventtypeStockflowAttributeDTOs);
+				
+		return eventtypestockflowDTO;		
 	}
 	
 	

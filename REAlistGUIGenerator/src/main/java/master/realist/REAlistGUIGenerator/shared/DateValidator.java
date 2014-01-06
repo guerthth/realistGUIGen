@@ -18,12 +18,12 @@ public class DateValidator extends Validator{
 		
 		try{
 			//DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(value);
-			DateTimeFormat.getFormat("yyyy-MM-dd").parse(value);
+			DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss").parse(value);
 			errorMessage = "";
 		} catch(Exception e){
 			isDate = false;
 			//errorMessage = "Enter a valid Date String (yyyy-MM-dd HH:mm:ss)";
-			errorMessage = "Enter a valid Date String (yyyy-MM-dd)";
+			errorMessage = "Enter a valid Date String (yyyy-MM-dd HH:mm:ss)";
 		}
 		
 		return isDate;

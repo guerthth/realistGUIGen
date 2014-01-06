@@ -15,6 +15,7 @@ import master.realist.REAlistGUIGenerator.shared.DateValidator;
 import master.realist.REAlistGUIGenerator.shared.NumericValidator;
 import master.realist.REAlistGUIGenerator.shared.TextValidator;
 import master.realist.REAlistGUIGenerator.shared.Validator;
+import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
 import master.realist.REAlistGUIGenerator.shared.dto.AttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceHasAdditionalattributevalueDTO;
@@ -42,6 +43,9 @@ public class ResourcePanel extends VerticalPanel{
 	// Logger
 	private final static Logger logger = Logger.getLogger("ResourcePanelLogger");
 
+	// READBEntryContainer
+	private READBEntryContainer reaDBEntryContainer;
+	
 	// Panel for Resource Administration + Resource ArrayList
 	private Label resourceSelectionIntroductionLabel = new Label("Resource Administration");
 	private HorizontalPanel resourceTableAndAddEditPanel = new HorizontalPanel();
@@ -66,8 +70,7 @@ public class ResourcePanel extends VerticalPanel{
 	private Button resourceOkButton = new Button("Ok");
 	private HorizontalPanel resourceAddPanel = new HorizontalPanel();
 	private Button resourceAddButton = new Button("Add");	
-	private ArrayList<ResourceDTO> existingResourceDTOs = new ArrayList<ResourceDTO>();
-	
+
 	// Arraylist for existing resourcetypes
 	private ArrayList<ResourcetypeDTO> existingResourcetypeDTOs = new ArrayList<ResourcetypeDTO>();
 		
@@ -93,6 +96,11 @@ public class ResourcePanel extends VerticalPanel{
 	 * Constructor
 	 */
 	public ResourcePanel(){
+		
+		// initialize READBEntryContainer
+		reaDBEntryContainer = READBEntryContainer.getInstance();
+		
+		// populate the panel
 		populateResourcePanel();
 	}
 	
@@ -328,12 +336,12 @@ public class ResourcePanel extends VerticalPanel{
 
 			public void onSuccess(List<ResourceDTO> result) {
 				
-				existingResourceDTOs.clear();
+				reaDBEntryContainer.getExistingResourceDTOs().clear();
 				
 				for(ResourceDTO rdto : result){
 					
 					// adding the ResourceDTOs to the existingResourceDTOs arrayList
-					existingResourceDTOs.add(rdto);
+					reaDBEntryContainer.getExistingResourceDTOs().add(rdto);
 					
 					// final variable needed for the button specifications
 					final ResourceDTO currentResourceDTO = rdto;
@@ -410,8 +418,8 @@ public class ResourcePanel extends VerticalPanel{
 			// setting the values of the resources
 			resourceSaveActionState = true;
 			
-			if(existingResourceDTOs.size()>0){
-				int lastId = existingResourceDTOs.get(existingResourceDTOs.size()-1).getId();
+			if(reaDBEntryContainer.getExistingResourceDTOs().size()>0){
+				int lastId = reaDBEntryContainer.getExistingResourceDTOs().get(reaDBEntryContainer.getExistingResourceDTOs().size()-1).getId();
 				resourceIdTextTextBox.setText(String.valueOf(lastId+1));
 				
 			}else{	
@@ -641,7 +649,7 @@ public class ResourcePanel extends VerticalPanel{
 		if(!resourceSaveActionState){
 
 			
-			int indexOfUpdateObject = existingResourceDTOs.indexOf(updatedResourceObject);
+			int indexOfUpdateObject = reaDBEntryContainer.getExistingResourceDTOs().indexOf(updatedResourceObject);
 			String oldName = resourceUpdateObject.getName();
 			String updatedName = resourceNameTextBox.getText();
 			boolean oldIsBulk = resourceUpdateObject.isBulk();
@@ -790,7 +798,7 @@ public class ResourcePanel extends VerticalPanel{
 				Window.alert("New Resource '" + result.getName() + "' added to REA DB with Id " + result.getId() );
 				
 				// adding the added resourceDTO to the list of resourceDTOs
-				existingResourceDTOs.add(result);
+				reaDBEntryContainer.getExistingResourceDTOs().add(result);
 				
 				final ResourceDTO savedResourceDTO = result;
 				
@@ -926,12 +934,12 @@ public class ResourcePanel extends VerticalPanel{
 	    		logger.info(updateResourceStatusMsg);
 	    		
 	    		// update the resourceDTO arraylist
-	    		existingResourceDTOs.get(updatedListIndex).setName(result.getName());
-	    		existingResourceDTOs.get(updatedListIndex).setResourcetype(result.getResourcetype());
-	    		existingResourceDTOs.get(updatedListIndex).setBulk(result.isBulk());
-	    		existingResourceDTOs.get(updatedListIndex).setIdentifiable(result.isIdentifiable());
-	    		existingResourceDTOs.get(updatedListIndex).setQoH(result.getQoH());
-	    		existingResourceDTOs.get(updatedListIndex).setIsComposed(result.getIsComposed());
+	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setName(result.getName());
+	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setResourcetype(result.getResourcetype());
+	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setBulk(result.isBulk());
+	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setIdentifiable(result.isIdentifiable());
+	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setQoH(result.getQoH());
+	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setIsComposed(result.getIsComposed());
 	    		
 	    		// update entries from flextable
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 1, result.getName());
@@ -941,7 +949,7 @@ public class ResourcePanel extends VerticalPanel{
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 5, String.valueOf(result.getIsComposed()));
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 6, String.valueOf(result.getQoH()));
 	    		
-				updateResourceAddEditPanel(existingResourceDTOs.get(updatedListIndex));
+				updateResourceAddEditPanel(reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex));
 	    	}
 	    };
 	    
@@ -957,7 +965,7 @@ public class ResourcePanel extends VerticalPanel{
 	 */
 	private void deleteResource(ResourceDTO deleteResourceDTO){
 		
-		final int removedListIndex = existingResourceDTOs.indexOf(deleteResourceDTO);
+		final int removedListIndex = reaDBEntryContainer.getExistingResourceDTOs().indexOf(deleteResourceDTO);
 		
 		// Initialize the service proxy.
 	    if (reaDBSvc == null) {
@@ -977,7 +985,7 @@ public class ResourcePanel extends VerticalPanel{
 				Window.alert("Resource with Id " + result + " was deleted from the REA DB");
 				
 				// remove entries from arrayList
-				existingResourceDTOs.remove(removedListIndex);
+				reaDBEntryContainer.getExistingResourceDTOs().remove(removedListIndex);
 				// remove entries from flextable
 				resourceSelectionFlexTable.removeRow(removedListIndex+1);
 				
@@ -988,7 +996,7 @@ public class ResourcePanel extends VerticalPanel{
 				
 				// if no resource exists resourceaddeditpanel is set to invisible
 				// the same happens to the rsourceSelectionFlexTable
-				if(existingResourceDTOs.size() == 0){
+				if(reaDBEntryContainer.getExistingResourceDTOs().size() == 0){
 					resourceAddEditPanel.setVisible(false);
 				}
 				

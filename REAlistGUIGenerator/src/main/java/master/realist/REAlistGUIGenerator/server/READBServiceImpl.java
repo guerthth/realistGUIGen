@@ -12,6 +12,7 @@ import master.realist.REAlistGUIGenerator.server.daos.DualityStatusDAO;
 import master.realist.REAlistGUIGenerator.server.daos.DualitytypeDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventDAO;
 import master.realist.REAlistGUIGenerator.server.daos.EventtypeParticipationHasAdditionalAttributeDAO;
+import master.realist.REAlistGUIGenerator.server.daos.EventtypeStockflowHasAdditionalAttributeDAO;
 import master.realist.REAlistGUIGenerator.server.daos.ResourceDAO;
 import master.realist.REAlistGUIGenerator.server.daos.ResourcetypeDAO;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
@@ -22,6 +23,8 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationHasAdditionalAttributeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.EventtypeStockflowHasAdditionalAttributeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourcetypeDTO;
 import master.realist.REAlistGUIGenerator.shared.util.SpringUtil;
@@ -207,6 +210,17 @@ public class READBServiceImpl extends RemoteServiceServlet implements READBServi
 		EventtypeParticipationHasAdditionalAttributeDAO eventParticipationhasAdditionalAttributeHandler = 
 				(EventtypeParticipationHasAdditionalAttributeDAO) SpringUtil.context.getBean("eventtypeparticipationhasadditionalattributedao");
 		return eventParticipationhasAdditionalAttributeHandler.getList(participation.getAgenttypeId(), participation.getEventtypeId());
+	}
+	
+
+	/**
+	 * getting all existing EventtypeStockflowHasAdditionalAttributes in the REA DB
+	 */
+	public List<EventtypeStockflowHasAdditionalAttributeDTO> getEventtypeStockflowHasAdditionalAttributes(EventtypeStockflowDTO stockflow){
+		
+		EventtypeStockflowHasAdditionalAttributeDAO eventStockflowhasAdditionalAttributeHandler = 
+				(EventtypeStockflowHasAdditionalAttributeDAO) SpringUtil.context.getBean("eventtypestockflowhasadditionalattributedao");
+		return eventStockflowhasAdditionalAttributeHandler.getList(stockflow.getResourcetypeId(), stockflow.getEventtypeId());
 	}
 	
 	

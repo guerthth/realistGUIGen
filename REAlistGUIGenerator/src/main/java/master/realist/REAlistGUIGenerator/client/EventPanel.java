@@ -8,9 +8,10 @@ import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualitytypeDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.EventtypeDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.StockflowDTO;
 
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * Class representing the Panel for Events
@@ -22,21 +23,26 @@ public class EventPanel extends TabPanel{
 	private DualitytypeDTO selectedDualityType;
 	private DualityDTO saveDualityDTO;
 	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap;
-	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap;
+	private Map<EventDTO,Map<ParticipationDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap;
+	private Map<EventDTO,Map<StockflowDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeStockflowAttributeLabelMap;
 	private List<EventDTO> saveEventDTOList;
+	private Map<EventDTO, Map<StockflowDTO, ArrayList<CustomTextBox>>> eventtypeStockflowFixedAttributeMap;
 	
 	/**
 	 * Constructor
 	 * @param dualityDTO
 	 */
 	public EventPanel(DualityDTO dualityDTO, List<EventDTO> saveEventDTOList, Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap,
-						Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeParticipationAttributeLabelMap){
+						Map<EventDTO,Map<ParticipationDTO, Map<AttributeDTO,CustomTextBox>>> eventtypeParticipationAttributeLabelMap, Map<EventDTO,Map<StockflowDTO,Map<AttributeDTO,CustomTextBox>>> eventtypeStockflowAttributeLabelMap,
+						Map<EventDTO, Map<StockflowDTO, ArrayList<CustomTextBox>>> eventtypeStockflowFixedAttributeMap){
 		
 		this.saveDualityDTO = dualityDTO;
 		this.selectedDualityType = dualityDTO.getDualitytype();
 		this.eventtypeAttributeLabelMap = eventtypeAttributeLabelMap;
 		this.eventtypeParticipationAttributeLabelMap = eventtypeParticipationAttributeLabelMap;
+		this.eventtypeStockflowAttributeLabelMap = eventtypeStockflowAttributeLabelMap;
 		this.saveEventDTOList = saveEventDTOList;
+		this.eventtypeStockflowFixedAttributeMap = eventtypeStockflowFixedAttributeMap;
 		populateEventPanel();
 	}
 	
@@ -69,14 +75,16 @@ public class EventPanel extends TabPanel{
 		for(EventtypeDTO increment : incrementEventtypes){
 
 			trimmedEventTypeName = increment.getName().substring(increment.getName().indexOf("_")+1);
-			this.add(new EventContentPanel(increment, saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, eventtypeParticipationAttributeLabelMap), trimmedEventTypeName);
+			this.add(new EventContentPanel(increment, saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, 
+								eventtypeParticipationAttributeLabelMap, eventtypeStockflowAttributeLabelMap, eventtypeStockflowFixedAttributeMap), trimmedEventTypeName);
 		}
 		
 		// adding tabls for decrement event sets
 		for(EventtypeDTO decrement : decrementEventtypes){
 
 			trimmedEventTypeName = decrement.getName().substring(decrement.getName().indexOf("_")+1);
-			this.add(new EventContentPanel(decrement, saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap, eventtypeParticipationAttributeLabelMap), trimmedEventTypeName);
+			this.add(new EventContentPanel(decrement, saveDualityDTO, saveEventDTOList, eventtypeAttributeLabelMap,
+							eventtypeParticipationAttributeLabelMap, eventtypeStockflowAttributeLabelMap, eventtypeStockflowFixedAttributeMap), trimmedEventTypeName);
 		}
 		
 		

@@ -31,6 +31,7 @@ public class EventDTO implements Serializable{
 	private Boolean isReconciled;
 	private Set<EventHasAdditionalattributevalueDTO> additionalAttributeValues;
 	private Set<ParticipationDTO> participations = new LinkedHashSet<ParticipationDTO>();
+	private Set<StockflowDTO> stockflows = new LinkedHashSet<StockflowDTO>();
 	
 	/**
 	 * Constructor transforming an Event object to an EventDTO object
@@ -183,6 +184,14 @@ public class EventDTO implements Serializable{
 
 	public void setParticipations(Set<ParticipationDTO> participations) {
 		this.participations = participations;
+	}
+
+	public Set<StockflowDTO> getStockflows() {
+		return stockflows;
+	}
+
+	public void setStockflows(Set<StockflowDTO> stockflows) {
+		this.stockflows = stockflows;
 	}
 	
 	

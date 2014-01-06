@@ -12,6 +12,10 @@ import javax.persistence.Embeddable;
 public class EventtypestockflowHasAdditionalattributeId implements
 		java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6693398990405666745L;
 	private String eventTypeStockflowEventTypeId;
 	private String eventTypeStockflowResourceTypeId;
 	private String attributeId;

@@ -17,7 +17,7 @@ public class ParticipationDTO implements Serializable{
 	private int id;
 	private AgentDTO agent;
 	private Set<EventDTO> events;
-	// TODO: private Set<ParticipationHasAdditionattributevalueDTO> additionalAttributeValues;
+	private Set<ParticipationHasAdditionalattributevalueDTO> additionalAttributeValues;
 	
 	/**
 	 * Default Constructor
@@ -70,6 +70,15 @@ public class ParticipationDTO implements Serializable{
 
 	public void setEvents(Set<EventDTO> events) {
 		this.events = events;
+	}
+
+	public Set<ParticipationHasAdditionalattributevalueDTO> getAdditionalAttributeValues() {
+		return additionalAttributeValues;
+	}
+
+	public void setAdditionalAttributeValues(
+			Set<ParticipationHasAdditionalattributevalueDTO> additionalAttributeValues) {
+		this.additionalAttributeValues = additionalAttributeValues;
 	}
 	
 	
