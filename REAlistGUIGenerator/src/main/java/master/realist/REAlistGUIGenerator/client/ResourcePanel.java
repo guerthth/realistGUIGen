@@ -27,7 +27,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -100,27 +99,16 @@ public class ResourcePanel extends VerticalPanel{
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();
 		
-		// populate the panel
-		populateResourcePanel();
 	}
 	
 	
 	/**
 	 * Method populating the Resource Panel
 	 */
-	private void populateResourcePanel(){
+	public void populateResourcePanel(){
 		
 		// get all the existing resourcetypes (they are added to the existingResourcetypeDTOs arrayList)
 		callGetResourcetypes();
-		
-		// get all the existing resources (they are added to the existingResourceDTOs arrayList)
-		callGetResources();
-		
-		// define style for resourceSelectionIntroductionLabel
-		resourceSelectionIntroductionLabel.addStyleName("introductionLabel");
-	
-		// Adding the headline label to the resourceSelectionPanel
-		this.add(resourceSelectionIntroductionLabel);
 		
 		// Populating the flex table for the selection of resources 
 		resourceSelectionFlexTable.setText(0, 0, "Id");
@@ -132,7 +120,7 @@ public class ResourcePanel extends VerticalPanel{
 		resourceSelectionFlexTable.setText(0, 6, "QoH");
 		resourceSelectionFlexTable.setText(0, 7, "Edit");
 		resourceSelectionFlexTable.setText(0, 8, "Remove");
-		
+				
 		// setting padding of 4 to the cells of the resourceSelectionFlexTable
 		resourceSelectionFlexTable.setCellPadding(4);
 		
@@ -146,7 +134,16 @@ public class ResourcePanel extends VerticalPanel{
 		resourceSelectionFlexTable.getCellFormatter().addStyleName(0, 6, "adminFlexTableColumn");
 		resourceSelectionFlexTable.getCellFormatter().addStyleName(0, 7, "adminFlexTableEditRemoveColumn");
 		resourceSelectionFlexTable.getCellFormatter().addStyleName(0, 8, "adminFlexTableEditRemoveColumn");
-		resourceSelectionFlexTable.addStyleName("adminFlexTable");	
+		resourceSelectionFlexTable.addStyleName("adminFlexTable");			
+		
+		// populate resourceSelectionFlexTable
+		populateResourceSelectionFlexTable();
+		
+		// define style for resourceSelectionIntroductionLabel
+		resourceSelectionIntroductionLabel.addStyleName("introductionLabel");
+	
+		// Adding the headline label to the resourceSelectionPanel
+		this.add(resourceSelectionIntroductionLabel);
 			
 		// Adding the resourceSelectionFlexTable to the resourceTableAndAddEditPanel
 		resourceTableAndAddEditPanel.add(resourceSelectionFlexTable);
@@ -319,89 +316,62 @@ public class ResourcePanel extends VerticalPanel{
 	/**
 	 * Calling the getResources method of the READBService
 	 */
-	private void callGetResources(){
-		
-		// Initialize the service proxy.
-	    if (reaDBSvc == null) {
-	    	reaDBSvc = GWT.create(READBService.class);
-	    }
+	private void populateResourceSelectionFlexTable(){
 	    
-	    // Set up the callback object.
-	    AsyncCallback<List<ResourceDTO>> callback = new AsyncCallback<List<ResourceDTO>>() {
+		// resources were already loaded on startup
+		// therefore the list in the reaDBEntryContainer is taken
+		for(ResourceDTO rdto : reaDBEntryContainer.getExistingResourceDTOs()){
+			
+			// final variable needed for the button specifications
+			final ResourceDTO currentResourceDTO = rdto;
+			
+			// Buttons to edit and delete resources
+			Button updateResourceButton = new Button("Update");
+			updateResourceButton.addStyleDependentName("removeupdate");
 
-			public void onFailure(Throwable caught) {
-				logREADBRPCFailure("getResources()");
-		    	caught.printStackTrace();
-			}
-
-			public void onSuccess(List<ResourceDTO> result) {
-				
-				reaDBEntryContainer.getExistingResourceDTOs().clear();
-				
-				for(ResourceDTO rdto : result){
-					
-					// adding the ResourceDTOs to the existingResourceDTOs arrayList
-					reaDBEntryContainer.getExistingResourceDTOs().add(rdto);
-					
-					// final variable needed for the button specifications
-					final ResourceDTO currentResourceDTO = rdto;
-					
-					// Buttons to edit and delete resources
-					Button updateResourceButton = new Button("Update");
-					updateResourceButton.addStyleDependentName("removeupdate");
-
-					updateResourceButton.addClickHandler(new ClickHandler(){
-						public void onClick(ClickEvent event){
-							updateResourceAddEditPanel(currentResourceDTO);
-						}
-					});	
-					
-					Button deleteResourceButton = new Button("X");
-					deleteResourceButton.addStyleDependentName("removeupdate");
-					
-					deleteResourceButton.addClickHandler(new ClickHandler(){
-						public void onClick(ClickEvent event){
-							
-							deleteResource(currentResourceDTO);
-						}
-					});
-					
-					ResourcetypeDTO resourcetypeDTO = rdto.getResourcetype();
-					
-					int row = resourceSelectionFlexTable.getRowCount();
-					resourceSelectionFlexTable.setText(row, 0, String.valueOf(rdto.getId()));
-					resourceSelectionFlexTable.setText(row, 1, rdto.getName());
-					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
-					resourceSelectionFlexTable.setText(row, 2, resourcetypeDTO.getId());
-					resourceSelectionFlexTable.setText(row, 3, String.valueOf(rdto.isBulk()));
-					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableColumn");
-					resourceSelectionFlexTable.setText(row, 4, String.valueOf(rdto.isIdentifiable()));
-					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 4, "adminFlexTableColumn");
-					resourceSelectionFlexTable.setText(row, 5, String.valueOf(rdto.getIsComposed()));
-					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 5, "adminFlexTableColumn");
-					
-					char afterdot = String.valueOf(rdto.getQoH()).charAt(String.valueOf(rdto.getQoH()).indexOf(".")+1);
-					if(afterdot == '0'){
-						resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()).substring(0, String.valueOf(rdto.getQoH()).indexOf(".")));
-					} else {
-						resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()));
-					}
-					// TODO: Substring or not? resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()).substring(0, String.valueOf(rdto.getQoH()).indexOf(".")));
-					
-					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 6, "adminFlexTableColumn");
-					resourceSelectionFlexTable.setWidget(row, 7, updateResourceButton);
-					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 7, "adminFlexTableEditRemoveColumn");
-					resourceSelectionFlexTable.setWidget(row, 8, deleteResourceButton);
-					resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 8, "adminFlexTableEditRemoveColumn");
-				
+			updateResourceButton.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent event){
+					updateResourceAddEditPanel(currentResourceDTO);
 				}
-				
+			});	
+			
+			Button deleteResourceButton = new Button("X");
+			deleteResourceButton.addStyleDependentName("removeupdate");
+			
+			deleteResourceButton.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent event){
+					
+					deleteResource(currentResourceDTO);
+				}
+			});
+			
+			ResourcetypeDTO resourcetypeDTO = rdto.getResourcetype();
+			
+			int row = resourceSelectionFlexTable.getRowCount();
+			resourceSelectionFlexTable.setText(row, 0, String.valueOf(rdto.getId()));
+			resourceSelectionFlexTable.setText(row, 1, rdto.getName());
+			resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
+			resourceSelectionFlexTable.setText(row, 2, resourcetypeDTO.getId());
+			resourceSelectionFlexTable.setText(row, 3, String.valueOf(rdto.isBulk()));
+			resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableColumn");
+			resourceSelectionFlexTable.setText(row, 4, String.valueOf(rdto.isIdentifiable()));
+			resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 4, "adminFlexTableColumn");
+			resourceSelectionFlexTable.setText(row, 5, String.valueOf(rdto.getIsComposed()));
+			resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 5, "adminFlexTableColumn");
+			
+			if(rdto.getQoH() % 1 != 0){
+				resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()));
+			} else {
+				resourceSelectionFlexTable.setText(row, 6, String.valueOf(rdto.getQoH()).substring(0, String.valueOf(rdto.getQoH()).indexOf(".")));
 			}
-	    	
-	    };
-	    
-	    // Make the call
-	    reaDBSvc.getResources(callback);
+			
+			resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 6, "adminFlexTableColumn");
+			resourceSelectionFlexTable.setWidget(row, 7, updateResourceButton);
+			resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 7, "adminFlexTableEditRemoveColumn");
+			resourceSelectionFlexTable.setWidget(row, 8, deleteResourceButton);
+			resourceSelectionFlexTable.getCellFormatter().addStyleName(row, 8, "adminFlexTableEditRemoveColumn");
+			
+		}
 	   
 	}
 	
@@ -410,6 +380,13 @@ public class ResourcePanel extends VerticalPanel{
 	 * Updating the RresourceAddEditPanel
 	 */
 	private void updateResourceAddEditPanel(ResourceDTO resourceDTO){
+		
+		// reset styles of fixed attribute textboxes
+		resourceNameTextBox.removeStyles();
+		resourceIsBulkTextBox.removeStyles();
+		resourceIsIdentifiableTextBox.removeStyles();
+		resourceQoHTextBox.removeStyles();
+		resourceIsComposedTextBox.removeStyles();
 		
 		// Check if the resourceDTO object is null
 		// If so the textboxes are granted for adding new resources without content
@@ -560,10 +537,6 @@ public class ResourcePanel extends VerticalPanel{
 		} else{
 			
 			if(resourcetypeAttributes != null){
-					
-				// Numberformats for string formatting
-				// TODO: DOES NOT WORK DUE TO GWT ISSUES
-				NumberFormat nf1 = NumberFormat.getFormat("");
 				
 				// get additional attribute values for resourceDTO that should be updated
 				Set<ResourceHasAdditionalattributevalueDTO> additionalattributevalues = resourceUpdateObject.getAdditionalAttributeValues();
@@ -594,7 +567,7 @@ public class ResourcePanel extends VerticalPanel{
 					if (rdto.getAttribute().getDatatype().equals("INT") || rdto.getAttribute().getDatatype().equals("DOUBLE")){
 						
 						//textBoxContent= String.valueOf(rdto.getNumericValue());
-						textBoxContent = nf1.format(rdto.getNumericValue());
+						textBoxContent = String.valueOf(rdto.getNumericValue());
 						attributeValidator = new NumericValidator();
 						
 			    	} else if (rdto.getAttribute().getDatatype().equals("VARCHAR")){
@@ -834,7 +807,16 @@ public class ResourcePanel extends VerticalPanel{
 				resourceSelectionFlexTable.setText(row, 3, String.valueOf(result.isBulk()));
 				resourceSelectionFlexTable.setText(row, 4, String.valueOf(result.isIdentifiable()));
 				resourceSelectionFlexTable.setText(row, 5, String.valueOf(result.getIsComposed()));
-				resourceSelectionFlexTable.setText(row, 6, String.valueOf(result.getQoH()));
+				
+				if(result.getQoH() % 1 != 0){
+
+					resourceSelectionFlexTable.setText(row, 6, String.valueOf(result.getQoH()));
+				} else {
+
+					resourceSelectionFlexTable.setText(row, 6, String.valueOf(result.getQoH()).substring(0, String.valueOf(result.getQoH()).indexOf(".")));
+				}
+				
+				// resourceSelectionFlexTable.setText(row, 6, String.valueOf(result.getQoH()));
 				resourceSelectionFlexTable.setWidget(row, 7, updateResourceButton);
 				resourceSelectionFlexTable.setWidget(row, 8, deleteResourceButton);
 				
@@ -940,6 +922,7 @@ public class ResourcePanel extends VerticalPanel{
 	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setIdentifiable(result.isIdentifiable());
 	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setQoH(result.getQoH());
 	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setIsComposed(result.getIsComposed());
+	    		reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex).setAdditionalAttributeValues(result.getAdditionalAttributeValues());
 	    		
 	    		// update entries from flextable
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 1, result.getName());
@@ -947,7 +930,14 @@ public class ResourcePanel extends VerticalPanel{
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 3, String.valueOf(result.isBulk()));
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 4, String.valueOf(result.isIdentifiable()));
 	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 5, String.valueOf(result.getIsComposed()));
-	    		resourceSelectionFlexTable.setText(updatedListIndex + 1, 6, String.valueOf(result.getQoH()));
+	    		
+	    		if(result.getQoH() % 1 != 0){
+
+					resourceSelectionFlexTable.setText(updatedListIndex + 1, 6, String.valueOf(result.getQoH()));
+				} else {
+
+					resourceSelectionFlexTable.setText(updatedListIndex + 1, 6, String.valueOf(result.getQoH()).substring(0, String.valueOf(result.getQoH()).indexOf(".")));
+				}
 	    		
 				updateResourceAddEditPanel(reaDBEntryContainer.getExistingResourceDTOs().get(updatedListIndex));
 	    	}
@@ -1152,7 +1142,10 @@ public class ResourcePanel extends VerticalPanel{
 		
 		// If the selected resource is a bulk resource, the QoH is also validated
 		if(selectedResourcetypeDTOInListBox.isBulk() && validationResult == false){
-			validationResult = resourceQoHTextBox.validate();
+			if(!resourceQoHTextBox.validate()){
+				
+				validationResult = false;
+			}
 		}
 			
 		// run through all entries of the attributeLabelMap and validate the textboxes

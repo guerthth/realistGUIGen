@@ -5,10 +5,13 @@ package master.realist.REAlistGUIGenerator.client;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import master.realist.REAlistGUIGenerator.shared.datacontainer.READBEntryContainer;
 import master.realist.REAlistGUIGenerator.shared.dto.AgentDTO;
+import master.realist.REAlistGUIGenerator.shared.dto.DualityDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.DualityStatusDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ResourceDTO;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -49,7 +52,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 	
 	// READBEntryContainer
 	private READBEntryContainer reaDBEntryContainer;
-
+	
 	/**
 	 * On module load method
 	 */
@@ -62,7 +65,8 @@ public class REAlistGUIGenerator implements EntryPoint {
 		callGetAgents();
 		callGetDualityStatus();
 		callGetResources();
-		
+		callGetDualities();
+			
 		// mainpanel stype
 		mainPanel.addStyleName("fullsizePanel");
 		
@@ -82,25 +86,6 @@ public class REAlistGUIGenerator implements EntryPoint {
 		stackPanel.add(dualitytypePanel,"Business Case Creation");
 		stackPanel.showStack(0);
 		stackPanel.addStyleName("fullsizePanel");
-		
-		// listener when selection changes
-		/**
-		stackPanel.addHandler(new ClickHandler()
-			{
-			    public void onClick(ClickEvent clickEvent)
-			    {
-			        // if the business case creation section is selected, reload the dualitytypePanel
-			        if(stackPanel.getSelectedIndex() == 1){
-			        	// populate the DualityTypePanel
-			    		dualitytypePanel.populateDualityTypePanel();
-			        	Window.alert("business case");
-			        } else{
-			        	Window.alert("admins");
-			        }
-			    }
-			}, ClickEvent.getType()
-		);
-		**/
 		
 		// Associate the Main panel with the HTML host page.
 		RootPanel.get("readb").add(mainPanel);	
@@ -135,6 +120,9 @@ public class REAlistGUIGenerator implements EntryPoint {
 				
 				reaDBEntryContainer.setExistingAgentDTOs(result);
 				
+				// populate agentpanel
+				agentPanel.populateAgentPanel();
+				
 			}
 	    	
 	    };
@@ -160,6 +148,7 @@ public class REAlistGUIGenerator implements EntryPoint {
 			public void onFailure(Throwable caught) {
 				logREADBRPCFailure("getDualityStatus()");
 		    	caught.printStackTrace();
+		    	
 			}
 
 			public void onSuccess(List<DualityStatusDTO> result) {
@@ -168,6 +157,8 @@ public class REAlistGUIGenerator implements EntryPoint {
 				
 				reaDBEntryContainer.setExistingDualityStatusDTOs(result);
 				
+				// populate dualitystatuspanel
+				dualityStatusPanel.populateDualityStatusPanel();
 			}
 	    	
 	    };
@@ -201,6 +192,9 @@ public class REAlistGUIGenerator implements EntryPoint {
 				reaDBEntryContainer.getExistingResourceDTOs().clear();
 				
 				reaDBEntryContainer.setExistingResourceDTOs(result);
+				
+				// populate resourcepanel
+				resourcePanel.populateResourcePanel();
 			}
 	    	
 	    };
@@ -208,6 +202,42 @@ public class REAlistGUIGenerator implements EntryPoint {
 	    // Make the call
 	    reaDBSvc.getResources(callback);
 	   
+	}
+	
+	
+	/**
+	 * calling the getDualities method of the READBService
+	 */
+	private void callGetDualities(){
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }
+	    
+	    // Set up the callback object.
+	    AsyncCallback<List<DualityDTO>> callback = new AsyncCallback<List<DualityDTO>>() {
+
+			public void onFailure(Throwable caught) {
+				logREADBRPCFailure("getDualities()");
+		    	caught.printStackTrace();
+			}
+
+			public void onSuccess(List<DualityDTO> result) {
+				
+				reaDBEntryContainer.getExistingDualityDTOs().clear();
+				
+				reaDBEntryContainer.setExistingDualityDTOs(result);
+				
+				// populate dualitytypePanel
+				dualitytypePanel.populateDualityTypePanel();
+			}
+	    	
+	    };
+	    
+	    // Make the call
+	    reaDBSvc.getDualities(callback);
+	    
 	}
 	   
 

@@ -1,6 +1,5 @@
 package master.realist.REAlistGUIGenerator.client;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import master.realist.REAlistGUIGenerator.shared.TextValidator;
@@ -64,35 +63,21 @@ public class DualityStatusPanel extends VerticalPanel{
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();	
 		
-		// populate dualitystatusPanel
-		populateDualityStatusPanel();
 	}
 	
 
 	/**
 	 * Method populating the DualityStatus panel
 	 */
-	private void populateDualityStatusPanel(){
+	public void populateDualityStatusPanel(){
 		
-		// styles for tableAndAddEditPanel
-		//tableAndAddEditPanel.addStyleName("fullsizePanel");
-		
-		// get all the existing dualitystatus (they are added to the existingDualityStatusDTOs arrayList)
-		callGetDualityStatus();
-		
-		// define style for agentSelectionIntroductionLabel
-		statusSelectionIntroductionLabel.addStyleName("introductionLabel");
-				
-		// Adding the headline label to the statusSelectionPanel
-		this.add(statusSelectionIntroductionLabel);
-				
 		// Populating the horizontalpanel and adding it to the panelstatusSelectionPanel
 		// Populating the flex table for the selection of status
 		statusSelectionFlexTable.setText(0, 0, "Id");
 		statusSelectionFlexTable.setText(0, 1, "Statuscode");
 		statusSelectionFlexTable.setText(0, 2, "Edit");
 		statusSelectionFlexTable.setText(0, 3, "Remove");
-		
+				
 		// setting padding of 4 to the cells of the statusSelectionFlexTable
 		statusSelectionFlexTable.setCellPadding(4);
 		
@@ -102,6 +87,15 @@ public class DualityStatusPanel extends VerticalPanel{
 		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 2, "adminFlexTableEditRemoveColumn");
 		statusSelectionFlexTable.getCellFormatter().addStyleName(0, 3, "adminFlexTableEditRemoveColumn");
 		statusSelectionFlexTable.addStyleName("adminFlexTable");
+		
+		// populate the statusSelectionFlextable with the values from the DB
+		populateStatusSelectionFlextable();
+		
+		// define style for agentSelectionIntroductionLabel
+		statusSelectionIntroductionLabel.addStyleName("introductionLabel");
+				
+		// Adding the headline label to the statusSelectionPanel
+		this.add(statusSelectionIntroductionLabel);
 		
 		// Adding the statusSelectionFlexTable to the statusSelectionEmptyMessageFlexTablePanel
 		tableAndAddEditPanel.add(statusSelectionFlexTable);				
@@ -173,70 +167,47 @@ public class DualityStatusPanel extends VerticalPanel{
 	/**
 	 * Calling the getDualityStatus method of the READBService
 	 */
-	private void callGetDualityStatus(){
-		
-		// Initialize the service proxy.
-	    if (reaDBSvc == null) {
-	    	reaDBSvc = GWT.create(READBService.class);
-	    }
-	    
-	    // Set up the callback object.
-	    AsyncCallback<List<DualityStatusDTO>> callback = new AsyncCallback<List<DualityStatusDTO>>() {
+	private void populateStatusSelectionFlextable(){
 
-			public void onFailure(Throwable caught) {
-				logREADBRPCFailure("getDualityStatus()");
-		    	caught.printStackTrace();
-			}
-
-			public void onSuccess(List<DualityStatusDTO> result) {
-				
-				reaDBEntryContainer.getExistingDualityStatusDTOs().clear();
-				
-				for(DualityStatusDTO dsdto : result){
-					
-					// adding the DualityStatusDTOs to the existingDualityStatusDTOs arrayList
-					reaDBEntryContainer.getExistingDualityStatusDTOs().add(dsdto);
-					
-					// final variable needed for the button specifications
-					final DualityStatusDTO currentDualityStatusDTO = dsdto;
-					
-					// Buttons to edit and delete dualitystatus
-					Button updateDualityStatusButton = new Button("Update");
-					updateDualityStatusButton.addStyleDependentName("removeupdate");
-					
-					updateDualityStatusButton.addClickHandler(new ClickHandler(){
-						public void onClick(ClickEvent event){
-							updateDualityStatusAddEditPanel(currentDualityStatusDTO);
-						}
-					});	
-					
-					Button deleteDualityStatusButton = new Button("X");
-					deleteDualityStatusButton.addStyleDependentName("removeupdate");
-					
-					deleteDualityStatusButton.addClickHandler(new ClickHandler(){
-						public void onClick(ClickEvent event){
-							
-							deleteDualityStatus(currentDualityStatusDTO);
-						}
-					});
-					
-					// adding rows for each dualitystatus that exists in the REA DB and apply styles
-					int row = statusSelectionFlexTable.getRowCount();
-					statusSelectionFlexTable.setText(row, 0, String.valueOf(dsdto.getId()));
-					statusSelectionFlexTable.setText(row, 1, dsdto.getStatus());
-					statusSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
-					statusSelectionFlexTable.setWidget(row, 2, updateDualityStatusButton);
-					statusSelectionFlexTable.getCellFormatter().addStyleName(row, 2, "adminFlexTableEditRemoveColumn");
-					statusSelectionFlexTable.setWidget(row, 3, deleteDualityStatusButton);
-					statusSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
+		// dualitystatuses were already loaded on startup 
+		// therefore the list in the reaDBEntryCOntainer is taken
+		for(DualityStatusDTO dsdto : reaDBEntryContainer.getExistingDualityStatusDTOs()){
+			
+			// final variable needed for the button specifications
+			final DualityStatusDTO currentDualityStatusDTO = dsdto;
+			
+			// Buttons to edit and delete dualitystatus
+			Button updateDualityStatusButton = new Button("Update");
+			updateDualityStatusButton.addStyleDependentName("removeupdate");
+			
+			updateDualityStatusButton.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent event){
+					updateDualityStatusAddEditPanel(currentDualityStatusDTO);
 				}
-				
-			}
-	    	
-	    };
-	    
-	    // Make the call
-	    reaDBSvc.getDualityStatus(callback);
+			});	
+			
+			Button deleteDualityStatusButton = new Button("X");
+			deleteDualityStatusButton.addStyleDependentName("removeupdate");
+			
+			deleteDualityStatusButton.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent event){
+					
+					deleteDualityStatus(currentDualityStatusDTO);
+				}
+			});
+			
+			// adding rows for each dualitystatus that exists in the REA DB and apply styles
+			int row = statusSelectionFlexTable.getRowCount();
+			
+			statusSelectionFlexTable.setText(row, 0, String.valueOf(dsdto.getId()));
+			statusSelectionFlexTable.setText(row, 1, dsdto.getStatus());
+			statusSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
+			statusSelectionFlexTable.setWidget(row, 2, updateDualityStatusButton);
+			statusSelectionFlexTable.getCellFormatter().addStyleName(row, 2, "adminFlexTableEditRemoveColumn");
+			statusSelectionFlexTable.setWidget(row, 3, deleteDualityStatusButton);
+			statusSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
+			
+		}
 	    
 	}	
 	
@@ -245,6 +216,9 @@ public class DualityStatusPanel extends VerticalPanel{
 	 * Updating the DualityStatusAddEditPanel (just setting it to visible)
 	 */
 	private void updateDualityStatusAddEditPanel(DualityStatusDTO dualityStatusDTO){
+		
+		// reset the styles of the fixed attirbutevalued
+		dualityStatusStatusCodeTextBox.removeStyles();
 		
 		// Check if the dualityStatusDTO object is null
 		// If so the textboxes are granted for adding new dualitystatus
@@ -362,6 +336,7 @@ public class DualityStatusPanel extends VerticalPanel{
 				
 				// adding the new dualitystatus to the statusSelectionFlexTable
 				int row = statusSelectionFlexTable.getRowCount();
+				
 				statusSelectionFlexTable.setText(row, 0, String.valueOf(result.getId()));
 				statusSelectionFlexTable.setText(row, 1, result.getStatus());
 				statusSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
@@ -457,7 +432,7 @@ public class DualityStatusPanel extends VerticalPanel{
 				String deleteDualityStatusMsg = "Dualitystatus with Id '" + result + "' was deleted from the REA DB";
 				Window.alert(deleteDualityStatusMsg);
 				logger.info(deleteDualityStatusMsg);
-				
+
 				// remove entries from arrayList
 				reaDBEntryContainer.getExistingDualityStatusDTOs().remove(removedListIndex);
 				// remove entries from flextable

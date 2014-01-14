@@ -85,6 +85,16 @@ public class CustomTextBox extends TextBox {
 	    }
 	}
 	
+	
+	/**
+	 * Remove styles of the textbox
+	 */
+	public void removeStyles(){
+		removeStyleName(TEXTBOX_VALIDATION_ERROR_STYLE);
+        setTitle("");
+	}
+	
+	
 	/**
 	 * Setter for textbox value
 	 */

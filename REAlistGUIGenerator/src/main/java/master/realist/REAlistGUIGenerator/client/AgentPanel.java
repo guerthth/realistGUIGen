@@ -92,30 +92,19 @@ public class AgentPanel extends VerticalPanel{
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();
 		
-		// populate AgentPanel
-		populateAgentPanel();
 	}
 	
 	
 	/**
 	 * Method populating the Agent panel
 	 */
-	private void populateAgentPanel(){
+	public void populateAgentPanel(){
 		
 		// styles for tableAndAddEditPanel
 		//agentTableAndAddEditPanel.addStyleName("fullsizePanel");
 		
 		// get all the existing agenttypes (they are added to the existingAgenttypeDTOs arrayList)
 		callGetAgenttypes();
-		
-		// get all the existing agents (they are added to the existingAgentDTOs arrayList)
-		callGetAgents();
-		
-		// define style for agentSelectionIntroductionLabel
-		agentSelectionIntroductionLabel.addStyleName("introductionLabel");
-		
-		// Adding the headline label to the agentSelectionPanel
-		this.add(agentSelectionIntroductionLabel);
 		
 		// Populating the horizontalpanel and adding it to the agentSelectionPanel
 		// Populating the flex table for the selection of agents
@@ -124,10 +113,10 @@ public class AgentPanel extends VerticalPanel{
 		agentSelectionFlexTable.setText(0, 2, "Agenttype");
 		agentSelectionFlexTable.setText(0, 3, "Edit");
 		agentSelectionFlexTable.setText(0, 4, "Remove");
-		
+				
 		// setting padding of 4 to the cells of the statusSelectionFlexTable
 		agentSelectionFlexTable.setCellPadding(4);
-		
+				
 		// Add styles to elements in the statusSelectionFlexTable
 		agentSelectionFlexTable.getRowFormatter().addStyleName(0, "adminFlexTableHeader");
 		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 1, "adminFlexTableColumn");
@@ -135,6 +124,15 @@ public class AgentPanel extends VerticalPanel{
 		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 3, "adminFlexTableEditRemoveColumn");
 		agentSelectionFlexTable.getCellFormatter().addStyleName(0, 4, "adminFlexTableEditRemoveColumn");
 		agentSelectionFlexTable.addStyleName("adminFlexTable");	
+		
+		// get all the existing agents (they are added to the existingAgentDTOs arrayList)
+		populateAgentSelectionFlexTable();
+		
+		// define style for agentSelectionIntroductionLabel
+		agentSelectionIntroductionLabel.addStyleName("introductionLabel");
+		
+		// Adding the headline label to the agentSelectionPanel
+		this.add(agentSelectionIntroductionLabel);
 		
 		// Adding the agentSelectionFlexTable to the agentTableAndAddEditPanel
 		agentTableAndAddEditPanel.add(agentSelectionFlexTable);		
@@ -278,76 +276,52 @@ public class AgentPanel extends VerticalPanel{
 	/**
 	 * Calling the getAgents method of the READBService
 	 */
-	private void callGetAgents(){
+	private void populateAgentSelectionFlexTable(){
 		
-		// Initialize the service proxy.
-	    if (reaDBSvc == null) {
-	    	reaDBSvc = GWT.create(READBService.class);
-	    }
-	    
-	    // Set up the callback object.
-	    AsyncCallback<List<AgentDTO>> callback = new AsyncCallback<List<AgentDTO>>() {
+		// agents were already loaded on startup 
+		// therefore the list in the reaDBEntryContainer is taken
+		for(AgentDTO adto : reaDBEntryContainer.getExistingAgentDTOs()){
+			
+			// final variable needed for the button specifications
+			final AgentDTO currentAgentDTO = adto;
+			
+			// Buttons to edit and delete agents
+			Button updateAgentButton = new Button("Update");
+			updateAgentButton.addStyleDependentName("removeupdate");
 
-			public void onFailure(Throwable caught) {
-				logREADBRPCFailure("getAgents()");
-		    	caught.printStackTrace();
-			}
-
-			public void onSuccess(List<AgentDTO> result) {
-				
-				reaDBEntryContainer.getExistingAgentDTOs().clear();
-				
-				for(AgentDTO adto : result){
-					
-					// adding the AgentDTOs to the existingAgentDTOs arrayList
-					reaDBEntryContainer.getExistingAgentDTOs().add(adto);
-					
-					// final variable needed for the button specifications
-					final AgentDTO currentAgentDTO = adto;
-					
-					// Buttons to edit and delete agents
-					Button updateAgentButton = new Button("Update");
-					updateAgentButton.addStyleDependentName("removeupdate");
-
-					updateAgentButton.addClickHandler(new ClickHandler(){
-						public void onClick(ClickEvent event){
-							updateAgentAddEditPanel(currentAgentDTO);
-						}
-					});	
-					
-					Button deleteAgentButton = new Button("X");
-					deleteAgentButton.addStyleDependentName("removeupdate");
-					
-					deleteAgentButton.addClickHandler(new ClickHandler(){
-						public void onClick(ClickEvent event){
-							
-							deleteAgent(currentAgentDTO);
-						}
-					});
-					
-					// TODO: the REA DB is capable of representing agents with more than one agenttype
-					// for this prototype it is assumed that each agent has only one agenttype
-					Iterator<AgenttypeDTO> iterator = adto.getAgenttypes().iterator();
-					AgenttypeDTO agenttypeDTO = iterator.next();
-					
-					int row = agentSelectionFlexTable.getRowCount();
-					agentSelectionFlexTable.setText(row, 0, String.valueOf(adto.getId()));
-					agentSelectionFlexTable.setText(row, 1, adto.getName());
-					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
-					agentSelectionFlexTable.setText(row, 2, agenttypeDTO.getId());
-					agentSelectionFlexTable.setWidget(row, 3, updateAgentButton);
-					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
-					agentSelectionFlexTable.setWidget(row, 4, deleteAgentButton);
-					agentSelectionFlexTable.getCellFormatter().addStyleName(row, 4, "adminFlexTableEditRemoveColumn");
-				
+			updateAgentButton.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent event){
+					updateAgentAddEditPanel(currentAgentDTO);
 				}
-				
-			}
-	    	
-	    };
+			});	
+			
+			Button deleteAgentButton = new Button("X");
+			deleteAgentButton.addStyleDependentName("removeupdate");
+			
+			deleteAgentButton.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent event){
+					
+					deleteAgent(currentAgentDTO);
+				}
+			});
+			
+			// TODO: the REA DB is capable of representing agents with more than one agenttype
+			// for this prototype it is assumed that each agent has only one agenttype
+			Iterator<AgenttypeDTO> iterator = adto.getAgenttypes().iterator();
+			AgenttypeDTO agenttypeDTO = iterator.next();
+			
+			int row = agentSelectionFlexTable.getRowCount();
+			agentSelectionFlexTable.setText(row, 0, String.valueOf(adto.getId()));
+			agentSelectionFlexTable.setText(row, 1, adto.getName());
+			agentSelectionFlexTable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
+			agentSelectionFlexTable.setText(row, 2, agenttypeDTO.getId());
+			agentSelectionFlexTable.setWidget(row, 3, updateAgentButton);
+			agentSelectionFlexTable.getCellFormatter().addStyleName(row, 3, "adminFlexTableEditRemoveColumn");
+			agentSelectionFlexTable.setWidget(row, 4, deleteAgentButton);
+			agentSelectionFlexTable.getCellFormatter().addStyleName(row, 4, "adminFlexTableEditRemoveColumn");
+			
+		}
 	    
-	    // Make the call
-	    reaDBSvc.getAgents(callback);
 	   
 	}
 	
@@ -356,6 +330,9 @@ public class AgentPanel extends VerticalPanel{
 	 * Updating the AgentAddEditPanel (just setting it to visible)
 	 */
 	private void updateAgentAddEditPanel(AgentDTO agentDTO){
+		
+		// reset the styles of the fixed attirbutevalued
+		agentNameTextBox.removeStyles();
 		
 		// Check if the agentDTO object is null
 		// If so the textboxes are granted for adding new agents without content
@@ -840,6 +817,7 @@ public class AgentPanel extends VerticalPanel{
 				
 				// remove entries from arrayList
 				reaDBEntryContainer.getExistingAgentDTOs().remove(removedListIndex);
+				
 				// remove entries from flextable
 				agentSelectionFlexTable.removeRow(removedListIndex+1);
 				

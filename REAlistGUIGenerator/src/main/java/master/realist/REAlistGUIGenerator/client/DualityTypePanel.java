@@ -52,6 +52,10 @@ public class DualityTypePanel extends VerticalPanel {
 	private List<DualitytypeDTO> existingDualitytypeDTOs = new ArrayList<DualitytypeDTO>();
 	private Button dualitytypeSelectionButton = new Button("Create new");
 	
+	// ExistingDualitiesPanel + ArrayList
+	private HorizontalPanel existingDualitiesPanel = new HorizontalPanel();
+	private FlexTable dualitySelectionFlextable = new FlexTable();
+	
 	// dualitystatusAndDualityAddPanel
 	private HorizontalPanel dualitystatusAndDualityAddPanel = new HorizontalPanel();
 	private FlexTable dualitystatusAndDualityAddFlexTable = new FlexTable();
@@ -97,14 +101,12 @@ public class DualityTypePanel extends VerticalPanel {
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();
 		
-		// populate the DualityTypePanel
-		populateDualityTypePanel();
 	}
 	
 	/**
 	 * Method populating the DualityTypePanel
 	 */
-	private void populateDualityTypePanel(){
+	public void populateDualityTypePanel(){
 		
 		// define style for agentSelectionIntroductionLabel
 		agentSelectionIntroductionLabel.addStyleName("introductionLabel");
@@ -114,6 +116,37 @@ public class DualityTypePanel extends VerticalPanel {
 		
 		// apply styles for dualitytylePanel
 		this.addStyleName("fullsizePanel");
+
+		// set dualitySelectionFlextable
+		dualitySelectionFlextable.setText(0, 0, "Id");
+		dualitySelectionFlextable.setText(0, 1, "Type");
+		dualitySelectionFlextable.setText(0, 2, "Date");
+		dualitySelectionFlextable.setText(0, 3, "Status");
+		dualitySelectionFlextable.setText(0, 4, "Remove");
+		
+		// setting padding of 4 to the cells of the dualitySelectionFlextable
+		dualitySelectionFlextable.setCellPadding(4);
+				
+		// Add styles to elements in the dualitySelectionFlextable
+		dualitySelectionFlextable.getRowFormatter().addStyleName(0, "adminFlexTableHeader");
+		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 1, "adminFlexTableColumn");
+		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 2, "adminFlexTableColumn");
+		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 3, "adminFlexTableColumn");
+		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 4, "adminFlexTableEditRemoveColumn");
+		dualitySelectionFlextable.addStyleName("adminFlexTable");	
+		
+		// add flextable to existingDualitiesPanel
+		existingDualitiesPanel.add(dualitySelectionFlextable);
+		existingDualitiesPanel.setVisible(false);
+		
+		// if dualities already exist in the REA B. Visualize the existingDualitiesPanel
+		if(reaDBEntryContainer.getExistingDualityDTOs().size()!=0){
+			
+			// populate dualitySelectionFlextable
+			populateDualitySelectionFlextable();
+			
+			existingDualitiesPanel.setVisible(true);
+		}
 		
 		// Assemble Dualitytype panel
 		dualitytypeFlexTable.setWidget(0, 0, dualitytypeLabel);
@@ -592,6 +625,89 @@ public class DualityTypePanel extends VerticalPanel {
 		}
 		
 		return validationResult;
+	}
+	
+	
+	/**
+	 * Method populating the populateDualitySelectionFlextable
+	 */
+	private void populateDualitySelectionFlextable(){
+		
+		// dualities were already loaded on startup 
+		// therefore the list in the reaDBEntryContainer is taken
+		for(DualityDTO ddto : reaDBEntryContainer.getExistingDualityDTOs()){
+			
+			// final variable needed for the button specifications
+			final DualityDTO currentDualityDTO = ddto;
+			
+			// Button to delete existing dualities					
+			Button deleteDualityButton = new Button("X");
+			deleteDualityButton.addStyleDependentName("removeupdate");
+					
+			deleteDualityButton.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent event){
+							
+					deleteDuality(currentDualityDTO);
+				}
+			});
+
+					
+			int row = dualitySelectionFlextable.getRowCount();
+			dualitySelectionFlextable.setText(row, 0, String.valueOf(ddto.getId()));
+			dualitySelectionFlextable.setText(row, 1, ddto.getDualitytype().getId());
+			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
+			dualitySelectionFlextable.setText(row, 2, String.valueOf(ddto.getDate()));
+			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 2, "adminFlexTableColumn");
+			dualitySelectionFlextable.setText(row, 3, ddto.getDualitystatus().getStatus());
+			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 3, "adminFlexTableColumn");
+			dualitySelectionFlextable.setWidget(row, 4, deleteDualityButton);
+			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 4, "adminFlexTableEditRemoveColumn");
+		}
+	}
+	
+	
+	/**
+	 * Deleting a duality from the REA DB
+	 * @param dualitydto
+	 */
+	private void deleteDuality(DualityDTO deleteDualityDTO){
+		
+		final int removedListIndex = reaDBEntryContainer.getExistingDualityDTOs().indexOf(deleteDualityDTO);
+		
+		// Initialize the service proxy.
+	    if (reaDBSvc == null) {
+	    	reaDBSvc = GWT.create(READBService.class);
+	    }		
+	    
+	    // Set up the callback object.
+	    AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
+
+			public void onFailure(Throwable caught) {
+				logREADBRPCFailure("deleteDuality()");
+		    	caught.printStackTrace();
+			}
+		
+			public void onSuccess(Integer result) {
+				
+				Window.alert("Duality with Id " + result + " was deleted from the REA DB");
+				
+				// remove entries from arrayList
+				reaDBEntryContainer.getExistingDualityDTOs().remove(removedListIndex);
+				
+				// remove entries from flextable
+				dualitySelectionFlextable.removeRow(removedListIndex+1);
+				
+				// if all dalities are deleted set existingDualitiesPanel invisible
+				if(reaDBEntryContainer.getExistingDualityDTOs().size()==0){
+					existingDualitiesPanel.setVisible(false);
+				}
+				
+			}
+			
+	    };
+	    
+	    // Make the call
+	    reaDBSvc.deleteDuality(deleteDualityDTO.getId(), callback);
 	}
 
 	
