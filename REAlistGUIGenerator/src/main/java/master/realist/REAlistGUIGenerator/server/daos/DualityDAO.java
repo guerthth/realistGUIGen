@@ -37,8 +37,10 @@ public class DualityDAO {
 				
 				for(Duality duality : existingDualities){
 					
-					// since lazy fetching is used, events need to be initialized
+					// since lazy fetching is used, status, types, and events need to be initialized
 					Hibernate.initialize(duality.getEvents());
+					Hibernate.initialize(duality.getDualitystatus());
+					Hibernate.initialize(duality.getDualitytype());
 	
 					// adding the created dualityDTOs to the List that is returned
 					dualityDTOlist.add(createDualityDTO(duality));

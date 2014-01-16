@@ -3160,3 +3160,281 @@
 2014-01-13 20:10:57 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
 2014-01-13 20:10:57 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
 2014-01-13 20:10:57 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 15:05:24 INFO  ClassPathXmlApplicationContext:510 - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@26f69ea3: startup date [Thu Jan 16 15:05:24 CET 2014]; root of context hierarchy
+2014-01-16 15:05:24 INFO  XmlBeanDefinitionReader:315 - Loading XML bean definitions from class path resource [application-context.xml]
+2014-01-16 15:05:24 INFO  DefaultListableBeanFactory:598 - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1930c398: defining beans [hibernateutil,dualitytypedao,dualitystatusdao,agentdao,agenttypedao,attributedao,resourcedao,resourcetypedao,dualitydao,eventdao,eventtypeparticipationhasadditionalattributedao,eventtypestockflowhasadditionalattributedao,eventtypeparticipationdao,eventtypedao]; root of factory hierarchy
+2014-01-16 15:05:25 INFO  Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+2014-01-16 15:05:25 INFO  Version:41 - HHH000412: Hibernate Core {4.2.6.Final}
+2014-01-16 15:05:25 INFO  Environment:238 - HHH000206: hibernate.properties not found
+2014-01-16 15:05:25 INFO  Environment:345 - HHH000021: Bytecode provider name : javassist
+2014-01-16 15:05:25 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 15:05:25 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 15:05:25 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 15:05:25 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 15:05:25 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 15:05:25 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 15:05:25 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 15:05:25 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 15:05:25 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 15:05:25 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 15:05:25 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 15:05:25 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 15:05:25 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 15:05:25 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 15:05:26 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 15:05:26 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 15:05:26 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 15:05:26 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 15:05:26 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 15:05:26 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 15:05:26 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 15:05:26 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 16:51:17 INFO  ClassPathXmlApplicationContext:510 - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@38942b4: startup date [Thu Jan 16 16:51:17 CET 2014]; root of context hierarchy
+2014-01-16 16:51:17 INFO  XmlBeanDefinitionReader:315 - Loading XML bean definitions from class path resource [application-context.xml]
+2014-01-16 16:51:18 INFO  DefaultListableBeanFactory:598 - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@28aaa799: defining beans [hibernateutil,dualitytypedao,dualitystatusdao,agentdao,agenttypedao,attributedao,resourcedao,resourcetypedao,dualitydao,eventdao,eventtypeparticipationhasadditionalattributedao,eventtypestockflowhasadditionalattributedao,eventtypeparticipationdao,eventtypedao]; root of factory hierarchy
+2014-01-16 16:51:18 INFO  Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+2014-01-16 16:51:18 INFO  Version:41 - HHH000412: Hibernate Core {4.2.6.Final}
+2014-01-16 16:51:18 INFO  Environment:238 - HHH000206: hibernate.properties not found
+2014-01-16 16:51:18 INFO  Environment:345 - HHH000021: Bytecode provider name : javassist
+2014-01-16 16:51:18 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 16:51:18 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 16:51:18 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 16:51:18 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 16:51:18 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 16:51:18 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 16:51:18 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 16:51:18 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 16:51:18 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 16:51:18 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 16:51:18 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 16:51:18 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 16:51:18 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 16:51:18 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 16:51:19 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 16:51:19 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 16:51:19 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 16:51:19 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 16:51:19 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 16:51:19 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 16:51:19 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 16:51:19 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:07:38 INFO  ClassPathXmlApplicationContext:510 - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@2b45891f: startup date [Thu Jan 16 17:07:38 CET 2014]; root of context hierarchy
+2014-01-16 17:07:38 INFO  XmlBeanDefinitionReader:315 - Loading XML bean definitions from class path resource [application-context.xml]
+2014-01-16 17:07:38 INFO  DefaultListableBeanFactory:598 - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@66ed1b31: defining beans [hibernateutil,dualitytypedao,dualitystatusdao,agentdao,agenttypedao,attributedao,resourcedao,resourcetypedao,dualitydao,eventdao,eventtypeparticipationhasadditionalattributedao,eventtypestockflowhasadditionalattributedao,eventtypeparticipationdao,eventtypedao]; root of factory hierarchy
+2014-01-16 17:07:39 INFO  Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+2014-01-16 17:07:39 INFO  Version:41 - HHH000412: Hibernate Core {4.2.6.Final}
+2014-01-16 17:07:39 INFO  Environment:238 - HHH000206: hibernate.properties not found
+2014-01-16 17:07:39 INFO  Environment:345 - HHH000021: Bytecode provider name : javassist
+2014-01-16 17:07:39 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:07:39 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:07:39 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:07:39 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:07:39 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:07:39 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:07:39 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:07:39 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:07:39 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:07:39 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:07:39 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:07:39 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:07:39 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:07:39 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:07:40 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:07:40 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:07:40 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:07:40 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:07:40 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:07:40 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:07:40 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:07:40 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:09:10 WARN  SqlExceptionHelper:145 - SQL Error: 1451, SQLState: 23000
+2014-01-16 17:09:10 ERROR SqlExceptionHelper:147 - Cannot delete or update a parent row: a foreign key constraint fails (`rea`.`event`, CONSTRAINT `fk_Event_Duality1` FOREIGN KEY (`Duality_Id`) REFERENCES `duality` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION)
+2014-01-16 17:09:10 INFO  AbstractBatchImpl:195 - HHH000010: On release of batch it still contained JDBC statements
+2014-01-16 17:23:19 INFO  ClassPathXmlApplicationContext:510 - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@373b5775: startup date [Thu Jan 16 17:23:19 CET 2014]; root of context hierarchy
+2014-01-16 17:23:19 INFO  XmlBeanDefinitionReader:315 - Loading XML bean definitions from class path resource [application-context.xml]
+2014-01-16 17:23:19 INFO  DefaultListableBeanFactory:598 - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@3d14e216: defining beans [hibernateutil,dualitytypedao,dualitystatusdao,agentdao,agenttypedao,attributedao,resourcedao,resourcetypedao,dualitydao,eventdao,eventtypeparticipationhasadditionalattributedao,eventtypestockflowhasadditionalattributedao,eventtypeparticipationdao,eventtypedao]; root of factory hierarchy
+2014-01-16 17:23:20 INFO  Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+2014-01-16 17:23:20 INFO  Version:41 - HHH000412: Hibernate Core {4.2.6.Final}
+2014-01-16 17:23:20 INFO  Environment:238 - HHH000206: hibernate.properties not found
+2014-01-16 17:23:20 INFO  Environment:345 - HHH000021: Bytecode provider name : javassist
+2014-01-16 17:23:20 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 17:23:20 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:23:20 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:23:20 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:23:20 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 17:23:20 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:23:20 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:23:20 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:23:20 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:23:20 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 17:23:20 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:23:20 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:23:20 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:23:20 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 17:23:21 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:23:21 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:23:21 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:23:21 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:23:21 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:23:21 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 17:23:21 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 17:23:21 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 18:14:33 INFO  ClassPathXmlApplicationContext:510 - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@5cc277b6: startup date [Thu Jan 16 18:14:33 CET 2014]; root of context hierarchy
+2014-01-16 18:14:33 INFO  XmlBeanDefinitionReader:315 - Loading XML bean definitions from class path resource [application-context.xml]
+2014-01-16 18:14:33 INFO  DefaultListableBeanFactory:598 - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@130c7bd2: defining beans [hibernateutil,dualitytypedao,dualitystatusdao,agentdao,agenttypedao,attributedao,resourcedao,resourcetypedao,dualitydao,eventdao,eventtypeparticipationhasadditionalattributedao,eventtypestockflowhasadditionalattributedao,eventtypeparticipationdao,eventtypedao]; root of factory hierarchy
+2014-01-16 18:14:34 INFO  Version:37 - HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+2014-01-16 18:14:34 INFO  Version:41 - HHH000412: Hibernate Core {4.2.6.Final}
+2014-01-16 18:14:34 INFO  Environment:238 - HHH000206: hibernate.properties not found
+2014-01-16 18:14:34 INFO  Environment:345 - HHH000021: Bytecode provider name : javassist
+2014-01-16 18:14:34 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 INFO  Configuration:2006 - HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 INFO  Configuration:2025 - HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-01-16 18:14:34 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 18:14:34 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 18:14:34 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 18:14:34 WARN  DTDEntityResolver:74 - HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-01-16 18:14:34 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 18:14:34 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 18:14:34 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 18:14:34 INFO  Configuration:2147 - HHH000041: Configured SessionFactory: null
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:98 - HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:134 - HHH000115: Hibernate connection pool size: 20
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:137 - HHH000006: Autocommit mode: false
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:151 - HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/rea]
+2014-01-16 18:14:34 INFO  DriverManagerConnectionProviderImpl:156 - HHH000046: Connection properties: {user=root, password=****}
+2014-01-16 18:14:34 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 18:14:34 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 18:14:34 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 18:14:34 INFO  Dialect:130 - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-01-16 18:14:34 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 18:14:34 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 18:14:34 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 18:14:34 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 18:14:35 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 18:14:35 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory
+2014-01-16 18:14:35 INFO  TransactionFactoryInitiator:68 - HHH000399: Using default transaction strategy (direct JDBC transactions)
+2014-01-16 18:14:35 INFO  ASTQueryTranslatorFactory:48 - HHH000397: Using ASTQueryTranslatorFactory

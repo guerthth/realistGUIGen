@@ -27,6 +27,8 @@ public class DualityDTO implements Serializable{
 		
 		this.id = duality.getId();
 		this.dualitytype = new DualitytypeDTO(duality.getDualitytype());
+		this.date = duality.getDate();
+		this.dualitystatus = new DualityStatusDTO(duality.getDualitystatus());
 	}
 	
 	

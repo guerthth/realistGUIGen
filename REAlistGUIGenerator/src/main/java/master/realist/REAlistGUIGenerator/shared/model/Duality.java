@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -149,7 +150,7 @@ public class Duality implements java.io.Serializable {
 		this.contracts = contracts;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "duality")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "duality", cascade=CascadeType.ALL)
 	public Set<Event> getEvents() {
 		return this.events;
 	}

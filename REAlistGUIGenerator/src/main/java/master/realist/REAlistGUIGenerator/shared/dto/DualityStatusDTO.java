@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import master.realist.REAlistGUIGenerator.shared.model.Dualitystatus;
+
 /**
  * Data Transfer Object for DualityStatus
  * @author Thomas
@@ -25,6 +27,15 @@ public class DualityStatusDTO implements Serializable{
 	 */
 	public DualityStatusDTO(){
 		
+	}
+	
+	/**
+	 * Constructor transforming a Dualitystatus from the REA DB to a DualityStatusDTO
+	 * @param dualitystatus
+	 */
+	public DualityStatusDTO(Dualitystatus dualitystatus){
+		this.id = dualitystatus.getId();
+		this.status = dualitystatus.getStatus();
 	}
 	
 	/**

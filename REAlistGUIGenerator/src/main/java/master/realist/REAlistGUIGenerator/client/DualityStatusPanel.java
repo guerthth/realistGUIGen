@@ -41,7 +41,9 @@ public class DualityStatusPanel extends VerticalPanel{
 	private Button dualityStatusOkButton = new Button("Ok");
 	private HorizontalPanel dualityStatusChooseAddPanel = new HorizontalPanel();
 	private Button dualityStatusAddButton = new Button("Add");	
-	//private ArrayList<DualityStatusDTO> existingDualityStatusDTOs = new ArrayList<DualityStatusDTO>();
+	
+	// panel that displays selection of existing dualities
+	private DualityPanel existingDualityPanel = new DualityPanel();
 	
 	// flag that specifies if a user wants to save or update
 	private boolean saveActionState = true;
@@ -159,7 +161,11 @@ public class DualityStatusPanel extends VerticalPanel{
 				addNewDualityStatus();
 			}
 		});
-						
+			
+		// add dualityPanel
+		this.add(existingDualityPanel);
+		
+		// add dualityStatusChooseAddPanel
 		this.add(dualityStatusChooseAddPanel);
 	}
 	

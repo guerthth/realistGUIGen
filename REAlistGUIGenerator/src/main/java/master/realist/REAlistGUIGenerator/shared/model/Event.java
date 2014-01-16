@@ -280,7 +280,7 @@ public class Event implements java.io.Serializable {
 		this.eventMaterializesClaims = eventMaterializesClaims;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name = "event_has_stockflow", catalog = "rea", joinColumns = { @JoinColumn(name = "Event_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "Stockflow_Id", nullable = false, updatable = false) })
 	public Set<Stockflow> getStockflows() {
 		return this.stockflows;
@@ -339,7 +339,7 @@ public class Event implements java.io.Serializable {
 		this.reconciliationsForIncEventId = reconciliationsForIncEventId;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name = "event_has_participation", catalog = "rea", joinColumns = { @JoinColumn(name = "Event_Id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "Participation_Participation_id", nullable = false, updatable = false) })
 	public Set<Participation> getParticipations() {
 		return this.participations;

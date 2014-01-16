@@ -43,18 +43,17 @@ public class DualityTypePanel extends VerticalPanel {
 	// READBEntryContainer
 	private READBEntryContainer reaDBEntryContainer;
 	
+	// Panel for existing dualities in REA DB
+	private DualityPanel existingDualityPanel;
+	
 	// DualitytypeSelection panel + ArrayList
-	private Label agentSelectionIntroductionLabel = new Label("Business Case Administration");
+	private Label dualitySelectionIntroductionLabel = new Label("Business Case Administration");
 	private HorizontalPanel dualitytypeSelectionPanel = new HorizontalPanel();
 	private FlexTable dualitytypeFlexTable = new FlexTable();
 	private Label dualitytypeLabel = new Label("Choose Dualitytype: ");
 	private ListBox dualitytypeListBox = new ListBox();
 	private List<DualitytypeDTO> existingDualitytypeDTOs = new ArrayList<DualitytypeDTO>();
 	private Button dualitytypeSelectionButton = new Button("Create new");
-	
-	// ExistingDualitiesPanel + ArrayList
-	private HorizontalPanel existingDualitiesPanel = new HorizontalPanel();
-	private FlexTable dualitySelectionFlextable = new FlexTable();
 	
 	// dualitystatusAndDualityAddPanel
 	private HorizontalPanel dualitystatusAndDualityAddPanel = new HorizontalPanel();
@@ -93,6 +92,7 @@ public class DualityTypePanel extends VerticalPanel {
 	// list of eventdtos that should be saved to the REA DB
 	private List<EventDTO> saveEventDTOList = new ArrayList<EventDTO>();
 	
+	
 	/**
 	 * Constructor
 	 */
@@ -108,45 +108,21 @@ public class DualityTypePanel extends VerticalPanel {
 	 */
 	public void populateDualityTypePanel(){
 		
+		// create dualitypanel
+		existingDualityPanel = new DualityPanel();
+		
 		// define style for agentSelectionIntroductionLabel
-		agentSelectionIntroductionLabel.addStyleName("introductionLabel");
+		dualitySelectionIntroductionLabel.addStyleName("introductionLabel");
 		
 		// adding the agentSelectionIntroductionLabel to the DualitytypePanel
-		this.add(agentSelectionIntroductionLabel);
+		this.add(dualitySelectionIntroductionLabel);
+		
+		// adding the dualityPanel
+		this.add(existingDualityPanel);
 		
 		// apply styles for dualitytylePanel
 		this.addStyleName("fullsizePanel");
-
-		// set dualitySelectionFlextable
-		dualitySelectionFlextable.setText(0, 0, "Id");
-		dualitySelectionFlextable.setText(0, 1, "Type");
-		dualitySelectionFlextable.setText(0, 2, "Date");
-		dualitySelectionFlextable.setText(0, 3, "Status");
-		dualitySelectionFlextable.setText(0, 4, "Remove");
 		
-		// setting padding of 4 to the cells of the dualitySelectionFlextable
-		dualitySelectionFlextable.setCellPadding(4);
-				
-		// Add styles to elements in the dualitySelectionFlextable
-		dualitySelectionFlextable.getRowFormatter().addStyleName(0, "adminFlexTableHeader");
-		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 1, "adminFlexTableColumn");
-		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 2, "adminFlexTableColumn");
-		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 3, "adminFlexTableColumn");
-		dualitySelectionFlextable.getCellFormatter().addStyleName(0, 4, "adminFlexTableEditRemoveColumn");
-		dualitySelectionFlextable.addStyleName("adminFlexTable");	
-		
-		// add flextable to existingDualitiesPanel
-		existingDualitiesPanel.add(dualitySelectionFlextable);
-		existingDualitiesPanel.setVisible(false);
-		
-		// if dualities already exist in the REA B. Visualize the existingDualitiesPanel
-		if(reaDBEntryContainer.getExistingDualityDTOs().size()!=0){
-			
-			// populate dualitySelectionFlextable
-			populateDualitySelectionFlextable();
-			
-			existingDualitiesPanel.setVisible(true);
-		}
 		
 		// Assemble Dualitytype panel
 		dualitytypeFlexTable.setWidget(0, 0, dualitytypeLabel);
@@ -252,14 +228,7 @@ public class DualityTypePanel extends VerticalPanel {
 		
 		// removing the tabpanel from theDualityTypePanel if it already exists to avoid adding it several times
 		if(eventypeSetTabPanel != null){
-			this.remove(eventypeSetTabPanel);
-		}
-		
-		// removing dualitystatusAndDualityAddPanel from the main DualityTypePanel if it already exists
-		if(dualitystatusAndDualityAddPanel != null){
-			this.remove(dualitystatusAndDualityAddPanel);
-			//also refresh dualitystatuslistbox content
-			dualitystatusListBox.clear();
+			removeEventtypeTabPanel();
 		}
 		
 		// Tab Panel for Eventtypes of a specific Duality
@@ -376,6 +345,8 @@ public class DualityTypePanel extends VerticalPanel {
 	  	    		saveEvent(eventdto);
 	  	      	}
 				
+				// update the existingDualityPanel by appending the newly inserted duality
+				existingDualityPanel.addEntryToDualitySelectionFlexTable(result);
 			}
 	    	
 	    };
@@ -556,6 +527,9 @@ public class DualityTypePanel extends VerticalPanel {
 	    	  
 	    	  Window.alert("Event " + result.getEventtype().getId() + " has been saved to the DB with id " + result.getId());
 	    	  
+	    	  // remove the eventtypetabpanel from the dualitytypepanel
+	    	  removeEventtypeTabPanel();
+
 	      }
 	    };
 	    
@@ -571,34 +545,53 @@ public class DualityTypePanel extends VerticalPanel {
 	 */
 	private boolean dualitytypeTextBoxValidationResult(){
 		
+		boolean agentresourcesset = true;
 		boolean validationResult = true;
 		// TODO: maybe change to 1 loop with 3 loops inside!
-		// Eventtype Attributes
-		for(EventDTO edto : eventtypeAttributeLabelMap.keySet()){
+		for(EventDTO edto : saveEventDTOList){
+			
+			// check if provide and receive agents are set
+			if(edto.getProvideAgent() == null){
+							
+				validationResult = false;
+				agentresourcesset = false;
+							
+			}else if (edto.getReceiveAgent() == null){
+							
+				validationResult = false;
+				agentresourcesset = false;
+							
+			}
+			
+			// check attributes of event
 			for(AttributeDTO adto : eventtypeAttributeLabelMap.get(edto).keySet()){
-				
+							
 				if(!eventtypeAttributeLabelMap.get(edto).get(adto).validate()){
 					validationResult = false;
 				}
-				
+							
 			}
-		}
-		
-		// fixed stockflow attributes
-		for(EventDTO edto : eventtypeStockflowFixedAttributeMap.keySet()){
 			
+			// fixed stockflow attributes
 			for(StockflowDTO sfdto : eventtypeStockflowFixedAttributeMap.get(edto).keySet()){
+				
+				// check affected resources in stockflow
+				if(sfdto.getResource() == null){
+					
+					validationResult = false;
+					agentresourcesset = false;
+					
+				}
+				
+				// check fixed attributes of stockflow
 				for(CustomTextBox ct : eventtypeStockflowFixedAttributeMap.get(edto).get(sfdto)){
 					if(!ct.validate()){
 						validationResult = false;
 					}
 				}
 			}
-
-		}
-		
-		// Stockflow Attributes
-		for(EventDTO edto : eventtypeStockflowAttributeLabelMap.keySet()){
+			
+			// Stockflow additional Attributes
 			for(StockflowDTO sfdto : eventtypeStockflowAttributeLabelMap.get(edto).keySet()){
 				for(AttributeDTO adto : eventtypeStockflowAttributeLabelMap.get(edto).get(sfdto).keySet()){
 					
@@ -608,11 +601,16 @@ public class DualityTypePanel extends VerticalPanel {
 				}
 			}
 			
-		}
-		
-		// Partcipation Attributes
-		for(EventDTO edto : eventtypeParticipationAttributeLabelMap.keySet()){
+			// Partcipation additional Attributes
 			for(ParticipationDTO pdto : eventtypeParticipationAttributeLabelMap.get(edto).keySet()){
+				
+				// check agents in participation
+				if(pdto.getAgent() == null){
+					
+					validationResult = false;
+					agentresourcesset = false;
+					
+				}
 				
 				for(AttributeDTO adto : eventtypeParticipationAttributeLabelMap.get(edto).get(pdto).keySet()){
 					
@@ -622,92 +620,30 @@ public class DualityTypePanel extends VerticalPanel {
 				}
 			}
 			
+			// if agents or resources were not set correctly, print erromessages for evet
+			if(!agentresourcesset){
+				Window.alert("Create respective agents or resources for " + edto.getEventtype().getName() +  " to save business case.");
+			}
+			
 		}
-		
+	
 		return validationResult;
 	}
 	
 	
 	/**
-	 * Method populating the populateDualitySelectionFlextable
+	 * Method removing the eventtypeTabPanel from the DualityTypePanel
 	 */
-	private void populateDualitySelectionFlextable(){
+	private void removeEventtypeTabPanel(){
 		
-		// dualities were already loaded on startup 
-		// therefore the list in the reaDBEntryContainer is taken
-		for(DualityDTO ddto : reaDBEntryContainer.getExistingDualityDTOs()){
-			
-			// final variable needed for the button specifications
-			final DualityDTO currentDualityDTO = ddto;
-			
-			// Button to delete existing dualities					
-			Button deleteDualityButton = new Button("X");
-			deleteDualityButton.addStyleDependentName("removeupdate");
-					
-			deleteDualityButton.addClickHandler(new ClickHandler(){
-				public void onClick(ClickEvent event){
-							
-					deleteDuality(currentDualityDTO);
-				}
-			});
-
-					
-			int row = dualitySelectionFlextable.getRowCount();
-			dualitySelectionFlextable.setText(row, 0, String.valueOf(ddto.getId()));
-			dualitySelectionFlextable.setText(row, 1, ddto.getDualitytype().getId());
-			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 1, "adminFlexTableColumn");
-			dualitySelectionFlextable.setText(row, 2, String.valueOf(ddto.getDate()));
-			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 2, "adminFlexTableColumn");
-			dualitySelectionFlextable.setText(row, 3, ddto.getDualitystatus().getStatus());
-			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 3, "adminFlexTableColumn");
-			dualitySelectionFlextable.setWidget(row, 4, deleteDualityButton);
-			dualitySelectionFlextable.getCellFormatter().addStyleName(row, 4, "adminFlexTableEditRemoveColumn");
+		this.remove(eventypeSetTabPanel);
+		
+		// removing dualitystatusAndDualityAddPanel from the main DualityTypePanel if it already exists
+		if(dualitystatusAndDualityAddPanel != null){
+			this.remove(dualitystatusAndDualityAddPanel);
+			//also refresh dualitystatuslistbox content
+			dualitystatusListBox.clear();
 		}
-	}
-	
-	
-	/**
-	 * Deleting a duality from the REA DB
-	 * @param dualitydto
-	 */
-	private void deleteDuality(DualityDTO deleteDualityDTO){
-		
-		final int removedListIndex = reaDBEntryContainer.getExistingDualityDTOs().indexOf(deleteDualityDTO);
-		
-		// Initialize the service proxy.
-	    if (reaDBSvc == null) {
-	    	reaDBSvc = GWT.create(READBService.class);
-	    }		
-	    
-	    // Set up the callback object.
-	    AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
-
-			public void onFailure(Throwable caught) {
-				logREADBRPCFailure("deleteDuality()");
-		    	caught.printStackTrace();
-			}
-		
-			public void onSuccess(Integer result) {
-				
-				Window.alert("Duality with Id " + result + " was deleted from the REA DB");
-				
-				// remove entries from arrayList
-				reaDBEntryContainer.getExistingDualityDTOs().remove(removedListIndex);
-				
-				// remove entries from flextable
-				dualitySelectionFlextable.removeRow(removedListIndex+1);
-				
-				// if all dalities are deleted set existingDualitiesPanel invisible
-				if(reaDBEntryContainer.getExistingDualityDTOs().size()==0){
-					existingDualitiesPanel.setVisible(false);
-				}
-				
-			}
-			
-	    };
-	    
-	    // Make the call
-	    reaDBSvc.deleteDuality(deleteDualityDTO.getId(), callback);
 	}
 
 	
