@@ -24,17 +24,10 @@ import master.realist.REAlistGUIGenerator.shared.dto.EventtypeParticipationDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.ParticipationDTO;
 import master.realist.REAlistGUIGenerator.shared.dto.StockflowDTO;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -97,18 +90,12 @@ public class EventContentPanel extends VerticalPanel{
 	private ParticipationPanel eventtypeParticipationPanel;
 	private StockflowPanel eventtypeStockFlowPanel;
 	
-	// trimmed name of the eventtype of the event 
-	private String trimmedEventTypeName;
-	// sort of the event (decrement or increment)
-	private String eventsort;
 	// eventtypeDTO object the EventContentPanel is created for
 	private EventtypeDTO eventtypeDTO;
 	
 	// flag depicting if the event belongs to a conversion or not
 	private boolean isConversion;
 	
-	// DualityDTO object that will be saved as Duality object in the REA DB
-	private DualityDTO saveDualityDTO;
 	
 	// map keeping track of eventtypes and their corresponding attributes + textboxes
 	private Map<EventDTO,Map<AttributeDTO,CustomTextBox>> eventtypeAttributeLabelMap;
@@ -148,19 +135,6 @@ public class EventContentPanel extends VerticalPanel{
 		
 		// initialize READBEntryContainer
 		reaDBEntryContainer = READBEntryContainer.getInstance();		
-		
-		// specify the trimmed name of the event
-		trimmedEventTypeName = selectedEventtypeDTO.getName().substring(selectedEventtypeDTO.getName().indexOf("_")+1);
-
-		// Defining if the event is an increment or decrement event
-		if(selectedEventtypeDTO.getIsIncrement()){
-			eventsort = "Increment";
-		}else{
-			eventsort = "Decrement";
-		}
-		
-		// set the saveDualityDTO object
-		this.saveDualityDTO = saveDualityDTO;
 
 		// set the eventtypeDTO object the eventContentPanel is created for
 		eventtypeDTO = selectedEventtypeDTO; 
