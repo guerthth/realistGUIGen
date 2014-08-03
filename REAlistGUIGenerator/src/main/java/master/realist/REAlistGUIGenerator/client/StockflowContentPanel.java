@@ -316,45 +316,51 @@ public class StockflowContentPanel extends VerticalPanel{
 				
 				for(EventtypeStockflowHasAdditionalAttributeDTO etsfhaa : result){
 					
-					// adding the EventtypeStockflowHasAdditionalAttributeDTO to the existingEventtypeStockflowHasAdditionalAttributeDTOs arrayList
-					existingEventtypeStockflowHasAdditionalAttributeDTOs.add(etsfhaa);
-					
-					// attribute Label and CustomTextBox
-					Label attributeLabel = new Label(etsfhaa.getAttribute().getName() + ":");
-					CustomTextBox attributeTextBox = new CustomTextBox();
-					
-					// Validator for the CustomTextBox
-					Validator attributeValidator;
-					
-					// setting Validations depending on the datatype
-				 	if (etsfhaa.getAttribute().getDatatype().equals("INT") || etsfhaa.getAttribute().getDatatype().equals("DOUBLE")){
-				 		
-				  		attributeValidator = new NumericValidator();
-				  	
-				   	} else if (etsfhaa.getAttribute().getDatatype().equals("VARCHAR")){
-						    		
-				   		attributeValidator = new TextValidator(45);
-						    	
-				   	} else if (etsfhaa.getAttribute().getDatatype().equals("BOOLEAN")){
-						    	
-				   		attributeValidator = new BooleanValidator();
-						    	
-				   	} else {		
-						    	
-				   		attributeValidator = new DateValidator();
-						    	
-				   	}	
-						    	
-				   	// adding validator to attributeTextBox
-				   	attributeTextBox.addValidator(attributeValidator);
-								
-					int row = stockflowAttributeFlexTable.getRowCount();
+					// only for stockflow and policy stockflows
+					if(!etsfhaa.isReserveProperty()){
+						
+						// adding the EventtypeStockflowHasAdditionalAttributeDTO to the existingEventtypeStockflowHasAdditionalAttributeDTOs arrayList
+						existingEventtypeStockflowHasAdditionalAttributeDTOs.add(etsfhaa);
+						
+						// attribute Label and CustomTextBox
+						Label attributeLabel = new Label(etsfhaa.getAttribute().getName() + ":");
+						CustomTextBox attributeTextBox = new CustomTextBox();
+						
+						// Validator for the CustomTextBox
+						Validator attributeValidator;
+						
+						// setting Validations depending on the datatype
+					 	if (etsfhaa.getAttribute().getDatatype().equals("INT") || etsfhaa.getAttribute().getDatatype().equals("DOUBLE")){
+					 		
+					  		attributeValidator = new NumericValidator();
+					  	
+					   	} else if (etsfhaa.getAttribute().getDatatype().equals("VARCHAR")){
+							    		
+					   		attributeValidator = new TextValidator(45);
+							    	
+					   	} else if (etsfhaa.getAttribute().getDatatype().equals("BOOLEAN")){
+							    	
+					   		attributeValidator = new BooleanValidator();
+							    	
+					   	} else {		
+							    	
+					   		attributeValidator = new DateValidator();
+							    	
+					   	}	
+							    	
+					   	// adding validator to attributeTextBox
+					   	attributeTextBox.addValidator(attributeValidator);
+									
+						int row = stockflowAttributeFlexTable.getRowCount();
 
-					stockflowAttributeFlexTable.setWidget(row, 0, attributeLabel);
-					stockflowAttributeFlexTable.setWidget(row, 1, attributeTextBox);
-											
-					// adding entries to stockflowAttributeLabelMap that stores all additional stockflow attributes
-					stockflowAttributeLabelMap.put(etsfhaa.getAttribute(),attributeTextBox);
+						stockflowAttributeFlexTable.setWidget(row, 0, attributeLabel);
+						stockflowAttributeFlexTable.setWidget(row, 1, attributeTextBox);
+												
+						// adding entries to stockflowAttributeLabelMap that stores all additional stockflow attributes
+						stockflowAttributeLabelMap.put(etsfhaa.getAttribute(),attributeTextBox);
+					}
+					
+					
 				}
 				
 				stockflowMap.put(stockflowdto, stockflowAttributeLabelMap);

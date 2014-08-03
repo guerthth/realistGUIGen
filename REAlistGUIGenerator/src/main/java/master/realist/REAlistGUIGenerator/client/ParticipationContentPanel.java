@@ -273,45 +273,50 @@ public class ParticipationContentPanel extends VerticalPanel{
 				
 				for(EventtypeParticipationHasAdditionalAttributeDTO etphaa : result){
 					
-					// adding the EventtypeParticipationHasAdditionalAttributeDTO to the existingEventtypeParticipationHasAdditionalAttributeDTOs arrayList
-					existingEventtypeParticipationHasAdditionalAttributeDTOs.add(etphaa);
-					
-					// attribute Label and CustomTextBox
-					Label attributeLabel = new Label(etphaa.getAttribute().getName() + ":");
-					CustomTextBox attributeTextBox = new CustomTextBox();
-					
-					// Validator for the CustomTextBox
-					Validator attributeValidator;
-					
-					// setting Validations depending on the datatype
-				 	if (etphaa.getAttribute().getDatatype().equals("INT") || etphaa.getAttribute().getDatatype().equals("DOUBLE")){
-				 		
-				  		attributeValidator = new NumericValidator();
-				  	
-				   	} else if (etphaa.getAttribute().getDatatype().equals("VARCHAR")){
-						    		
-				   		attributeValidator = new TextValidator(45);
-						    	
-				   	} else if (etphaa.getAttribute().getDatatype().equals("BOOLEAN")){
-						    	
-				   		attributeValidator = new BooleanValidator();
-						    	
-				   	} else {		
-						    	
-				   		attributeValidator = new DateValidator();
-						    	
-				   	}	
-						    	
-				   	// adding validator to attributeTextBox
-				   	attributeTextBox.addValidator(attributeValidator);
-								
-					int row = participationAttributeFlexTable.getRowCount();
+					// only participation and policy attributes
+					if(!etphaa.isReserveProperty()){
+						// adding the EventtypeParticipationHasAdditionalAttributeDTO to the existingEventtypeParticipationHasAdditionalAttributeDTOs arrayList
+						existingEventtypeParticipationHasAdditionalAttributeDTOs.add(etphaa);
+						
+						// attribute Label and CustomTextBox
+						Label attributeLabel = new Label(etphaa.getAttribute().getName() + ":");
+						CustomTextBox attributeTextBox = new CustomTextBox();
+						
+						// Validator for the CustomTextBox
+						Validator attributeValidator;
+						
+						// setting Validations depending on the datatype
+					 	if (etphaa.getAttribute().getDatatype().equals("INT") || etphaa.getAttribute().getDatatype().equals("DOUBLE")){
+					 		
+					  		attributeValidator = new NumericValidator();
+					  	
+					   	} else if (etphaa.getAttribute().getDatatype().equals("VARCHAR")){
+							    		
+					   		attributeValidator = new TextValidator(45);
+							    	
+					   	} else if (etphaa.getAttribute().getDatatype().equals("BOOLEAN")){
+							    	
+					   		attributeValidator = new BooleanValidator();
+							    	
+					   	} else {		
+							    	
+					   		attributeValidator = new DateValidator();
+							    	
+					   	}	
+							    	
+					   	// adding validator to attributeTextBox
+					   	attributeTextBox.addValidator(attributeValidator);
+									
+						int row = participationAttributeFlexTable.getRowCount();
 
-					participationAttributeFlexTable.setWidget(row, 0, attributeLabel);
-					participationAttributeFlexTable.setWidget(row, 1, attributeTextBox);
-											
-					// adding entries to participationAttributeMap that stores all additional participation attributes
-					participationAttributeLabelMap.put(etphaa.getAttribute(),attributeTextBox);
+						participationAttributeFlexTable.setWidget(row, 0, attributeLabel);
+						participationAttributeFlexTable.setWidget(row, 1, attributeTextBox);
+												
+						// adding entries to participationAttributeMap that stores all additional participation attributes
+						participationAttributeLabelMap.put(etphaa.getAttribute(),attributeTextBox);
+					}
+					
+					
 				}
 				
 				// add ParticipationDTO with CustomTextBoxesto participationMap

@@ -206,8 +206,11 @@ public class DualitytypeDAO {
 		// using the additional attributes for the eventtype
 		if(additionalEventtypeAttributes != null){
 			for(EventtypeHasAdditionalattribute ethaa : additionalEventtypeAttributes){
-						
-				additionalEventtypeAttributeDTOs.add(new AttributeDTO(ethaa));
+				
+				// only object and type properties
+				if(!ethaa.isIsCommitmentProperty()){
+					additionalEventtypeAttributeDTOs.add(new AttributeDTO(ethaa));
+				}		
 
 			}
 		}
@@ -223,7 +226,7 @@ public class DualitytypeDAO {
 		// using the stockflows for the eventtype
 		if(eventtypestockflowDTOs != null){
 			for(Eventtypestockflow etsf : eventtypestockflows){
-				
+
 				eventtypestockflowDTOs.add(createEventtypeStockflowDTO(etsf));
 			}
 		}		
@@ -271,7 +274,11 @@ public class DualitytypeDAO {
 		if(eventtypeParticipationAttributes != null){
 			for(EventtypeparticipationHasAdditionalattribute etphaa : etp.getEventtypeparticipationHasAdditionalattributes()){
 				
-				additionalEventtypeParticipationAttributeDTOs.add(new AttributeDTO(etphaa));
+				// only participation and policy properties
+				if(!etphaa.isIsReserveProperty()){
+					additionalEventtypeParticipationAttributeDTOs.add(new AttributeDTO(etphaa));
+				}
+				
 			}
 		}
 		
@@ -298,8 +305,12 @@ public class DualitytypeDAO {
 		
 		if(eventtypeStockflowAttributes != null){
 			for(EventtypestockflowHasAdditionalattribute etsfhaa : etsf.getEventtypestockflowHasAdditionalattributes()){
-						
-				additionalEventtypeStockflowAttributeDTOs.add(new AttributeDTO(etsfhaa));
+				
+				// only stockflow and policy properties
+				if(!etsfhaa.isIsReserveProperty()){
+					additionalEventtypeStockflowAttributeDTOs.add(new AttributeDTO(etsfhaa));
+				}
+				
 			}
 		}
 				
